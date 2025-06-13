@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Go program",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto", // "auto", "debug", "test" or "remote"
+            "program": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}",
+            "args": [],
+            "env": {},
+            "buildFlags": "",
+            // "trace": "verbose",
+            // "showLog": true,
+        }
+    ]
+}
