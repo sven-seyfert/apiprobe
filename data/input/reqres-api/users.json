@@ -1,0 +1,24 @@
+[
+    {
+        "id": "22a3e9cfbb",
+        "endpoint": "/api/users",
+        "description": "...",
+        "method": "GET",
+        "url": "https://reqres.in",
+        "postBody": "",
+        "basicAuth": "",
+        "params": [
+            "page=2"
+        ],
+        "headers": [
+            "Content-Type: application/json"
+        ],
+        "testCases": [
+            "page=33"
+        ],
+        "tags": [
+            "reqres"
+        ],
+        "jq": "."
+    }
+]
