@@ -44,4 +44,4 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ##
 
-[To the top](#)
+[To the top](#changelog)
