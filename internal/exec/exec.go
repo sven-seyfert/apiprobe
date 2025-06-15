@@ -78,7 +78,7 @@ func ProcessRequest(
 func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) {
 	curlOutput, statusCode, err := runCurl(ctx, req)
 	if err != nil {
-		return nil, "", err
+		return nil, statusCode, err
 	}
 
 	return curlOutput, statusCode, nil

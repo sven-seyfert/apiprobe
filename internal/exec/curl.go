@@ -48,7 +48,7 @@ func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error
 	if !strings.HasPrefix(statusCode, "2") {
 		logger.Warnf("Non-2xx status code received: status %s", statusCode)
 
-		return nil, "", fmt.Errorf("status %s", statusCode) //nolint:err113
+		return nil, statusCode, fmt.Errorf("status %s", statusCode) //nolint:err113
 	}
 
 	return body, statusCode, nil
