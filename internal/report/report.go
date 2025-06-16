@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
@@ -95,10 +96,15 @@ func (r *Report) SaveToFile(filename string) error {
 func WebExWebhookNotification(ctx context.Context, conn *sqlite.Conn,
 	webhookURL string, spaceSecret string,
 	webhookPayload []byte) {
-	spaceSecret = crypto.ExtractSecretHash(spaceSecret)
+	url := webhookURL + spaceSecret
 
-	spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
-	url := webhookURL + crypto.Deobfuscate(spaceIdentifier)
+	const secretPrefix = "<secret-"
+
+	if strings.Contains(spaceSecret, secretPrefix) {
+		spaceSecret = crypto.ExtractSecretHash(spaceSecret)
+		spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
+		url = webhookURL + crypto.Deobfuscate(spaceIdentifier)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(webhookPayload))
 	if err != nil {
