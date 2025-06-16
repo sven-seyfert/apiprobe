@@ -92,9 +92,13 @@ func (r *Report) SaveToFile(filename string) error {
 
 // WebExWebhookNotification sends the given JSON payload to the configured
 // WebEx incoming webhook URL.
-func WebExWebhookNotification(ctx context.Context, webhookPayload []byte, conn *sqlite.Conn) {
-	webExChannel, _ := db.SelectHash(conn, "f54e7b098b")
-	url := "https://webexapis.com/v1/webhooks/incoming/" + crypto.Deobfuscate(webExChannel)
+func WebExWebhookNotification(ctx context.Context, conn *sqlite.Conn,
+	webhookURL string, spaceSecret string,
+	webhookPayload []byte) {
+	spaceSecret = crypto.ExtractSecretHash(spaceSecret)
+
+	spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
+	url := webhookURL + crypto.Deobfuscate(spaceIdentifier)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(webhookPayload))
 	if err != nil {

@@ -58,7 +58,7 @@ func replaceSecretInString(str string, conn *sqlite.Conn) (string, error) {
 		return str, nil
 	}
 
-	secretHash := extractSecretHash(str)
+	secretHash := ExtractSecretHash(str)
 
 	if secretHash == "" {
 		logger.Warnf("No valid secret hash found in string: %s", str)
@@ -101,10 +101,10 @@ func replaceSecretInSlice(reqSlice []string, conn *sqlite.Conn) error {
 	return nil
 }
 
-// extractSecretHash uses a precompiled regex to extract the hash from
+// ExtractSecretHash uses a precompiled regex to extract the hash from
 // a '<secret-<hash>>' placeholder. Returns the hash without angle brackets
 // or prefix or an empty string if no match is found.
-func extractSecretHash(input string) string {
+func ExtractSecretHash(input string) string {
 	pattern := regexp.MustCompile(`<secret-([^>]+)>`)
 	matches := pattern.FindStringSubmatch(input)
 
