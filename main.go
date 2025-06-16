@@ -88,8 +88,16 @@ func main() {
 	// processRequests(ctx, preparedRequests, res, rep)
 	res, rep := processRequests(ctx, preparedRequests)
 
+	// Load config file and values.
+	cfg, err := config.Load("./config/config.json")
+	if err != nil {
+		logger.Fatalf("Program exits: Failed to load config file.")
+
+		return
+	}
+
 	// Send notification on error case or on changes.
-	notification(ctx, res, rep, conn)
+	notification(ctx, cfg, conn, res, rep)
 }
 
 // FilterRequests applies the '--id' and '--tags' flags
@@ -180,14 +188,23 @@ func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest)
 }
 
 // notification sends a summary notification via WebEx webhook.
-func notification(ctx context.Context, res *report.Result, rep *report.Report, conn *sqlite.Conn) {
-	const program = "APIProbe 📡 v0.3.0 - 2025-06-13"
+func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, res *report.Result, rep *report.Report) {
+	if cfg.Notification.WebEx == nil {
+		return
+	}
+
+	if !cfg.Notification.WebEx.Active {
+		return
+	}
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
 		mdMessage := "{\"markdown\": \"#### 🟢 " + config.Version + "\"}"
 		webhookPayload := []byte(mdMessage)
 
-		report.WebExWebhookNotification(ctx, webhookPayload, conn)
+		report.WebExWebhookNotification(ctx, conn,
+			cfg.Notification.WebEx.WebhookURL,
+			cfg.Notification.WebEx.SpaceSecret,
+			webhookPayload)
 
 		return
 	}
@@ -226,5 +243,8 @@ func notification(ctx context.Context, res *report.Result, rep *report.Report, c
 		return
 	}
 
-	report.WebExWebhookNotification(ctx, webhookPayload, conn)
+	report.WebExWebhookNotification(ctx, conn,
+		cfg.Notification.WebEx.WebhookURL,
+		cfg.Notification.WebEx.SpaceSecret,
+		webhookPayload)
 }
