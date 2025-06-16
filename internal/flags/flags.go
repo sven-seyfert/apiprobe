@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
@@ -21,7 +22,7 @@ type CLIFlags struct {
 // Init defines and parses the CLI flags and returning their values.
 func Init() *CLIFlags {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "APIProbe 📡 v0.3.0 - 2025-06-13\n\n")
+		fmt.Fprintf(os.Stderr, config.Version+"\n\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n")
 		flag.PrintDefaults()
 	}

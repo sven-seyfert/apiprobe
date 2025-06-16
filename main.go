@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/exec"
@@ -18,8 +19,6 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/util"
 	"zombiezen.com/go/sqlite"
 )
-
-// APIProbe 📡 v0.3.0 - 2025-06-13
 
 // main initializes flags, logger, and contexts, loads all API requests
 // and starts their processing.
@@ -185,7 +184,7 @@ func notification(ctx context.Context, res *report.Result, rep *report.Report, c
 	const program = "APIProbe 📡 v0.3.0 - 2025-06-13"
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
-		mdMessage := "{\"markdown\": \"#### 🟢 " + program + "\"}"
+		mdMessage := "{\"markdown\": \"#### 🟢 " + config.Version + "\"}"
 		webhookPayload := []byte(mdMessage)
 
 		report.WebExWebhookNotification(ctx, webhookPayload, conn)
@@ -213,7 +212,7 @@ func notification(ctx context.Context, res *report.Result, rep *report.Report, c
 	mdResult := fmt.Sprintf(
 		"Changed files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
 		res.ChangedFilesCount, res.RequestErrorCount, res.FormatResponseErrorCount)
-	mdMessage := "{markdown: \"#### 🔴 " + program + "\n" + mdResult + "\n\\($code)\"}"
+	mdMessage := "{markdown: \"#### 🔴 " + config.Version + "\n" + mdResult + "\n\\($code)\"}"
 
 	jqArgs := []string{
 		"-nr",
