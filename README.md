@@ -153,6 +153,8 @@ At the moment the project is in a stable initial state. Means it's on a basic le
     ./apiprobe.exe --add-secret "myApiKey123"
     ```
 
+    For more instructions, see section [secret management](#secret-management) below.
+
 ## Configuration
 
 🏃‍♂️ [Notify](#notify) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
