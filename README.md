@@ -155,7 +155,15 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
 ## Configuration
 
-🏃‍♂️ [JSON definitions](#json-definitions) | [Secret Management](#secret-management)
+🏃‍♂️ [Notify](#notify) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
+
+### Notify
+
+Setup your webhook URL for WebEx, Slack, MS Teams etc. At the moment only WebEx is available (more to be developed).
+
+#### *config.json*
+
+You can use a placeholder like `<secret-f0f0f0f0f0>` to avoid any plaintext URL section or other secret tokens. To do so, add your URL section to the database using `--add-secret "<value>"` and replace the generated returned placeholder with your original URL section. For more instructions, see section [secret management](#secret-management) below.
 
 ### JSON definitions
 
@@ -235,7 +243,7 @@ Mandatory for POST = (P)
 | **tags**         | Representation of the topic, of a application, environment etc.                                               | [] (empty string array)                     |
 | **jq**           | JSON query syntax; prettify JSON response (default ".").                                                      | "." (dot is the fallback if "" is provided) |
 
-### Secret Management
+### Secret management
 
 1. Insert a new secret:
 
@@ -271,6 +279,8 @@ Most important parts (directories and files):
 apiprobe/
 ├── assets/
 │   └── images/         # Images, screenshots
+├── config/
+│   └── config.json     # User defined config entries (like notification settings)
 ├── data/
 │   ├── input/          # JSON request definitions organized by service and environment
 │   └── output/         # Auto-generated responses (snapshots)
@@ -289,9 +299,9 @@ apiprobe/
 
 ### How it works
 
-1. **Initialization**: Logger setup, DB connection, seed data insertion.
-2. **Loading**: Recursively parse JSON files into `APIRequest` objects.
-3. **Filtering**: Apply `--id` or `--tags` filters.
+1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
+2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
+3. **Filtering**: Apply `--id` or `--tags` CLI flag filters.
 4. **Secrets**: Replace `<secret-...>` placeholders with actual secrets.
 5. **Execution**:
    - Build curl arguments and run HTTP requests.
@@ -308,9 +318,9 @@ apiprobe/
 
 ### Logging, Reporting
 
-- **Console & file logging**: All logs to console and file like `./logs/YYYY-MM-DD-HH-MM-SS.mil.log`.
+- **Console & file logging**: All logs to console and to file, like `./logs/YYYY-MM-DD-HH-MM-SS.mil.log`.
 - **Report file**: JSON report at `./logs/report.json` when errors/changes occur.
-- **Webhook**: Automatic notifications to WebEx configurable via secrets.
+- **Webhook**: Automatic notifications to WebEx (WebEx only at the moment). Later also to Slack, MS Teams etc.
 
 ## Contributing
 
