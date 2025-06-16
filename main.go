@@ -42,6 +42,14 @@ func main() {
 
 	cliFlags := flags.Init()
 
+	// Load config file and values.
+	cfg, err := config.Load("./config/config.json")
+	if err != nil {
+		logger.Fatalf("Program exits: Failed to load config file.")
+
+		return
+	}
+
 	// Handle command-line flags.
 	filterValueNotFound, err := flags.IsNewID(*cliFlags.NewID)
 	if filterValueNotFound || err != nil {
@@ -90,14 +98,6 @@ func main() {
 	// Process each API request, optionally with test case variations.
 	// processRequests(ctx, preparedRequests, res, rep)
 	res, rep := processRequests(ctx, preparedRequests)
-
-	// Load config file and values.
-	cfg, err := config.Load("./config/config.json")
-	if err != nil {
-		logger.Fatalf("Program exits: Failed to load config file.")
-
-		return
-	}
 
 	// Send notification on error case or on changes.
 	notification(ctx, cfg, conn, res, rep)
