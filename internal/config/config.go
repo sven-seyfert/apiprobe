@@ -11,9 +11,9 @@ const Version = "APIProbe 📡 v0.3.0 - 2025-06-13"
 
 type Notification struct {
 	WebEx *struct {
-		Active      bool   `json:"active"`
-		WebhookURL  string `json:"webhookUrl"`
-		SpaceSecret string `json:"spaceSecret"`
+		Active     bool   `json:"active"`
+		WebhookURL string `json:"webhookUrl"`
+		Space      string `json:"space"`
 	} `json:"webEx"`
 }
 

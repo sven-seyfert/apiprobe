@@ -206,7 +206,7 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 
 		report.WebExWebhookNotification(ctx, conn,
 			cfg.Notification.WebEx.WebhookURL,
-			cfg.Notification.WebEx.SpaceSecret,
+			cfg.Notification.WebEx.Space,
 			webhookPayload)
 
 		return
@@ -248,6 +248,6 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 
 	report.WebExWebhookNotification(ctx, conn,
 		cfg.Notification.WebEx.WebhookURL,
-		cfg.Notification.WebEx.SpaceSecret,
+		cfg.Notification.WebEx.Space,
 		webhookPayload)
 }

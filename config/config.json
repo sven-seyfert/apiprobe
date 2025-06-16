@@ -3,7 +3,7 @@
         "webEx": {
             "active": true,
             "webhookUrl": "https://webexapis.com/v1/webhooks/incoming/",
-            "spaceSecret": "<secret-f54e7b098b>"
+            "space": "<secret-f54e7b098b>"
         }
     }
 }
