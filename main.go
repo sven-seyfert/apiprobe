@@ -20,8 +20,11 @@ import (
 	"zombiezen.com/go/sqlite"
 )
 
-// main initializes flags, logger, and contexts, loads all API requests
-// and starts their processing.
+// main initializes the logger and database, parses command-line flags loads
+// configuration and seeds the database. It then loads and filters API request
+// definitions, injects secrets, establishes a cancellation-aware context,
+// processes each request and finally sends notifications based on errors
+// or detected changes.
 func main() {
 	if err := logger.Init(); err != nil {
 		logger.Fatalf("Program exits: Failed to initialize logger.")

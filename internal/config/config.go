@@ -21,6 +21,8 @@ type Config struct {
 	Notification Notification `json:"notification"`
 }
 
+// Load opens the JSON configuration file, decodes its contents into
+// a Config struct and returns the loaded configuration or an error.
 func Load(filePath string) (*Config, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
