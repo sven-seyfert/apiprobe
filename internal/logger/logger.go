@@ -13,30 +13,31 @@ import (
 // Init sets up the logger, creates a new log file
 // and directs output to both console and file.
 func Init() error {
-	logsDir := "./logs"
+	now := time.Now()
+	yearMonth := now.Format("2006-01")
+	day := now.Format("02")
+	logsDir := filepath.Join(".", "logs", yearMonth, day)
 
 	if err := os.MkdirAll(logsDir, os.ModePerm); err != nil {
-		Errorf("Failed to create logs directory. Error: %v", err)
+		Errorf(`Failed to create logs directory "%s". Error: %v`, logsDir, err)
 
 		return err
 	}
 
-	// Generate unique log file (./logs/2025-06-06-20-18-54.938.log).
-	datetimePrefix := time.Now().Format("2006-01-02-15-04-05.000")
-	filename := datetimePrefix + ".log"
+	// Generate unique log file (./logs/2025-06/18/2025-06-18-12-58-54.938.log).
+	filename := now.Format("2006-01-02-15-04-05.000") + ".log"
 	logFilePath := filepath.Join(logsDir, filename)
 
 	// Open log file.
 	const permissions = 0644
-
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, permissions)
 	if err != nil {
-		Errorf("Failed to open log file. Error: %v", err)
+		Errorf(`Failed to open log file "%s". Error: %v`, logFilePath, err)
 
 		return err
 	}
 
-	// Set output to both file and console.
+	// Set log output to console and to file.
 	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
 
 	return nil
