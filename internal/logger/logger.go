@@ -30,6 +30,7 @@ func Init() error {
 
 	// Open log file.
 	const permissions = 0644
+
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, permissions)
 	if err != nil {
 		Errorf(`Failed to open log file "%s". Error: %v`, logFilePath, err)
