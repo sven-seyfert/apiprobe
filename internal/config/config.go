@@ -7,7 +7,7 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.4.0 - 2025-06-16"
+const Version = "APIProbe 📡 v0.5.0 - 2025-06-19"
 
 type Notification struct {
 	WebEx *struct {
