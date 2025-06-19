@@ -11,6 +11,13 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-06-19
+
+### Changed
+
+- Dependency update (SQLite). [172c8cb](https://github.com/sven-seyfert/apiprobe/commit/172c8cb66cba8c66913294f80cf1a8567459c279)
+- Log files are stored more granular in month and day folders. [bce77cd](https://github.com/sven-seyfert/apiprobe/commit/bce77cd65e113c2d8f1b3a7324432e0d62b9d101)
+
 ## [0.4.0] - 2025-06-16
 
 ### Added
@@ -54,7 +61,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/sven-seyfert/apiprobe/releases/tag/v0.3.0
 
