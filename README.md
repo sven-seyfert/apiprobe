@@ -320,7 +320,7 @@ apiprobe/
 
 ### Logging, Reporting
 
-- **Console & file logging**: All logs to console and to file, like `./logs/YYYY-MM-DD-HH-MM-SS.mil.log`.
+- **Console & file logging**: All logs to console and to file, like `./logs/2025-06/18/2025-06-18-12-58-54.938.log`.
 - **Report file**: JSON report at `./logs/report.json` when errors/changes occur.
 - **Webhook**: Automatic notifications to WebEx (WebEx only at the moment). Later also to Slack, MS Teams etc.
 
