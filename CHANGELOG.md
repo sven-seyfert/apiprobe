@@ -11,6 +11,12 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.6.1] - 2025-06-20
+
+### Fixed
+
+- Filtering problem when jq filter is empty. [18dd02d](https://github.com/sven-seyfert/apiprobe/commit/18dd02db327f4ad291175eb5f6f52ae5fd42f9aa)
+
 ## [0.6.0] - 2025-06-20
 
 ### Added
@@ -79,7 +85,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.3.0...v0.4.0
