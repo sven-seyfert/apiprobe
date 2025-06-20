@@ -191,7 +191,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
         "headers": [],
         "testCases": [],
         "tags": ["env-prod"],
-        "jq": "."
+        "jq": ""
     }
 ]
 ```
@@ -224,7 +224,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
             "reqres",
             "env-prod"
         ],
-        "jq": "."
+        "jq": ""
     }
 ]
 ```
