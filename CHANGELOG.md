@@ -11,6 +11,24 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-06-20
+
+### Added
+
+- Heartbeat message notification (configurable interval) instead of run notification on each execution. [3d399ca](https://github.com/sven-seyfert/apiprobe/commit/3d399ca155cd5b0519370d575f9891aae2e1e111)
+
+### Changed
+
+- Extend notification message by hostname. [2c72842](https://github.com/sven-seyfert/apiprobe/commit/2c72842a2279fa16773ec57318e182445b31a6b4)
+
+### Documented
+
+- Update README.md file. [1f6398f](https://github.com/sven-seyfert/apiprobe/commit/1f6398fdc3cb52404e4784d37fde5b352a4679d1)
+
+### Styled
+
+- Trivial code style adjustment. [97704c4](https://github.com/sven-seyfert/apiprobe/commit/97704c41a8d03e61c5296b6a1a238f9ab97eb2bc)
+
 ## [0.5.0] - 2025-06-19
 
 ### Changed
@@ -61,7 +79,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/sven-seyfert/apiprobe/releases/tag/v0.3.0
