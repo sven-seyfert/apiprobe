@@ -16,7 +16,7 @@ import (
 func RunJQ(ctx context.Context, jqArgs []string, input []byte) ([]byte, error) {
 	const defaultJQPrettifyFilter = "."
 
-	if len(jqArgs) == 0 {
+	if len(jqArgs) == 0 || jqArgs[0] == "" {
 		jqArgs = []string{defaultJQPrettifyFilter}
 	}
 
