@@ -192,11 +192,7 @@ func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest)
 
 // notification sends a summary notification via WebEx webhook.
 func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, res *report.Result, rep *report.Report) {
-	if cfg.Notification.WebEx == nil {
-		return
-	}
-
-	if !cfg.Notification.WebEx.Active {
+	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
 		return
 	}
 
@@ -252,8 +248,17 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 
 	mdResult := fmt.Sprintf(
 		"Changed files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
-		res.ChangedFilesCount, res.RequestErrorCount, res.FormatResponseErrorCount)
-	mdMessage := "{markdown: \"#### 🔴 " + config.Version + "\n" + mdResult + "\n\\($code)\"}"
+		res.ChangedFilesCount,
+		res.RequestErrorCount,
+		res.FormatResponseErrorCount,
+	)
+
+	mdMessage := fmt.Sprintf(
+		"{markdown: \"#### 🔴 %s\n%s\n\\($code)\n\n%s\"}",
+		config.Version,
+		mdResult,
+		hostnameMessage,
+	)
 
 	jqArgs := []string{
 		"-nr",
