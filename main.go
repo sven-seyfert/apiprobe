@@ -96,7 +96,6 @@ func main() {
 	defer stop()
 
 	// Process each API request, optionally with test case variations.
-	// processRequests(ctx, preparedRequests, res, rep)
 	res, rep := processRequests(ctx, preparedRequests)
 
 	// Send notification on error case or on changes.
@@ -196,10 +195,14 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 		return
 	}
 
+	const reportFile = "./logs/report.json"
+
 	hostname, _ := os.Hostname()
 	hostnameMessage := fmt.Sprintf("_Message from %s (hostname)_", hostname)
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
+		_ = os.Remove(reportFile)
+
 		isHeartbeatTime, err := report.IsHeartbeatTime(cfg)
 		if err != nil {
 			return
@@ -228,8 +231,6 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 
 		return
 	}
-
-	const reportFile = "./logs/report.json"
 
 	if err := rep.SaveToFile(reportFile); err != nil {
 		logger.Errorf("Error on save file. Error: %v", err)
