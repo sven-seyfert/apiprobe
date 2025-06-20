@@ -9,6 +9,11 @@ import (
 
 const Version = "APIProbe 📡 v0.5.0 - 2025-06-19"
 
+type Heartbeat struct {
+	IntervallInHours  int    `json:"intervallInHours"`
+	LastHeartbeatTime string `json:"lastHeartbeatTime"`
+}
+
 type Notification struct {
 	WebEx *struct {
 		Active     bool   `json:"active"`
@@ -18,6 +23,7 @@ type Notification struct {
 }
 
 type Config struct {
+	Heartbeat    Heartbeat    `json:"heartbeat"`
 	Notification Notification `json:"notification"`
 }
 

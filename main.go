@@ -200,8 +200,29 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 		return
 	}
 
+	hostname, _ := os.Hostname()
+	hostnameMessage := fmt.Sprintf("_Message from %s (hostname)_", hostname)
+
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
-		mdMessage := "{\"markdown\": \"#### 🟢 " + config.Version + "\"}"
+		isHeartbeatTime, err := report.IsHeartbeatTime(cfg)
+		if err != nil {
+			return
+		}
+
+		if !isHeartbeatTime {
+			return
+		}
+
+		if err := report.UpdateHeartbeatTime(cfg); err != nil {
+			return
+		}
+
+		mdMessage := fmt.Sprintf(
+			`{"markdown":"#### 💙 %s\nHeartbeat: __still alive__\n\n%s"}`,
+			config.Version,
+			hostnameMessage,
+		)
+
 		webhookPayload := []byte(mdMessage)
 
 		report.WebExWebhookNotification(ctx, conn,

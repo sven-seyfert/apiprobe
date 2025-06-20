@@ -1,4 +1,8 @@
 {
+    "heartbeat": {
+        "intervallInHours": 3,
+        "lastHeartbeatTime": ""
+    },
     "notification": {
         "webEx": {
             "active": true,

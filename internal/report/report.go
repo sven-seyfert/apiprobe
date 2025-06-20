@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
+	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/loader"
@@ -80,9 +82,59 @@ func (r *Report) SaveToFile(filename string) error {
 	defer file.Close()
 
 	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ") // Prettify json.
+	encoder.SetIndent("", "    ")
 
 	if err := encoder.Encode(r); err != nil {
+		logger.Errorf("Failure on write file. Error: %v", err)
+
+		return err
+	}
+
+	return nil
+}
+
+// IsHeartbeatTime checks whether enough time has passed
+// since the last heartbeat.
+func IsHeartbeatTime(cfg *config.Config) (bool, error) {
+	lastHeartbeatTime := cfg.Heartbeat.LastHeartbeatTime
+	if lastHeartbeatTime == "" {
+		return true, nil
+	}
+
+	threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervallInHours)
+
+	lastTime, err := time.Parse(time.RFC3339, lastHeartbeatTime)
+	if err != nil {
+		logger.Errorf(`Invalid datetime "%s". Error: %v\n`, lastHeartbeatTime, err)
+
+		return false, err
+	}
+
+	diff := time.Since(lastTime)
+
+	return diff >= threshold, nil
+}
+
+// UpdateHeartbeatTime writes the current UTC time (RFC3339) into
+// cfg.Heartbeat.LastHeartbeatTime and persists the entire cfg back
+// to the config JSON file.
+func UpdateHeartbeatTime(cfg *config.Config) error {
+	cfg.Heartbeat.LastHeartbeatTime = time.Now().UTC().Format(time.RFC3339)
+
+	file, err := os.Create("./config/config.json")
+	if err != nil {
+		logger.Errorf("Failure on create file. Error: %v", err)
+
+		return err
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+
+	encoder.SetIndent("", "    ")
+	encoder.SetEscapeHTML(false)
+
+	if err := encoder.Encode(cfg); err != nil {
 		logger.Errorf("Failure on write file. Error: %v", err)
 
 		return err
