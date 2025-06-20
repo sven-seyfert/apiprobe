@@ -157,13 +157,17 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
 ## Configuration
 
-🏃‍♂️ [Notify](#notify) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
+🏃‍♂️ [config.json](#configjson) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
 
-### Notify
+### config.json
 
 Setup your webhook URL for WebEx, Slack, MS Teams etc. At the moment only WebEx is available (more to be developed).
 
-#### *config.json*
+#### *heartbeat*
+
+Define the interval (in hours) how often you want to get a heartbeat message. This is useful when you don't receive much failures or changes with you API requests and still want to know is the program running and healthy.
+
+#### *notification*
 
 You can use a placeholder like `<secret-f0f0f0f0f0>` to avoid any plaintext URL section or other secret tokens. To do so, add your URL section to the database using `--add-secret "<value>"` and replace the generated returned placeholder with your original URL section. For more instructions, see section [secret management](#secret-management) below.
 
