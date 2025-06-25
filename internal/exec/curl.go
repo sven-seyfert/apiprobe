@@ -24,8 +24,8 @@ func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error
 	cmd := exec.CommandContext(ctx, "./lib/curl.exe", cmdArgs...)
 	cmd.Stdout = &stdout
 
-	logger.Debugf(`Executing endpoint request "%s"`, req.Endpoint)
-	logger.Infof(`Description: "%s"`, req.Description)
+	logger.Debugf(`Executing endpoint request "%s"`, req.Request.Endpoint)
+	logger.Infof(`Description: "%s"`, req.Request.Description)
 
 	start := time.Now()
 

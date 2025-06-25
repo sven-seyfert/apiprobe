@@ -49,12 +49,12 @@ type TestCases struct {
 func (req *APIRequest) BuildRequestURL() string {
 	var requestURL strings.Builder
 
-	requestURL.WriteString(req.BaseURL)
-	requestURL.WriteString(req.Endpoint)
+	requestURL.WriteString(req.Request.BaseURL)
+	requestURL.WriteString(req.Request.Endpoint)
 
-	if len(req.Params) > 0 {
+	if len(req.Request.Params) > 0 {
 		requestURL.WriteString("?")
-		requestURL.WriteString(strings.Join(req.Params, "&"))
+		requestURL.WriteString(strings.Join(req.Request.Params, "&"))
 	}
 
 	return requestURL.String()
@@ -65,7 +65,7 @@ func (req *APIRequest) BuildRequestURL() string {
 // and payload specified in the APIRequest.
 func (req *APIRequest) CurlCmdArguments() []string {
 	cmdArgs := []string{
-		"--request", req.Method,
+		"--request", req.Request.Method,
 		"--silent", "--location", "--insecure",
 		"--connect-timeout", "5",
 		"--max-time", "10",
@@ -73,19 +73,19 @@ func (req *APIRequest) CurlCmdArguments() []string {
 		"--write-out", "%{http_code}",
 	}
 
-	if req.Method == http.MethodGet {
+	if req.Request.Method == http.MethodGet {
 		cmdArgs = append(cmdArgs, "--get")
 	}
 
-	if req.Method == http.MethodPost && req.PostBody != "" {
-		cmdArgs = append(cmdArgs, "--data", req.PostBody)
+	if req.Request.Method == http.MethodPost && req.Request.PostBody != "" {
+		cmdArgs = append(cmdArgs, "--data", req.Request.PostBody)
 	}
 
-	if req.BasicAuth != "" {
-		cmdArgs = append(cmdArgs, "--user", req.BasicAuth)
+	if req.Request.BasicAuth != "" {
+		cmdArgs = append(cmdArgs, "--user", req.Request.BasicAuth)
 	}
 
-	for _, h := range req.Headers {
+	for _, h := range req.Request.Headers {
 		cmdArgs = append(cmdArgs, "--header", h)
 	}
 

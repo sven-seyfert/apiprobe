@@ -17,25 +17,25 @@ import (
 // placeholder. Returns an error immediately if any DB lookup fails.
 func HandleSecrets(filteredRequests []*loader.APIRequest, conn *sqlite.Conn) ([]*loader.APIRequest, error) {
 	for _, req := range filteredRequests {
-		newBody, err := replaceSecretInString(req.PostBody, conn)
+		newBody, err := replaceSecretInString(req.Request.PostBody, conn)
 		if err != nil {
 			return nil, err
 		}
 
-		req.PostBody = newBody
+		req.Request.PostBody = newBody
 
-		newAuth, err := replaceSecretInString(req.BasicAuth, conn)
+		newAuth, err := replaceSecretInString(req.Request.BasicAuth, conn)
 		if err != nil {
 			return nil, err
 		}
 
-		req.BasicAuth = newAuth
+		req.Request.BasicAuth = newAuth
 
-		if err := replaceSecretInSlice(req.Params, conn); err != nil {
+		if err := replaceSecretInSlice(req.Request.Params, conn); err != nil {
 			return nil, err
 		}
 
-		if err := replaceSecretInSlice(req.Headers, conn); err != nil {
+		if err := replaceSecretInSlice(req.Request.Headers, conn); err != nil {
 			return nil, err
 		}
 

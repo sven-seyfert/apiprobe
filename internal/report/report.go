@@ -57,13 +57,13 @@ func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, output
 	testCase := ""
 
 	if testCaseIndex != -1 {
-		testCase = req.TestCases[testCaseIndex]
+		testCase = req.TestCases[testCaseIndex].Name
 	}
 
 	request := Request{
 		ID:             req.HexHash,
-		Description:    req.Description,
-		Endpoint:       req.Endpoint,
+		Description:    req.Request.Description,
+		Endpoint:       req.Request.Endpoint,
 		StatusCode:     statusCode,
 		OutputFilePath: outputFilePath,
 		TestCase:       testCase,
