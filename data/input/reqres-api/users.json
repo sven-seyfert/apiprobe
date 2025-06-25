@@ -1,20 +1,28 @@
 [
     {
         "id": "22a3e9cfbb",
-        "endpoint": "/api/users",
-        "description": "...",
-        "method": "GET",
-        "url": "https://reqres.in",
-        "postBody": "",
-        "basicAuth": "",
-        "params": [
-            "page=2"
-        ],
-        "headers": [
-            "Content-Type: application/json"
-        ],
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "List users",
+            "method": "GET",
+            "url": "https://reqres.in",
+            "endpoint": "/api/users",
+            "basicAuth": "",
+            "headers": [
+                "Content-Type: application/json"
+            ],
+            "params": [
+                "page=2"
+            ],
+            "postBody": ""
+        },
         "testCases": [
-            "page=33"
+            {
+                "name": "Test with invalid page parameter",
+                "paramsData": "page=33",
+                "postBodyData": ""
+            }
         ],
         "tags": [
             "reqres"
