@@ -13,21 +13,35 @@ import (
 // APIRequest represents the structure of each API request definition
 // as specified in the input JSON configuration.
 type APIRequest struct {
-	HexHash     string   `json:"id"`
-	Endpoint    string   `json:"endpoint"`
-	Description string   `json:"description"`
-	Method      string   `json:"method"`
-	BaseURL     string   `json:"url"`
-	PostBody    string   `json:"postBody"`
-	BasicAuth   string   `json:"basicAuth"`
-	Params      []string `json:"params"`
-	Headers     []string `json:"headers"`
-	TestCases   []string `json:"testCases"`
-	Tags        []string `json:"tags"`
-	JqCommand   string   `json:"jq"`
+	ID            string      `json:"id"`
+	IsAuthRequest bool        `json:"isAuthRequest"`
+	PreRequestId  string      `json:"preRequestId"`
+	Request       Request     `json:"request"`
+	TestCases     []TestCases `json:"testCases"`
+	Tags          []string    `json:"tags"`
+	JqCommand     string      `json:"jq"`
 
 	// Relative JSON file path.
 	JSONFilePath string `json:"-"`
+}
+
+// Request holds the HTTP-specific details for an API request.
+type Request struct {
+	Description string   `json:"description"`
+	Method      string   `json:"method"`
+	BaseURL     string   `json:"url"`
+	Endpoint    string   `json:"endpoint"`
+	BasicAuth   string   `json:"basicAuth"`
+	Headers     []string `json:"headers"`
+	Params      []string `json:"params"`
+	PostBody    string   `json:"postBody"`
+}
+
+// Test defines the input variations for the requests.
+type TestCases struct {
+	Name         string `json:"name"`
+	ParamsData   string `json:"paramsData"`
+	PostBodyData string `json:"postBodyData"`
 }
 
 // BuildRequestURL constructs the full request URL by concatenating the BaseURL,
