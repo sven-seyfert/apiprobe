@@ -39,7 +39,7 @@ func HandleSecrets(filteredRequests []*loader.APIRequest, conn *sqlite.Conn) ([]
 			return nil, err
 		}
 
-		if err := replaceSecretInSlice(req.TestCases, conn); err != nil {
+		if err := replaceSecretInTestCases(req.TestCases, conn); err != nil {
 			return nil, err
 		}
 	}
@@ -96,6 +96,37 @@ func replaceSecretInSlice(reqSlice []string, conn *sqlite.Conn) error {
 		}
 
 		reqSlice[idx] = newVal
+	}
+
+	return nil
+}
+
+// replaceSecretInTestCases iterates over all test cases and replaces secrets
+// in the ParamsData and PostBodyData fields in-place.
+// Returns the first error encountered, if any.
+func replaceSecretInTestCases(testCases []loader.TestCases, conn *sqlite.Conn) error {
+	for idx := range testCases {
+		testCase := &testCases[idx]
+
+		var err error
+
+		if testCase.ParamsData != "" {
+			testCase.ParamsData, err = replaceSecretInString(testCase.ParamsData, conn)
+			if err != nil {
+				logger.Errorf(`Error replacing secret in ParamsData of test "%q".`, testCase.Name)
+
+				return err
+			}
+		}
+
+		if testCase.PostBodyData != "" {
+			testCase.PostBodyData, err = replaceSecretInString(testCase.PostBodyData, conn)
+			if err != nil {
+				logger.Errorf(`Error replacing secret in PostBodyData of test "%q".`, testCase.Name)
+
+				return err
+			}
+		}
 	}
 
 	return nil
