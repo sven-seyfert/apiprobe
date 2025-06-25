@@ -54,14 +54,16 @@ type Report struct {
 // AddReportData records a single API request’s result, its ID, description,
 // endpoint, status code, output file path and test case into the Report.
 func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) {
+	const noTestCaseIndicator = -1
+
 	testCase := ""
 
-	if testCaseIndex != -1 {
+	if testCaseIndex != noTestCaseIndicator {
 		testCase = req.TestCases[testCaseIndex].Name
 	}
 
 	request := Request{
-		ID:             req.HexHash,
+		ID:             req.ID,
 		Description:    req.Request.Description,
 		Endpoint:       req.Request.Endpoint,
 		StatusCode:     statusCode,
