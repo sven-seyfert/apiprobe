@@ -15,7 +15,7 @@ import (
 type APIRequest struct {
 	ID            string      `json:"id"`
 	IsAuthRequest bool        `json:"isAuthRequest"`
-	PreRequestId  string      `json:"preRequestId"`
+	PreRequestID  string      `json:"preRequestId"`
 	Request       Request     `json:"request"`
 	TestCases     []TestCases `json:"testCases"`
 	Tags          []string    `json:"tags"`
