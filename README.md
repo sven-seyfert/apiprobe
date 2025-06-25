@@ -104,11 +104,11 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
 #### *Global Flags*
 
-| Flags                     | Description                                                                                                                  |
-| ---                       | ---                                                                                                                          |
-| `--id "<hex hash>"`       | Run only the request matching this ID.                                                                                       |
-| `--tags "reqres, booker"` | Run all requests containing any of the comma-separated tags.                                                                 |
-| `--new-id`                | Generates and returns a new random hex ID for use in JSON definitions.                                                       |
+| Flags                     | Description                                                                                                                    |
+| ---                       | ---                                                                                                                            |
+| `--id "<hex hash>"`       | Run only the request matching this ID.                                                                                         |
+| `--tags "reqres, booker"` | Run all requests containing any of the comma-separated tags.                                                                   |
+| `--new-id`                | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
 | `--add-secret "<value>"`  | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
