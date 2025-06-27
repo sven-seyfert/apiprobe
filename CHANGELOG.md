@@ -11,6 +11,29 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-06-27
+
+### Changed
+
+- File report.json will be removed each time the requests execution end with no failures or changes. [30fa830](https://github.com/sven-seyfert/apiprobe/commit/30fa8305f0611624e7329533fea2597bdff4f4c4)
+- Restructure go structs (APIRequests, more granular). [6299af9](https://github.com/sven-seyfert/apiprobe/commit/6299af9582aad71a831e2ac8f5aa4f68d2b31ff6)
+- Apply new go structs values to the relevant locations. [2602ff0](https://github.com/sven-seyfert/apiprobe/commit/2602ff0c2789afe8ca173770c44bb9715106e48c)
+- Update test case secret replacement and test case handling. [9e0c135](https://github.com/sven-seyfert/apiprobe/commit/9e0c1359fd0d39e87643504afe1a4096e42265e8)
+- Restructure input files (JSON definition files). [c1a4a8d](https://github.com/sven-seyfert/apiprobe/commit/c1a4a8d3cd9a9d1ae7dbca2af9c4078775a4fe30)
+
+### Documented
+
+- Update README.md file. [732a334](https://github.com/sven-seyfert/apiprobe/commit/732a3346b35271f0f4d576fd8257295a7d206e6a)
+
+### Refactored
+
+- Readability improvements. [17e04fe](https://github.com/sven-seyfert/apiprobe/commit/17e04fe46174633e6d0d93d2ef0531bfac381fb8)
+- Trivial adjustment (renaming). [c0f99d2](https://github.com/sven-seyfert/apiprobe/commit/c0f99d2d4e0beeb980af082b43fef387b6659bcc)
+
+### Styled
+
+- Fix typo. [156e8ee](https://github.com/sven-seyfert/apiprobe/commit/156e8ee3e7f9ae0db13b41d7a6b1333ca7e20ed0)
+
 ## [0.6.1] - 2025-06-20
 
 ### Fixed
@@ -85,7 +108,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.4.0...v0.5.0
