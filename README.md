@@ -181,16 +181,28 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
-        "endpoint": "/api/path",
-        "description": "Short description of the request (purpose)",
-        "method": "GET|POST",
-        "url": "https://api.example.com",
-        "postBody": "",
-        "basicAuth": "",
-        "params": [],
-        "headers": [],
-        "testCases": [],
-        "tags": ["env-prod"],
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "Short description of the request (purpose)",
+            "method": "GET|POST",
+            "url": "https://api.example.com",
+            "endpoint": "/api/path",
+            "basicAuth": "",
+            "headers": [],
+            "params": [],
+            "postBody": ""
+        },
+        "testCases": [
+            {
+                "name": "",
+                "paramsData": "",
+                "postBodyData": ""
+            }
+        ],
+        "tags": [
+            "env-prod"
+        ],
         "jq": ""
     }
 ]
@@ -202,29 +214,47 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
-        "endpoint": "/api/path",
-        "description": "Short description of the request (purpose)",
-        "method": "GET|POST",
-        "url": "https://api.example.com",
-        "postBody": "{\"username\": \"John Doe\", \"password\": \"<secret-b4c3d2e1f0>\"}",
-        "basicAuth": "<secret-b4c3d2e1f0>",
-        "params": [
-            "pageSize=25",
-            "page=3"
-        ],
-        "headers": [
-            "Content-Type: application/json",
-            "api-key: <secret-0f0f0f0f0f>"
-        ],
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "Short description of the request (purpose)",
+            "method": "GET|POST",
+            "url": "https://api.example.com",
+            "endpoint": "/api/path",
+            "basicAuth": "<secret-b4c3d2e1f0>",
+            "headers": [
+                "Content-Type: application/json"
+            ],
+            "params": [
+                "animalId=1337",
+                "pageSize=25",
+                "page=3"
+            ],
+            "postBody": "{\"Username\": \"John Doe\", \"Password\": \"<secret-b4c3d2e1f0>\"}"
+        },
         "testCases": [
-            "{\"username\": \"Marry Doe\", \"password\": \"<secret-ff00ee11cc>\"}",
-            "{\"username\": \"Julia Ismo\", \"password\": \"<secret-cc11ee00ff>\"}"
+            {
+                "name": "Test with Marry Doe",
+                "paramsData": "",
+                "postBodyData": "{\"Username\": \"Marry Doe\", \"Password\": \"<secret-ff00ee11cc>\"}"
+            },
+            {
+                "name": "Test with Julia Ismo",
+                "paramsData": "",
+                "postBodyData": "{\"Username\": \"Julia Ismo\", \"Password\": \"<secret-cc11ee00ff>\"}"
+            },
+            {
+                "name": "Test with John Doe and different animalId",
+                "paramsData": "animalId=4567",
+                "postBodyData": ""
+            }
         ],
         "tags": [
-            "reqres",
+            "animals",
+            "cars",
             "env-prod"
         ],
-        "jq": ""
+        "jq": "."
     }
 ]
 ```
@@ -234,20 +264,26 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 Mandatory = (M)<br>
 Mandatory for POST = (P)
 
-| JSON key         | JSON value description                                                                                        | Default value                               |
-| --               | ---                                                                                                           | ---                                         |
-| **id** (M)       | Unique 10 character hex hash. Use `--new-id` to generate.                                                     |                                             |
-| **endpoint** (M) | Request endpoint.                                                                                             |                                             |
-| **description**  | Endpoint description (purpose).                                                                               |                                             |
-| **method** (M)   | HTTP Method; currently only GET and POST requests are supported.                                              |                                             |
-| **url** (M)      | Interface (API) URL                                                                                           |                                             |
-| **postBody** (P) | JSON message body (payload) for POST requests; data have to be JSON valid (escaping " ==> \").                | "" (empty                                   |
-| **basicAuth**    | User and password for a basic authentification; format \<user\>:\<password\>.                                 | "" (empty string)                           |
-| **params**       | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                | [] (empty string                            |
-| **headers**      | Request header list (one or n headers).                                                                       | [] (empty string array)                     |
-| **testCases**    | Data driven test data list (one or n test data entries); these variations apply to query params or post body. | [] (empty string array)                     |
-| **tags**         | Representation of the topic, of a application, environment etc.                                               | [] (empty string array)                     |
-| **jq**           | JSON query syntax; prettify JSON response (default ".").                                                      | "." (dot is the fallback if "" is provided) |
+| JSON key                   | JSON value description                                                                                                                                                          | Default value                               |
+| --                         | ---                                                                                                                                                                             | ---                                         |
+| **id** (M)                 | Unique 10 character hex hash. Use `--new-id` to generate.                                                                                                                       |                                             |
+| **isAuthRequest** (M)      | Is the request type an auth request (login or similar)? In case of true, the request will be handled differently.                                                               | false                                       |
+| **preRequestId**           | Define the request which should be executed before the actual request (because e.g. the<br>preconditional auth request provides a token which is necessary for the actual one). | "" (empty string)                           |
+| **request**                | Endpoint description (purpose).                                                                                                                                                 |                                             |
+| **request.description**    | Endpoint description (purpose).                                                                                                                                                 | "" (empty string)                           |
+| **request.method** (M)     | HTTP Method; currently only GET and POST requests are supported.                                                                                                                |                                             |
+| **request.url** (M)        | Interface (API) URL                                                                                                                                                             |                                             |
+| **request.endpoint** (M)   | Request endpoint.                                                                                                                                                               |                                             |
+| **request.basicAuth**      | User and password for a basic authentification; format \<user\>:\<password\>.                                                                                                   | "" (empty string)                           |
+| **request.headers**        | Request header list (one or n headers).                                                                                                                                         | [] (empty string array)                     |
+| **request.params**         | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                                                                                  | [] (empty string array)                     |
+| **request.postBody** (P)   | JSON message body (payload) for POST requests; data have to be JSON valid (escaping " ==> \").                                                                                  | "" (empty string)                           |
+| **testCases**              | Data driven test data list (one or n test data entries); these variations apply to query params or post body. See [minimal definition](#minimal-definition).                    |                                             |
+| **testCases.name**         | Define the name of your test case.                                                                                                                                              | "" (empty string)                           |
+| **testCases.paramsData**   | Define which query parameter should be applied (replaced) in request.params for the test cases. See [advanced definition](#advanced-definition).                                | "" (empty string)                           |
+| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. See [advanced definition](#advanced-definition).                                  | "" (empty string)                           |
+| **tags**                   | Representation of the topic, of a application, environment etc.                                                                                                                 | [] (empty string array)                     |
+| **jq**                     | JSON query syntax; prettify JSON response (default ".").                                                                                                                        | "." (dot is the fallback if "" is provided) |
 
 ### Secret management
 
