@@ -10,7 +10,7 @@ import (
 const Version = "APIProbe 📡 v0.6.1 - 2025-06-20"
 
 type Heartbeat struct {
-	IntervallInHours  int    `json:"intervallInHours"`
+	IntervalInHours   int    `json:"intervalInHours"`
 	LastHeartbeatTime string `json:"lastHeartbeatTime"`
 }
 

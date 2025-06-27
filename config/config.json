@@ -1,6 +1,6 @@
 {
     "heartbeat": {
-        "intervallInHours": 3,
+        "intervalInHours": 3,
         "lastHeartbeatTime": ""
     },
     "notification": {

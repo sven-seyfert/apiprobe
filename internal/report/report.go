@@ -103,7 +103,7 @@ func IsHeartbeatTime(cfg *config.Config) (bool, error) {
 		return true, nil
 	}
 
-	threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervallInHours)
+	threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervalInHours)
 
 	lastTime, err := time.Parse(time.RFC3339, lastHeartbeatTime)
 	if err != nil {
