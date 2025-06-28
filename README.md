@@ -159,7 +159,7 @@ Currently in a stable initial state — core features implemented; more advanced
 
 You can run the CLI regularly via various schedulers or task runners.
 
-**Windows Task Scheduler**
+> Windows Task Scheduler
 
 A sample XML definition is provided under `./remote/windows-tasks-scheduler.xml`.<br>
 Use it to register a scheduled task that invokes `apiprobe.exe` at your desired interval.<br>
