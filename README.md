@@ -20,15 +20,15 @@
 
 ## Description
 
-#### *What*
+#### 🥇 *What*
 
 The project **APIProbe** 📡 is a Go-based lightweight CLI tool designed for automated API monitoring, structured request testing and response change detection. It loads JSON-defined API requests, applies test cases, handles secrets securely, diffs responses and sends webhook notifications when changes or errors occur.
 
-#### *Why this*
+#### 🥈 *Why this*
 
 Unlike GUI-based tools such as Postman, **APIProbe** 📡 is built with developers in mind and optimized for fully automated, data-driven workflows. You can invoke it interactively for quick ad‑hoc checks on your local machine or integrate it seamlessly into your CI/CD pipelines for continuous monitoring on remote machines.
 
-#### *Stability notice*
+#### 🥉 *Stability notice*
 
 Currently in a stable initial state — core features implemented; more advanced capabilities planned.
 
