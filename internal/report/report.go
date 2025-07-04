@@ -54,16 +54,18 @@ type Report struct {
 // AddReportData records a single API request’s result, its ID, description,
 // endpoint, status code, output file path and test case into the Report.
 func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) {
+	const noTestCaseIndicator = -1
+
 	testCase := ""
 
-	if testCaseIndex != -1 {
-		testCase = req.TestCases[testCaseIndex]
+	if testCaseIndex != noTestCaseIndicator {
+		testCase = req.TestCases[testCaseIndex].Name
 	}
 
 	request := Request{
-		ID:             req.HexHash,
-		Description:    req.Description,
-		Endpoint:       req.Endpoint,
+		ID:             req.ID,
+		Description:    req.Request.Description,
+		Endpoint:       req.Request.Endpoint,
 		StatusCode:     statusCode,
 		OutputFilePath: outputFilePath,
 		TestCase:       testCase,
@@ -101,7 +103,7 @@ func IsHeartbeatTime(cfg *config.Config) (bool, error) {
 		return true, nil
 	}
 
-	threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervallInHours)
+	threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervalInHours)
 
 	lastTime, err := time.Parse(time.RFC3339, lastHeartbeatTime)
 	if err != nil {

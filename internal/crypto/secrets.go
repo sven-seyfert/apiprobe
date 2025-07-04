@@ -17,29 +17,29 @@ import (
 // placeholder. Returns an error immediately if any DB lookup fails.
 func HandleSecrets(filteredRequests []*loader.APIRequest, conn *sqlite.Conn) ([]*loader.APIRequest, error) {
 	for _, req := range filteredRequests {
-		newBody, err := replaceSecretInString(req.PostBody, conn)
+		newBody, err := replaceSecretInString(req.Request.PostBody, conn)
 		if err != nil {
 			return nil, err
 		}
 
-		req.PostBody = newBody
+		req.Request.PostBody = newBody
 
-		newAuth, err := replaceSecretInString(req.BasicAuth, conn)
+		newAuth, err := replaceSecretInString(req.Request.BasicAuth, conn)
 		if err != nil {
 			return nil, err
 		}
 
-		req.BasicAuth = newAuth
+		req.Request.BasicAuth = newAuth
 
-		if err := replaceSecretInSlice(req.Params, conn); err != nil {
+		if err := replaceSecretInSlice(req.Request.Params, conn); err != nil {
 			return nil, err
 		}
 
-		if err := replaceSecretInSlice(req.Headers, conn); err != nil {
+		if err := replaceSecretInSlice(req.Request.Headers, conn); err != nil {
 			return nil, err
 		}
 
-		if err := replaceSecretInSlice(req.TestCases, conn); err != nil {
+		if err := replaceSecretInTestCases(req.TestCases, conn); err != nil {
 			return nil, err
 		}
 	}
@@ -96,6 +96,37 @@ func replaceSecretInSlice(reqSlice []string, conn *sqlite.Conn) error {
 		}
 
 		reqSlice[idx] = newVal
+	}
+
+	return nil
+}
+
+// replaceSecretInTestCases iterates over all test cases and replaces secrets
+// in the ParamsData and PostBodyData fields in-place.
+// Returns the first error encountered, if any.
+func replaceSecretInTestCases(testCases []loader.TestCases, conn *sqlite.Conn) error {
+	for idx := range testCases {
+		testCase := &testCases[idx]
+
+		var err error
+
+		if testCase.ParamsData != "" {
+			testCase.ParamsData, err = replaceSecretInString(testCase.ParamsData, conn)
+			if err != nil {
+				logger.Errorf(`Error replacing secret in ParamsData of test "%q".`, testCase.Name)
+
+				return err
+			}
+		}
+
+		if testCase.PostBodyData != "" {
+			testCase.PostBodyData, err = replaceSecretInString(testCase.PostBodyData, conn)
+			if err != nil {
+				logger.Errorf(`Error replacing secret in PostBodyData of test "%q".`, testCase.Name)
+
+				return err
+			}
+		}
 	}
 
 	return nil

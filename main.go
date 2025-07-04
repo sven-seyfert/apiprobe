@@ -165,24 +165,27 @@ func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest)
 
 		testCases := req.TestCases
 
+		// Execute first (main) request, regardless of whether additional test cases exist.
 		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep)
 
-		if len(testCases) > 0 {
-			const postBodyIndicator = "{"
-
-			for testCaseIndex, testCaseValue := range testCases {
-				modifiedReq := *req
-
-				if string(testCaseValue[0]) != postBodyIndicator {
-					modifiedReq.Params = util.ReplaceQueryParam(req.Params, testCaseValue)
-				}
-
-				if string(testCaseValue[0]) == postBodyIndicator {
-					modifiedReq.PostBody = testCaseValue
-				}
-
-				exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep)
+		// Execute additional requests depending on the number of defined test cases.
+		for testCaseIndex, testCase := range testCases {
+			if testCase.ParamsData == "" && testCase.PostBodyData == "" {
+				continue
 			}
+
+			modifiedReq := *req
+
+			if testCase.ParamsData != "" {
+				modifiedReq.Request.Params = util.ReplaceQueryParam(req.Request.Params, testCase.ParamsData)
+			}
+
+			if testCase.PostBodyData != "" {
+				modifiedReq.Request.PostBody = testCase.PostBodyData
+			}
+
+			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep)
+			logger.Infof("Test case: %s", testCase.Name)
 		}
 	}
 

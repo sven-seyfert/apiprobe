@@ -20,17 +20,17 @@
 
 ## Description
 
-#### *What*
+#### 🥇 *What*
 
 The project **APIProbe** 📡 is a Go-based lightweight CLI tool designed for automated API monitoring, structured request testing and response change detection. It loads JSON-defined API requests, applies test cases, handles secrets securely, diffs responses and sends webhook notifications when changes or errors occur.
 
-#### *Why this*
+#### 🥈 *Why this*
 
-Compared to other API testing or monitoring tools like Postman for example, **APIProbe** 📡 is more developer focused and especially for the automated, data driven (test cases) use cases designed. It's designed to run in CI/CD workflow.
+Unlike GUI-based tools such as Postman, **APIProbe** 📡 is built with developers in mind and optimized for fully automated, data-driven workflows. You can invoke it interactively for quick ad‑hoc checks on your local machine or integrate it seamlessly into your CI/CD pipelines for continuous monitoring on remote machines.
 
-#### *Stability notice*
+#### 🥉 *Stability notice*
 
-At the moment the project is in a stable initial state. Means it's on a basic level approach done. Further more advanced features are planned.
+Currently in a stable initial state — core features implemented; more advanced capabilities planned.
 
 ## Features
 
@@ -81,7 +81,7 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
 3. Run or build the program:
 
-    ``` get
+    ``` bash
     # load
     go mod tidy
     go mod download
@@ -93,22 +93,22 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
     # or build and run executable
     go build
-    ./apiprobe
+    ./apiprobe.exe
     ```
 
     Or see [Makefile](https://github.com/sven-seyfert/apiprobe/blob/main/Makefile) commands.
 
 ### Usage
 
-🏃‍♂️ [Global Flags](#global-flags) | [Examples](#examples)
+🏃‍♂️ [Global Flags](#global-flags) | [Examples](#examples) | [Remote execution](#remote-execution)
 
 #### *Global Flags*
 
-| Flags                     | Description                                                                                                                  |
-| ---                       | ---                                                                                                                          |
-| `--id "<hex hash>"`       | Run only the request matching this ID.                                                                                       |
-| `--tags "reqres, booker"` | Run all requests containing any of the comma-separated tags.                                                                 |
-| `--new-id`                | Generates and returns a new random hex ID for use in JSON definitions.                                                       |
+| Flags                     | Description                                                                                                                    |
+| ---                       | ---                                                                                                                            |
+| `--id "<hex hash>"`       | Run only the request matching this ID.                                                                                         |
+| `--tags "reqres, booker"` | Run all requests containing any of the comma-separated tags.                                                                   |
+| `--new-id`                | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
 | `--add-secret "<value>"`  | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
@@ -155,6 +155,16 @@ At the moment the project is in a stable initial state. Means it's on a basic le
 
     For more instructions, see section [secret management](#secret-management) below.
 
+#### *Remote execution*
+
+You can run the CLI regularly via various schedulers or task runners.
+
+> Windows Task Scheduler
+
+A sample XML definition is provided under `./remote/windows-tasks-scheduler.xml`.<br>
+Use it to register a scheduled task that invokes `apiprobe.exe` at your desired interval.<br>
+For example, to schedule a daily run at 2 AM, import the XML and adjust the `<Triggers>` section accordingly.
+
 ## Configuration
 
 🏃‍♂️ [config.json](#configjson) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
@@ -165,7 +175,7 @@ Setup your webhook URL for WebEx, Slack, MS Teams etc. At the moment only WebEx 
 
 #### *heartbeat*
 
-Define the interval (in hours) how often you want to get a heartbeat message. This is useful when you don't receive much failures or changes with you API requests and still want to know is the program running and healthy.
+Define the interval (in hours) how often a heartbeat message should be sent. This is useful when you don't receive many failures or changes with you API requests and still want to know is the program running and healthy.
 
 #### *notification*
 
@@ -181,16 +191,28 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
-        "endpoint": "/api/path",
-        "description": "Short description of the request (purpose)",
-        "method": "GET|POST",
-        "url": "https://api.example.com",
-        "postBody": "",
-        "basicAuth": "",
-        "params": [],
-        "headers": [],
-        "testCases": [],
-        "tags": ["env-prod"],
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "Short description of the request (purpose)",
+            "method": "GET|POST",
+            "url": "https://api.example.com",
+            "endpoint": "/api/path",
+            "basicAuth": "",
+            "headers": [],
+            "params": [],
+            "postBody": ""
+        },
+        "testCases": [
+            {
+                "name": "",
+                "paramsData": "",
+                "postBodyData": ""
+            }
+        ],
+        "tags": [
+            "env-prod"
+        ],
         "jq": ""
     }
 ]
@@ -202,29 +224,47 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
-        "endpoint": "/api/path",
-        "description": "Short description of the request (purpose)",
-        "method": "GET|POST",
-        "url": "https://api.example.com",
-        "postBody": "{\"username\": \"John Doe\", \"password\": \"<secret-b4c3d2e1f0>\"}",
-        "basicAuth": "<secret-b4c3d2e1f0>",
-        "params": [
-            "pageSize=25",
-            "page=3"
-        ],
-        "headers": [
-            "Content-Type: application/json",
-            "api-key: <secret-0f0f0f0f0f>"
-        ],
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "Short description of the request (purpose)",
+            "method": "GET|POST",
+            "url": "https://api.example.com",
+            "endpoint": "/api/path",
+            "basicAuth": "<secret-b4c3d2e1f0>",
+            "headers": [
+                "Content-Type: application/json"
+            ],
+            "params": [
+                "animalId=1337",
+                "pageSize=25",
+                "page=3"
+            ],
+            "postBody": "{\"Username\": \"John Doe\", \"Password\": \"<secret-b4c3d2e1f0>\"}"
+        },
         "testCases": [
-            "{\"username\": \"Marry Doe\", \"password\": \"<secret-ff00ee11cc>\"}",
-            "{\"username\": \"Julia Ismo\", \"password\": \"<secret-cc11ee00ff>\"}"
+            {
+                "name": "Test with Marry Doe",
+                "paramsData": "",
+                "postBodyData": "{\"Username\": \"Marry Doe\", \"Password\": \"<secret-ff00ee11cc>\"}"
+            },
+            {
+                "name": "Test with Julia Ismo",
+                "paramsData": "",
+                "postBodyData": "{\"Username\": \"Julia Ismo\", \"Password\": \"<secret-cc11ee00ff>\"}"
+            },
+            {
+                "name": "Test with John Doe and different animalId",
+                "paramsData": "animalId=4567",
+                "postBodyData": ""
+            }
         ],
         "tags": [
-            "reqres",
+            "animals",
+            "cars",
             "env-prod"
         ],
-        "jq": ""
+        "jq": "."
     }
 ]
 ```
@@ -234,20 +274,26 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 Mandatory = (M)<br>
 Mandatory for POST = (P)
 
-| JSON key         | JSON value description                                                                                        | Default value                               |
-| --               | ---                                                                                                           | ---                                         |
-| **id** (M)       | Unique 10 character hex hash. Use `--new-id` to generate.                                                     |                                             |
-| **endpoint** (M) | Request endpoint.                                                                                             |                                             |
-| **description**  | Endpoint description (purpose).                                                                               |                                             |
-| **method** (M)   | HTTP Method; currently only GET and POST requests are supported.                                              |                                             |
-| **url** (M)      | Interface (API) URL                                                                                           |                                             |
-| **postBody** (P) | JSON message body (payload) for POST requests; data have to be JSON valid (escaping " ==> \").                | "" (empty                                   |
-| **basicAuth**    | User and password for a basic authentification; format \<user\>:\<password\>.                                 | "" (empty string)                           |
-| **params**       | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                | [] (empty string                            |
-| **headers**      | Request header list (one or n headers).                                                                       | [] (empty string array)                     |
-| **testCases**    | Data driven test data list (one or n test data entries); these variations apply to query params or post body. | [] (empty string array)                     |
-| **tags**         | Representation of the topic, of a application, environment etc.                                               | [] (empty string array)                     |
-| **jq**           | JSON query syntax; prettify JSON response (default ".").                                                      | "." (dot is the fallback if "" is provided) |
+| JSON key                   | JSON value description                                                                                                                                                                               | Default value                               |
+| --                         | ---                                                                                                                                                                                                  | ---                                         |
+| **id** (M)                 | Unique 10 character hex hash. Use `--new-id` to generate.                                                                                                                                            |                                             |
+| **isAuthRequest** (M)      | Marks this as an authentication request (e.g. login). When true, the tool will (soon) perform an OIDC-style token exchange and make the resulting token available to subsequent requests.            | false                                       |
+| **preRequestId**           | ID of the preconditional request to run before this one. The response payload (e.g. token) of that pre-request will automatically be made available to this request’s headers or body if referenced. | "" (empty string)                           |
+| **request**                | JSON node for all request related values.                                                                                                                                                            |                                             |
+| **request.description**    | Endpoint description (purpose).                                                                                                                                                                      | "" (empty string)                           |
+| **request.method** (M)     | HTTP Method; currently only GET and POST requests are supported.                                                                                                                                     |                                             |
+| **request.url** (M)        | Interface (API) URL                                                                                                                                                                                  |                                             |
+| **request.endpoint** (M)   | Request endpoint.                                                                                                                                                                                    |                                             |
+| **request.basicAuth**      | User and password for a basic authentification; format \<user\>:\<password\>.                                                                                                                        | "" (empty string)                           |
+| **request.headers**        | Request header list (one or n headers).                                                                                                                                                              | [] (empty string array)                     |
+| **request.params**         | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                                                                                                       | [] (empty string array)                     |
+| **request.postBody** (P)   | JSON message body (payload) for POST requests; data have to be JSON valid (escaping " ==> \").                                                                                                       | "" (empty string)                           |
+| **testCases**              | Data driven test data list (one or n test data entries); these variations apply to query params or post body. See [minimal definition](#minimal-definition).                                         |                                             |
+| **testCases.name**         | Define the name of your test case.                                                                                                                                                                   | "" (empty string)                           |
+| **testCases.paramsData**   | Define which query parameter should be applied (replaced) in request.params for the test cases. See [advanced definition](#advanced-definition).                                                     | "" (empty string)                           |
+| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. See [advanced definition](#advanced-definition).                                                       | "" (empty string)                           |
+| **tags**                   | Representation of the topic, of a application, environment etc.                                                                                                                                      | [] (empty string array)                     |
+| **jq**                     | JSON query syntax; prettify JSON response (default ".").                                                                                                                                             | "." (dot is the fallback if "" is provided) |
 
 ### Secret management
 

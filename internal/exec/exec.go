@@ -27,7 +27,7 @@ func ProcessRequest(
 
 	response, statusCode, err := executeRequest(ctx, req)
 	if err != nil {
-		logger.Errorf(`Failed endpoint request "%s": %v`, req.Endpoint, err)
+		logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
 		res.IncreaseRequestErrorCount()
 
 		if testCaseIndex != nil {

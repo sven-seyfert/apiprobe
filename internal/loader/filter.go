@@ -1,10 +1,10 @@
 package loader
 
-// FilterByID searches a slice of APIRequest for the given HexHash
+// FilterByID searches a slice of APIRequest for the given ID
 // and returns the first matching object.
 func FilterByID(requests []*APIRequest, id string) *APIRequest {
 	for _, req := range requests {
-		if req.HexHash == id {
+		if req.ID == id {
 			return req
 		}
 	}
