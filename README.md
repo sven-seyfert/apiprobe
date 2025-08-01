@@ -47,7 +47,7 @@ Currently in a stable initial state — core features implemented; more advanced
   Detect changes through a before and after comparison.
 
 - **Webhook notifications**:<br>
-  Send summary reports or error alerts to collaboration tools (like WebEx, Slack, MS Teams).
+  Send summary reports or error alerts to collaboration tools (like WebEx, MS Teams).
 
 - **Custom Logging**:<br>
   Log to console and log file with multiple log levels.
@@ -104,12 +104,14 @@ Currently in a stable initial state — core features implemented; more advanced
 
 #### *Global Flags*
 
-| Flags                     | Description                                                                                                                    |
-| ---                       | ---                                                                                                                            |
-| `--id "<hex hash>"`       | Run only the request matching this ID.                                                                                         |
-| `--tags "reqres, booker"` | Run all requests containing any of the comma-separated tags.                                                                   |
-| `--new-id`                | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
-| `--add-secret "<value>"`  | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
+| Flags                                | Description                                                                                                                    |
+| ---                                  | ---                                                                                                                            |
+| `--help`                             | Show all flags (switches) and their explanations. Shows also the program version.                                              |
+| `--id "<hex hash>"`                  | Run only the request matching this ID.                                                                                         |
+| `--tags "animals, cars"`             | Run all requests containing any of the comma-separated tags.                                                                   |
+| `--exclude "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
+| `--new-id`                           | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
+| `--add-secret "<value>"`             | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
 
@@ -135,6 +137,20 @@ Currently in a stable initial state — core features implemented; more advanced
     go run main.go --tags "reqres, booker, env-prod"
     # or by executable (faster)
     ./apiprobe.exe --tags "reqres, booker, env-prod"
+    ```
+
+- **Exclude API requests from run by ID**:
+
+    ``` bash
+    go run main.go --exclude "ff00fceb61, bb11abc987"
+    # or by executable (faster)
+    ./apiprobe.exe --exclude "ff00fceb61, bb11abc987"
+    ```
+
+    ``` bash
+    # combination example:
+    # run every request with tag "<tag-name>" except request with specific <ID>
+    go run main.go --tags "env-prod" --exclude "bb11abc987"
     ```
 
 - **Generate new ID**:
@@ -171,7 +187,7 @@ For example, to schedule a daily run at 2 AM, import the XML and adjust the `<
 
 ### config.json
 
-Setup your webhook URL for WebEx, Slack, MS Teams etc. At the moment only WebEx is available (more to be developed).
+Setup your webhook URL for WebEx, MS Teams etc. At the moment only WebEx is available (more to be developed).
 
 #### *heartbeat*
 
@@ -353,26 +369,26 @@ apiprobe/
 
 1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
 2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
-3. **Filtering**: Apply `--id` or `--tags` CLI flag filters.
+3. **Filtering**: Apply `--exclude`, `--id` and `--tags` CLI flag filters.
 4. **Secrets**: Replace `<secret-...>` placeholders with actual secrets.
 5. **Execution**:
-   - Build curl arguments and run HTTP requests.
-   - Capture status codes and response bodies.
-   - Filter response through `jq`.
+   - Build cURL arguments and run HTTP request.
+   - Capture status code and response body.
+   - Filter response body through `jq`.
 6. **Diffing**:
    - Compute SHA256 of formatted response.
-   - Compare with existing snapshot in `./data/output`.
+   - Compare with existing snapshot file in `./data/output`.
    - Update file and record change if different.
 7. **Reporting**:
    - Increment counters for errors and changes.
-   - Optionally write `./logs/report.json`.
+   - Depending on counter results write `./logs/report.json`.
    - Send WebEx webhook summary.
 
 ### Logging, Reporting
 
 - **Console & file logging**: All logs to console and to file, like `./logs/2025-06/18/2025-06-18-12-58-54.938.log`.
 - **Report file**: JSON report at `./logs/report.json` when errors/changes occur.
-- **Webhook**: Automatic notifications to WebEx (WebEx only at the moment). Later also to Slack, MS Teams etc.
+- **Webhook**: Automatic notifications to WebEx (WebEx only at the moment). Later also to MS Teams etc.
 
 ## Contributing
 
