@@ -51,13 +51,13 @@ func main() {
 	}
 
 	// Handle command-line flags.
-	filterValueNotFound, err := flags.IsNewID(*cliFlags.NewID)
-	if filterValueNotFound || err != nil {
+	complete, err := flags.IsNewID(*cliFlags.NewID)
+	if complete || err != nil {
 		return
 	}
 
-	filterValueNotFound, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
-	if filterValueNotFound || err != nil {
+	complete, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
+	if complete || err != nil {
 		return
 	}
 
@@ -77,9 +77,12 @@ func main() {
 		return
 	}
 
+	// Exclude requests based on IDs.
+	requests = loader.ExcludeRequestsByID(requests, *cliFlags.Exclude)
+
 	// Filter requests based on single id (ten character long hex hash) or by flags.
-	filteredRequests, filterValueNotFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
-	if filterValueNotFound {
+	filteredRequests, notFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
+	if notFound {
 		return
 	}
 
@@ -102,40 +105,45 @@ func main() {
 	notification(ctx, cfg, conn, res, rep)
 }
 
-// FilterRequests applies the '--id' and '--tags' flags
-// to the slice of APIRequest objects. It returns a slice of matching requests
-// or signals if no matching filter value was found (in which case
-// the program should exit).
-func filterRequests(requests []*loader.APIRequest, idFlag string, tagFlag string) ([]*loader.APIRequest, bool) {
+// filterRequests filters the given slice of APIRequest by the '--id'
+// and '--tags' flags. It returns a slice of matching requests and a
+// boolean flag that is true if no requests matched the filters.
+func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*loader.APIRequest, bool) { //nolint:varnamelen
+	if len(requests) == 0 {
+		logger.Warnf(`No requests found.`)
+
+		return requests, true
+	}
+
 	// Filter requests by ID.
-	if idFlag != "" {
-		if req := loader.FilterByID(requests, idFlag); req != nil {
+	if id != "" {
+		if req := loader.FilterByID(requests, id); req != nil {
 			return []*loader.APIRequest{req}, false
 		}
 
-		logger.Warnf(`No request with id (hex hash) "%s" found.`, idFlag)
+		logger.Warnf(`No request with id (hex hash) "%s" found.`, id)
 
 		return requests, true
 	}
 
 	// Or filter requests by tags.
-	if tagFlag != "" {
-		rawTagList := strings.Split(tagFlag, ",")
-		wantedTag := make([]string, 0, len(rawTagList))
+	if tags != "" {
+		tagsList := strings.Split(tags, ",")
+		wantedTags := make([]string, 0, len(tagsList))
 
-		for _, tagList := range rawTagList {
-			tagList = strings.TrimSpace(tagList)
-			if tagList != "" {
-				wantedTag = append(wantedTag, tagList)
+		for _, tag := range tagsList {
+			tag = strings.TrimSpace(tag)
+			if tag != "" {
+				wantedTags = append(wantedTags, tag)
 			}
 		}
 
-		filteredRequests := loader.FilterByTags(requests, wantedTag)
+		filteredRequests := loader.FilterByTags(requests, wantedTags)
 		if len(filteredRequests) > 0 {
 			return filteredRequests, false
 		}
 
-		logger.Warnf(`No requests found for tags "%s".`, tagFlag)
+		logger.Warnf(`No requests found for tags "%s".`, tags)
 
 		return requests, true
 	}
@@ -144,8 +152,9 @@ func filterRequests(requests []*loader.APIRequest, idFlag string, tagFlag string
 	return requests, false
 }
 
-// processRequests iterates over filtered APIRequests, executes them (including test cases)
-// and writes the results.
+// processRequests iterates over the filtered APIRequests, executes
+// each (including test cases), and writes the results. It returns
+// the aggregated Result and Report.
 func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest) (*report.Result, *report.Report) {
 	res := &report.Result{} //nolint:exhaustruct
 	rep := &report.Report{} //nolint:exhaustruct
@@ -201,7 +210,7 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 	const reportFile = "./logs/report.json"
 
 	hostname, _ := os.Hostname()
-	hostnameMessage := fmt.Sprintf("_Message from %s (hostname)_", hostname)
+	hostnameMessage := fmt.Sprintf("_Message from **%s** (hostname)_", hostname)
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
 		_ = os.Remove(reportFile)
