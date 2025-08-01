@@ -11,6 +11,30 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.8.0] - 2025-08-01
+
+### Added
+
+- Exclude feature as command line argument (exclude requests to be run). [6daf963](https://github.com/sven-seyfert/apiprobe/commit/6daf963c08624b9c11f476c1e6573f42689e35c7)
+
+### Changed
+
+- Few minor adjustments and improvements. [07c3bad](https://github.com/sven-seyfert/apiprobe/commit/07c3bad742c6774e06da4863bb251026c5f1c55d)
+
+### Documented
+
+- Improve function comments (more precise and return value description). [69aa925](https://github.com/sven-seyfert/apiprobe/commit/69aa9255bf9458af8a2080bc00b6c3b3c2f8fa24)
+- Update README.md file. [67c4be2](https://github.com/sven-seyfert/apiprobe/commit/67c4be2cc1d7e5b3052446577f321c267ef2e7aa)
+- Project version bump. [c3fd3c0](https://github.com/sven-seyfert/apiprobe/commit/c3fd3c0dc4950283080910aeab35dc3c963edf69)
+
+### Fixed
+
+- Wrong notification text syntax. [2aab332](https://github.com/sven-seyfert/apiprobe/commit/2aab332a15c36bcf4fa5a5bb8e820899621da988)
+
+### Refactored
+
+- Simply renamings for better readability. [bcff334](https://github.com/sven-seyfert/apiprobe/commit/bcff334d73f81f4d2a0d0178e1d14e6838ad9429)
+
 ## [0.7.0] - 2025-06-27
 
 ### Changed
@@ -108,7 +132,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.5.0...v0.6.0
