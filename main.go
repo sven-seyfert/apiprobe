@@ -109,6 +109,12 @@ func main() {
 // and '--tags' flags. It returns a slice of matching requests and a
 // boolean flag that is true if no requests matched the filters.
 func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*loader.APIRequest, bool) { //nolint:varnamelen
+	if len(requests) == 0 {
+		logger.Warnf(`No requests found.`)
+
+		return requests, true
+	}
+
 	// Filter requests by ID.
 	if id != "" {
 		if req := loader.FilterByID(requests, id); req != nil {
@@ -204,7 +210,7 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 	const reportFile = "./logs/report.json"
 
 	hostname, _ := os.Hostname()
-	hostnameMessage := fmt.Sprintf("_Message from %s (hostname)_", hostname)
+	hostnameMessage := fmt.Sprintf(`_Message from "%s" (hostname)_`, hostname)
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
 		_ = os.Remove(reportFile)
