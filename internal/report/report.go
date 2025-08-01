@@ -96,7 +96,9 @@ func (r *Report) SaveToFile(filename string) error {
 }
 
 // IsHeartbeatTime checks whether enough time has passed
-// since the last heartbeat.
+// since the last heartbeat and returns true if a new
+// heartbeat should be sent, or false otherwise,
+// along with any error encountered.
 func IsHeartbeatTime(cfg *config.Config) (bool, error) {
 	lastHeartbeatTime := cfg.Heartbeat.LastHeartbeatTime
 	if lastHeartbeatTime == "" {
@@ -118,8 +120,8 @@ func IsHeartbeatTime(cfg *config.Config) (bool, error) {
 }
 
 // UpdateHeartbeatTime writes the current UTC time (RFC3339) into
-// cfg.Heartbeat.LastHeartbeatTime and persists the entire cfg back
-// to the config JSON file.
+// cfg.Heartbeat.LastHeartbeatTime and persists the entire config
+// back to the JSON file, returning an error if persistence fails.
 func UpdateHeartbeatTime(cfg *config.Config) error {
 	cfg.Heartbeat.LastHeartbeatTime = time.Now().UTC().Format(time.RFC3339)
 

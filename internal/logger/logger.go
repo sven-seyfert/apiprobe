@@ -10,8 +10,9 @@ import (
 	"time"
 )
 
-// Init sets up the logger, creates a new log file
-// and directs output to both console and file.
+// Init sets up the logger, creates a new log file,
+// directs output to both console and file, and
+// returns an error if initialization fails.
 func Init() error {
 	now := time.Now()
 	yearMonth := now.Format("2006-01")

@@ -39,7 +39,7 @@ func Deobfuscate(data string) string {
 	return string(byteString)
 }
 
-// chars generates a random alphanumeric string of the specified length.
+// chars returns a random alphanumeric string of the specified length.
 func chars(length int) string {
 	const alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 

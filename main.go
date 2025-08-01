@@ -102,6 +102,9 @@ func main() {
 	notification(ctx, cfg, conn, res, rep)
 }
 
+// filterRequests filters the given slice of APIRequest by the '--id'
+// and '--tags' flags. It returns a slice of matching requests and a
+// boolean flag that is true if no requests matched the filters.
 func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*loader.APIRequest, bool) { //nolint:varnamelen
 	// Filter requests by ID.
 	if id != "" {
@@ -140,8 +143,9 @@ func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*l
 	return requests, false
 }
 
-// processRequests iterates over filtered APIRequests, executes them (including test cases)
-// and writes the results.
+// processRequests iterates over the filtered APIRequests, executes
+// each (including test cases), and writes the results. It returns
+// the aggregated Result and Report.
 func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest) (*report.Result, *report.Report) {
 	res := &report.Result{} //nolint:exhaustruct
 	rep := &report.Report{} //nolint:exhaustruct
