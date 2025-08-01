@@ -77,6 +77,9 @@ func main() {
 		return
 	}
 
+	// Exclude requests based on IDs.
+	requests = loader.ExcludeRequestsByID(requests, *cliFlags.Exclude)
+
 	// Filter requests based on single id (ten character long hex hash) or by flags.
 	filteredRequests, notFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
 	if notFound {

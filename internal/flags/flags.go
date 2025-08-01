@@ -15,6 +15,7 @@ import (
 type CLIFlags struct {
 	ID        *string
 	Tags      *string
+	Exclude   *string
 	NewID     *bool
 	AddSecret *string
 }
@@ -29,11 +30,17 @@ func Init() *CLIFlags {
 
 	idUsage := "Specify the ten-character hex hash (id) of the request to run.\n" +
 		"The hash must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
+		"In combination with the --exclude flag, exclude will be prioritized.\n" +
 		"Example: --id \"ff00fceb61\"\n"
 
 	tagUsage := "Specify a comma-separated list of tags to select which requests to run.\n" +
 		"Tags must match the JSON \"tags\" value, in the JSON definition (input) files.\n" +
+		"In combination with the --exclude flag, exclude will be prioritized.\n" +
 		"Example: --tags \"reqres, booker\"\n"
+
+	excludeUsage := "Specify a comma-separated list of IDs (hashes) to exclude from the execution.\n" +
+		"The IDs must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
+		"Example: --exclude \"bb5599abcd, ff00fceb61\"\n"
 
 	newIDUsage := "Generate a new ten-character hex hash (id) for the \n" +
 		"JSON \"id\" value, in the JSON definition (input) file.\n" +
@@ -47,6 +54,7 @@ func Init() *CLIFlags {
 	cliFlags := &CLIFlags{
 		ID:        flag.String("id", "", idUsage),
 		Tags:      flag.String("tags", "", tagUsage),
+		Exclude:   flag.String("exclude", "", excludeUsage),
 		NewID:     flag.Bool("new-id", false, newIDUsage),
 		AddSecret: flag.String("add-secret", "", addSecretUsage),
 	}
