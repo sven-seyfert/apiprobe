@@ -210,7 +210,7 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 	const reportFile = "./logs/report.json"
 
 	hostname, _ := os.Hostname()
-	hostnameMessage := fmt.Sprintf(`_Message from "%s" (hostname)_`, hostname)
+	hostnameMessage := fmt.Sprintf("_Message from **%s** (hostname)_", hostname)
 
 	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
 		_ = os.Remove(reportFile)
