@@ -51,13 +51,13 @@ func main() {
 	}
 
 	// Handle command-line flags.
-	filterValueNotFound, err := flags.IsNewID(*cliFlags.NewID)
-	if filterValueNotFound || err != nil {
+	complete, err := flags.IsNewID(*cliFlags.NewID)
+	if complete || err != nil {
 		return
 	}
 
-	filterValueNotFound, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
-	if filterValueNotFound || err != nil {
+	complete, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
+	if complete || err != nil {
 		return
 	}
 
@@ -78,8 +78,8 @@ func main() {
 	}
 
 	// Filter requests based on single id (ten character long hex hash) or by flags.
-	filteredRequests, filterValueNotFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
-	if filterValueNotFound {
+	filteredRequests, notFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
+	if notFound {
 		return
 	}
 
@@ -102,40 +102,36 @@ func main() {
 	notification(ctx, cfg, conn, res, rep)
 }
 
-// FilterRequests applies the '--id' and '--tags' flags
-// to the slice of APIRequest objects. It returns a slice of matching requests
-// or signals if no matching filter value was found (in which case
-// the program should exit).
-func filterRequests(requests []*loader.APIRequest, idFlag string, tagFlag string) ([]*loader.APIRequest, bool) {
+func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*loader.APIRequest, bool) { //nolint:varnamelen
 	// Filter requests by ID.
-	if idFlag != "" {
-		if req := loader.FilterByID(requests, idFlag); req != nil {
+	if id != "" {
+		if req := loader.FilterByID(requests, id); req != nil {
 			return []*loader.APIRequest{req}, false
 		}
 
-		logger.Warnf(`No request with id (hex hash) "%s" found.`, idFlag)
+		logger.Warnf(`No request with id (hex hash) "%s" found.`, id)
 
 		return requests, true
 	}
 
 	// Or filter requests by tags.
-	if tagFlag != "" {
-		rawTagList := strings.Split(tagFlag, ",")
-		wantedTag := make([]string, 0, len(rawTagList))
+	if tags != "" {
+		tagsList := strings.Split(tags, ",")
+		wantedTags := make([]string, 0, len(tagsList))
 
-		for _, tagList := range rawTagList {
-			tagList = strings.TrimSpace(tagList)
-			if tagList != "" {
-				wantedTag = append(wantedTag, tagList)
+		for _, tag := range tagsList {
+			tag = strings.TrimSpace(tag)
+			if tag != "" {
+				wantedTags = append(wantedTags, tag)
 			}
 		}
 
-		filteredRequests := loader.FilterByTags(requests, wantedTag)
+		filteredRequests := loader.FilterByTags(requests, wantedTags)
 		if len(filteredRequests) > 0 {
 			return filteredRequests, false
 		}
 
-		logger.Warnf(`No requests found for tags "%s".`, tagFlag)
+		logger.Warnf(`No requests found for tags "%s".`, tags)
 
 		return requests, true
 	}

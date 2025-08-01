@@ -21,18 +21,18 @@ func FilterByTags(requests []*APIRequest, wantedTags []string) []*APIRequest {
 		wantedSet[w] = struct{}{}
 	}
 
-	var filtered []*APIRequest
+	var filteredRequests []*APIRequest
 
 	// Check each request only once.
 	for _, req := range requests {
 		for _, tag := range req.Tags {
 			if _, ok := wantedSet[tag]; ok {
-				filtered = append(filtered, req)
+				filteredRequests = append(filteredRequests, req)
 
 				break
 			}
 		}
 	}
 
-	return filtered
+	return filteredRequests
 }
