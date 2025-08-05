@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/sven-seyfert/apiprobe/internal/config"
@@ -78,10 +77,10 @@ func main() {
 	}
 
 	// Exclude requests based on IDs.
-	requests = loader.ExcludeRequestsByID(requests, *cliFlags.Exclude)
+	filteredRequests := loader.ExcludeRequestsByID(requests, *cliFlags.Exclude)
 
 	// Filter requests based on single id (ten character long hex hash) or by flags.
-	filteredRequests, notFound := filterRequests(requests, *cliFlags.ID, *cliFlags.Tags)
+	filteredRequests, notFound := loader.FilterRequests(filteredRequests, *cliFlags.ID, *cliFlags.Tags)
 	if notFound {
 		return
 	}
@@ -103,53 +102,6 @@ func main() {
 
 	// Send notification on error case or on changes.
 	notification(ctx, cfg, conn, res, rep)
-}
-
-// filterRequests filters the given slice of APIRequest by the '--id'
-// and '--tags' flags. It returns a slice of matching requests and a
-// boolean flag that is true if no requests matched the filters.
-func filterRequests(requests []*loader.APIRequest, id string, tags string) ([]*loader.APIRequest, bool) { //nolint:varnamelen
-	if len(requests) == 0 {
-		logger.Warnf(`No requests found.`)
-
-		return requests, true
-	}
-
-	// Filter requests by ID.
-	if id != "" {
-		if req := loader.FilterByID(requests, id); req != nil {
-			return []*loader.APIRequest{req}, false
-		}
-
-		logger.Warnf(`No request with id (hex hash) "%s" found.`, id)
-
-		return requests, true
-	}
-
-	// Or filter requests by tags.
-	if tags != "" {
-		tagsList := strings.Split(tags, ",")
-		wantedTags := make([]string, 0, len(tagsList))
-
-		for _, tag := range tagsList {
-			tag = strings.TrimSpace(tag)
-			if tag != "" {
-				wantedTags = append(wantedTags, tag)
-			}
-		}
-
-		filteredRequests := loader.FilterByTags(requests, wantedTags)
-		if len(filteredRequests) > 0 {
-			return filteredRequests, false
-		}
-
-		logger.Warnf(`No requests found for tags "%s".`, tags)
-
-		return requests, true
-	}
-
-	// Or use the fallback (return all requests).
-	return requests, false
 }
 
 // processRequests iterates over the filtered APIRequests, executes

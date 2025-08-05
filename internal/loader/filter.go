@@ -1,6 +1,10 @@
 package loader
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/sven-seyfert/apiprobe/internal/logger"
+)
 
 // ExcludeRequestsByID returns a filtered slice of APIRequest, excluding any
 // requests whose IDs are listed in the comma-separated excludeIDs string.
@@ -30,9 +34,56 @@ func ExcludeRequestsByID(requests []*APIRequest, excludeIDs string) []*APIReques
 	return filteredRequests
 }
 
-// FilterByID searches a slice of APIRequest for the given ID
+// FilterRequests filters the given slice of APIRequest by the '--id'
+// and '--tags' flags. It returns a slice of matching requests and a
+// boolean flag that is true if no requests matched the filters.
+func FilterRequests(requests []*APIRequest, id string, tags string) ([]*APIRequest, bool) { //nolint:varnamelen
+	if len(requests) == 0 {
+		logger.Warnf(`No requests found.`)
+
+		return requests, true
+	}
+
+	// Filter requests by ID.
+	if id != "" {
+		if req := filterByID(requests, id); req != nil {
+			return []*APIRequest{req}, false
+		}
+
+		logger.Warnf(`No request with id (hex hash) "%s" found.`, id)
+
+		return requests, true
+	}
+
+	// Or filter requests by tags.
+	if tags != "" {
+		tagsList := strings.Split(tags, ",")
+		wantedTags := make([]string, 0, len(tagsList))
+
+		for _, tag := range tagsList {
+			tag = strings.TrimSpace(tag)
+			if tag != "" {
+				wantedTags = append(wantedTags, tag)
+			}
+		}
+
+		filteredRequests := filterByTags(requests, wantedTags)
+		if len(filteredRequests) > 0 {
+			return filteredRequests, false
+		}
+
+		logger.Warnf(`No requests found for tags "%s".`, tags)
+
+		return requests, true
+	}
+
+	// Or use the fallback (return all requests).
+	return requests, false
+}
+
+// filterByID searches a slice of APIRequest for the given ID
 // and returns the first matching object.
-func FilterByID(requests []*APIRequest, id string) *APIRequest {
+func filterByID(requests []*APIRequest, id string) *APIRequest {
 	for _, req := range requests {
 		if req.ID == id {
 			return req
@@ -42,9 +93,9 @@ func FilterByID(requests []*APIRequest, id string) *APIRequest {
 	return nil
 }
 
-// FilterByTags returns all APIRequest objects whose tags intersect
+// filterByTags returns all APIRequest objects whose tags intersect
 // with the desired tag list.
-func FilterByTags(requests []*APIRequest, wantedTags []string) []*APIRequest {
+func filterByTags(requests []*APIRequest, wantedTags []string) []*APIRequest {
 	// Build a set (map) for O|1 lookup of desired tags.
 	wantedSet := make(map[string]struct{}, len(wantedTags))
 	for _, w := range wantedTags {
