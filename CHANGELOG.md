@@ -11,6 +11,27 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-08-06
+
+### Added
+
+- Functionality to execute depending pre-requests first then actual request. [c18434e](https://github.com/sven-seyfert/apiprobe/commit/c18434e5990c1efc558fa42e1cdc4b033ff5a88b)
+
+### Changed
+
+- Tiny adjustment on notification message text. [34716fa](https://github.com/sven-seyfert/apiprobe/commit/34716faf4599d9aaa021038bc2ca86ca2f1735bf)
+- Improve Makefile to get cross-platform compilation. [0abe9a9](https://github.com/sven-seyfert/apiprobe/commit/0abe9a90677c9e08968af87b61c57645e3d334eb)
+
+### Documented
+
+- Improve license section readability by code block usage. [ab14777](https://github.com/sven-seyfert/apiprobe/commit/ab1477702f69ff42ab9d0916d50558dc63ba887c)
+- Update README.md file. [6dce375](https://github.com/sven-seyfert/apiprobe/commit/6dce375f07d1f70cbb58345875f28a5b0332eb2c)
+
+### Refactored
+
+- Extract filter function in separate 'loader' package. [d509228](https://github.com/sven-seyfert/apiprobe/commit/d509228677ac7bdbb5b3c007c4abb45cdf0786f5)
+- Readability improvements by variable renaming. [011a4bf](https://github.com/sven-seyfert/apiprobe/commit/011a4bfbb4c49fccf8cc7fa0c6fe03a9748b2886)
+
 ## [0.8.0] - 2025-08-01
 
 ### Added
@@ -132,7 +153,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.0...v0.6.1
