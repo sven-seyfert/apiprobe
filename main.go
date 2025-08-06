@@ -85,8 +85,16 @@ func main() {
 		return
 	}
 
+	// Merge possible pre-requests (prepend) with the filtered requests.
+	preparedRequests, err := loader.MergePreRequests(requests, filteredRequests)
+	if err != nil {
+		logger.Fatalf("Program exits: Failed to gather pre-requests.")
+
+		return
+	}
+
 	// Replace secrets placeholders in the requests with actual values.
-	preparedRequests, err := crypto.HandleSecrets(filteredRequests, conn)
+	finalRequests, err := crypto.HandleSecrets(preparedRequests, conn)
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to handle secrets in requests.")
 
@@ -98,7 +106,7 @@ func main() {
 	defer stop()
 
 	// Process each API request, optionally with test case variations.
-	res, rep := processRequests(ctx, preparedRequests)
+	res, rep := processRequests(ctx, finalRequests)
 
 	// Send notification on error case or on changes.
 	notification(ctx, cfg, conn, res, rep)

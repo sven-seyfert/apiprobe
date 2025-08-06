@@ -1,6 +1,8 @@
 package loader
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/sven-seyfert/apiprobe/internal/logger"
@@ -116,4 +118,67 @@ func filterByTags(requests []*APIRequest, wantedTags []string) []*APIRequest {
 	}
 
 	return filteredRequests
+}
+
+// MergePreRequests constructs a merged requests list in which, for each
+// filtered request having a PreRequestID, the corresponding loaded request
+// is prepended before the filtered requests. It returns the gathered/merged
+// APIRequest list without duplicates.
+func MergePreRequests(loadedRequests []*APIRequest, filteredRequests []*APIRequest) ([]*APIRequest, error) {
+	lookupMap := make(map[string]*APIRequest, len(loadedRequests))
+
+	for _, loadedReq := range loadedRequests {
+		lookupMap[loadedReq.ID] = loadedReq
+	}
+
+	const tenCharHexHashPattern = `^[a-fA-F0-9]{10}$`
+
+	hexPattern := regexp.MustCompile(tenCharHexHashPattern)
+	requestsList := make([]*APIRequest, 0, len(loadedRequests)+len(filteredRequests))
+
+	// Handle possible pre-requests by PreRequestID.
+	for _, filteredReq := range filteredRequests {
+		preID := filteredReq.PreRequestID
+		if preID == "" {
+			continue
+		}
+
+		if !hexPattern.MatchString(preID) {
+			logger.Errorf(`PreRequestID "%s" has invalid format (not the expected ten character hex hash format).`, preID)
+
+			return nil, fmt.Errorf("invalid format error")
+
+		}
+
+		prev, found := lookupMap[preID]
+		if !found {
+			logger.Errorf(`PreRequestID "%s" not found in loadedRequests.`, preID)
+
+			return nil, fmt.Errorf("not found error")
+		}
+
+		requestsList = append(requestsList, prev)
+	}
+
+	// Append all filtered requests (to be behind the pre-requests).
+	requestsList = append(requestsList, filteredRequests...)
+
+	return removeDuplicates(requestsList), nil
+}
+
+// removeDuplicates returns a new slice of APIRequest pointers with
+// duplicates removed, keeping only the first occurrence of each
+// request based on its ID.
+func removeDuplicates(requestsList []*APIRequest) []*APIRequest {
+	seen := make(map[string]bool, len(requestsList))
+	unique := make([]*APIRequest, 0, len(requestsList))
+
+	for _, req := range requestsList {
+		if !seen[req.ID] {
+			seen[req.ID] = true
+			unique = append(unique, req)
+		}
+	}
+
+	return unique
 }
