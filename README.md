@@ -370,16 +370,17 @@ apiprobe/
 1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
 2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
 3. **Filtering**: Apply `--exclude`, `--id` and `--tags` CLI flag filters.
-4. **Secrets**: Replace `<secret-...>` placeholders with actual secrets.
-5. **Execution**:
+4. **Prepending**: Dependent pre-requests will be merged (prepend) to the list of requests.
+5. **Secrets**: Replace `<secret-...>` placeholders with actual secrets.
+6. **Execution**:
    - Build cURL arguments and run HTTP request.
    - Capture status code and response body.
    - Filter response body through `jq`.
-6. **Diffing**:
+7. **Diffing**:
    - Compute SHA256 of formatted response.
    - Compare with existing snapshot file in `./data/output`.
    - Update file and record change if different.
-7. **Reporting**:
+8. **Reporting**:
    - Increment counters for errors and changes.
    - Depending on counter results write `./logs/report.json`.
    - Send WebEx webhook summary.
