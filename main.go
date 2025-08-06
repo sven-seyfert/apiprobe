@@ -112,14 +112,14 @@ func main() {
 	notification(ctx, cfg, conn, res, rep)
 }
 
-// processRequests iterates over the filtered APIRequests, executes
+// processRequests iterates over the APIRequests, executes
 // each (including test cases), and writes the results. It returns
 // the aggregated Result and Report.
-func processRequests(ctx context.Context, filteredRequests []*loader.APIRequest) (*report.Result, *report.Report) {
+func processRequests(ctx context.Context, requests []*loader.APIRequest) (*report.Result, *report.Report) {
 	res := &report.Result{} //nolint:exhaustruct
 	rep := &report.Report{} //nolint:exhaustruct
 
-	for idx, req := range filteredRequests {
+	for idx, req := range requests {
 		if ctx.Err() != nil {
 			logger.Debugf("Received cancellation signal. Stopping request processing.")
 
