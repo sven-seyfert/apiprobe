@@ -14,7 +14,7 @@
 [![last commit](https://img.shields.io/github/last-commit/sven-seyfert/apiprobe.svg?color=darkgoldenrod&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/commits/main)
 [![contributors](https://img.shields.io/github/contributors/sven-seyfert/apiprobe.svg?color=darkolivegreen&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/graphs/contributors)
 
-[Description](#description) | [Features](#features) | [Getting started](#getting-started) | [Configuration](#configuration) | [Behind the scenes](#behind-the-scenes) | [Contributing](#contributing) | [License](#license) | [Acknowledgements](#acknowledgements)
+[Description](#description) | [Features](#features) | [Getting started](#getting-started) | [Configuration](#configuration) | [Authentication](#authentication) | [Behind the scenes](#behind-the-scenes) | [Contributing](#contributing) | [License](#license) | [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -26,7 +26,7 @@ The project **APIProbe** 📡 is a Go-based lightweight CLI tool designed for au
 
 #### 🥈 *Why this*
 
-Unlike GUI-based tools such as Postman, **APIProbe** 📡 is built with developers in mind and optimized for fully automated, data-driven workflows. You can invoke it interactively for quick ad‑hoc checks on your local machine or integrate it seamlessly into your CI/CD pipelines for continuous monitoring on remote machines.
+Unlike GUI-based tools such as Postman, **APIProbe** 📡 is built with developers in mind and optimized for fully automated, data-driven workflows. You can invoke it interactively for quick ad-hoc checks on your local machine or integrate it seamlessly into your CI/CD pipelines for continuous monitoring on remote machines.
 
 #### 🥉 *Stability notice*
 
@@ -35,13 +35,16 @@ Currently in a stable initial state — core features implemented; more advanced
 ## Features
 
 - **Structured API definitions**:<br>
-  Define and load multiple API requests based on JSON files (JSON objects).
+  Define and load multiple API requests based on JSON files.
 
 - **Test case support**:<br>
   Define multiple test cases per request to cover various scenarios (data driven approach).
 
 - **Secrets management**:<br>
   Securely store secrets in an encrypted database instead of plain credentials/secrets in the JSON definition files (SQLite).
+
+- **Authentication token handling**:<br>
+  Send auth requests, store returned tokens and automatically inject them into dependent requests via `<auth-token>` placeholder.
 
 - **Response diffing**:<br>
   Detect changes through a before and after comparison.
@@ -335,6 +338,24 @@ Mandatory for POST = (P)
 
     Secrets are securely stored in the SQLite database `./db/store.db`.
 
+## Authentication
+
+This section details how authentication token requests are handled.
+
+1. **Define Auth Requests**: In your JSON definitions set `"isAuthRequest": true` and include the endpoint to obtain your token.
+2. **Token Extraction**: Auth responses are parsed (via `jq`) and added to the Token Store under the auth request ID.
+3. **Injecting Tokens**: For any request that depends on an auth request, set `"preRequestId": "<auth-request-id>"` **and include the header placeholder**:
+
+   ```json
+   "headers": [
+     "Authorization: Bearer <auth-token>"
+   ]
+   ```
+
+   The tool replaces `<auth-token>` with the actual token from the Token Store before executing the request.
+
+4. **Usage**: Ensure your JSON definitions reference `<auth-token>` exactly, so that the CLI can locate and replace it.
+
 ## Behind the scenes
 
 🏃‍♂️ [Project layout](#project-layout) | [How it works](#how-it-works) | [Logging, Reporting](#logging-reporting)
@@ -370,17 +391,18 @@ apiprobe/
 1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
 2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
 3. **Filtering**: Apply `--exclude`, `--id` and `--tags` CLI flag filters.
-4. **Prepending**: Dependent pre-requests will be merged (prepend) to the list of requests.
-5. **Secrets**: Replace `<secret-...>` placeholders with actual secrets.
-6. **Execution**:
+4. **Prepending**: Dependent pre-requests will be merged (prepended) to the list of requests.
+5. **Secrets**: Replace `<secret-...>` placeholders with actual secrets from the database.
+6. **Authentication**: If an API definition has `isAuthRequest: true`, the response token is stored in an in-memory Token Store keyed by the request ID. For any subsequent requests with `preRequestId`, the `<auth-token>` placeholder in headers is replaced with the stored token before execution.
+7. **Execution**:
    - Build cURL arguments and run HTTP request.
    - Capture status code and response body.
    - Filter response body through `jq`.
-7. **Diffing**:
+8. **Diffing**:
    - Compute SHA256 of formatted response.
    - Compare with existing snapshot file in `./data/output`.
    - Update file and record change if different.
-8. **Reporting**:
+9. **Reporting**:
    - Increment counters for errors and changes.
    - Depending on counter results write `./logs/report.json`.
    - Send WebEx webhook summary.
