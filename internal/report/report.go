@@ -74,6 +74,8 @@ func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, output
 	r.Requests = append(r.Requests, request)
 }
 
+// SaveToFile creates a file with the given name and writes the report as
+// pretty-printed JSON. Returns an error if file creation or writing fails.
 func (r *Report) SaveToFile(filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
