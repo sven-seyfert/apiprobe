@@ -11,6 +11,30 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.10.0] - 2025-08-07
+
+### Added
+
+- Token store for auth token management (for requests with depending tokens). [ebeea3d](https://github.com/sven-seyfert/apiprobe/commit/ebeea3d7eb40fdc4c07147c2daea197ecc27dd4d)
+
+### Changed
+
+- Dependency update (tidy). [fb52b7d](https://github.com/sven-seyfert/apiprobe/commit/fb52b7d832a9aaa73c0a9819d81aeb6606c28905)
+
+### Documented
+
+- Update README.md file. [a9f9a56](https://github.com/sven-seyfert/apiprobe/commit/a9f9a56d7a55bc4a1ac1122ac4cbbf062e7441a2)
+- Add missing function comment. [4383296](https://github.com/sven-seyfert/apiprobe/commit/4383296c941e72fa79f078e2e3d94ea1a4f65619)
+- Add authentication section to README.md file. [6b3d42d](https://github.com/sven-seyfert/apiprobe/commit/6b3d42df5feda96ded56b20e5a887a957b8c46e8)
+
+### Refactored
+
+- Apply new golangci-lint settings. [ad854d9](https://github.com/sven-seyfert/apiprobe/commit/ad854d9690fe7d5c1f45fd2bbb5943fc67300176)
+
+### Styled
+
+- Append whitespace to string. [cd7abdb](https://github.com/sven-seyfert/apiprobe/commit/cd7abdbe7d843b4f3ca3d720f37dbed1e1da0058)
+
 ## [0.9.0] - 2025-08-06
 
 ### Added
@@ -153,7 +177,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.6.1...v0.7.0
