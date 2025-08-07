@@ -17,7 +17,8 @@ import (
 // if differences are detected.
 func ProcessRequest(
 	ctx context.Context, idx int, req *loader.APIRequest, testCaseIndex *int,
-	res *report.Result, rep *report.Report, tokenStore *auth.TokenStore) {
+	res *report.Result, rep *report.Report, tokenStore *auth.TokenStore,
+) {
 	if testCaseIndex != nil {
 		logger.NewLine()
 		logger.Debugf("Run: %d, Test case: %d", idx, *testCaseIndex+1)
@@ -99,7 +100,6 @@ func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string
 func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte) ([]byte, error) {
 	jqArgs := []string{req.JqCommand}
 	jqOutput, err := RunJQ(ctx, jqArgs, response)
-
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte
 // using the request ID as the key. Returns nothing.
 func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *loader.APIRequest) {
 	token := util.TrimQuotes(string(result))
-	strippedToken := token[:util.Min(10, len(token))]
+	strippedToken := token[:util.Min(10, len(token))] //nolint:mnd
 
 	if added := tokenStore.Add(req.ID, token); added {
 		logger.Debugf(`Token "%s..." for auth request "%s" added to token store.`, strippedToken, req.ID)

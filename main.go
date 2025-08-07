@@ -8,6 +8,8 @@ import (
 	"strings"
 	"syscall"
 
+	"zombiezen.com/go/sqlite"
+
 	"github.com/sven-seyfert/apiprobe/internal/auth"
 	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
@@ -18,7 +20,6 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 	"github.com/sven-seyfert/apiprobe/internal/report"
 	"github.com/sven-seyfert/apiprobe/internal/util"
-	"zombiezen.com/go/sqlite"
 )
 
 // main initializes the logger and database, parses command-line flags loads
@@ -120,9 +121,13 @@ func main() {
 // processRequests iterates over the APIRequests, executes
 // each (including test cases), and writes the results. It returns
 // the aggregated Result and Report.
-func processRequests(ctx context.Context, requests []*loader.APIRequest, tokenStore *auth.TokenStore) (*report.Result, *report.Report) {
-	res := &report.Result{} //nolint:exhaustruct
-	rep := &report.Report{} //nolint:exhaustruct
+func processRequests(
+	ctx context.Context,
+	requests []*loader.APIRequest,
+	tokenStore *auth.TokenStore,
+) (*report.Result, *report.Report) {
+	res := &report.Result{}
+	rep := &report.Report{}
 
 	for idx, req := range requests {
 		if ctx.Err() != nil {
@@ -184,7 +189,7 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
 		}
 
 		if token, found := tokenStore.Get(lookupID); found {
-			strippedToken := token[:util.Min(10, len(token))]
+			strippedToken := token[:util.Min(10, len(token))] //nolint:mnd
 
 			logger.Debugf(`Token "%s..." found for auth request "%s".`, strippedToken, lookupID)
 
@@ -220,7 +225,7 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 			return
 		}
 
-		if err := report.UpdateHeartbeatTime(cfg); err != nil {
+		if err = report.UpdateHeartbeatTime(cfg); err != nil {
 			return
 		}
 

@@ -7,9 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sven-seyfert/apiprobe/internal/logger"
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
+
+	"github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
 // Init opens or creates the SQLite database file at './db/store.db',
@@ -88,7 +89,6 @@ func GetTableEntryCount(conn *sqlite.Conn) (int, error) {
 			return nil
 		},
 	})
-
 	if err != nil {
 		logger.Errorf("Failed to query table count. Error: %v", err)
 
@@ -114,15 +114,15 @@ func readSeedData() (string, error) {
 	var values []string
 
 	for {
-		record, err := reader.Read()
-		if err == io.EOF {
+		record, readErr := reader.Read()
+		if readErr == io.EOF {
 			break
 		}
 
-		if err != nil {
-			logger.Errorf("Failure reading file. Error: %v", err)
+		if readErr != nil {
+			logger.Errorf("Failure reading file. Error: %v", readErr)
 
-			return "", err
+			return "", readErr
 		}
 
 		hash := record[0]
@@ -147,7 +147,7 @@ func InsertSecret(conn *sqlite.Conn, hash string, secret string) error {
 	}
 
 	defer func() {
-		if err := stmt.Finalize(); err != nil {
+		if err = stmt.Finalize(); err != nil {
 			logger.Errorf("Failed to finalize statement. Error: %v", err)
 		}
 	}()
@@ -155,7 +155,7 @@ func InsertSecret(conn *sqlite.Conn, hash string, secret string) error {
 	stmt.BindText(1, hash)
 	stmt.BindText(2, secret) //nolint:mnd
 
-	if _, err := stmt.Step(); err != nil {
+	if _, err = stmt.Step(); err != nil {
 		logger.Errorf("Failed to execute insert statement. Error: %v", err)
 
 		return err
@@ -176,7 +176,7 @@ func SelectHash(conn *sqlite.Conn, hash string) (string, error) {
 	}
 
 	defer func() {
-		if err := stmt.Finalize(); err != nil {
+		if err = stmt.Finalize(); err != nil {
 			logger.Errorf("Failed to finalize statement. Error: %v", err)
 		}
 	}()

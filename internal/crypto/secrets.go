@@ -5,10 +5,11 @@ import (
 	"regexp"
 	"strings"
 
+	"zombiezen.com/go/sqlite"
+
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/loader"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
-	"zombiezen.com/go/sqlite"
 )
 
 // HandleSecrets iterates over each APIRequest in filteredRequests, finds all
@@ -31,15 +32,15 @@ func HandleSecrets(filteredRequests []*loader.APIRequest, conn *sqlite.Conn) ([]
 
 		req.Request.BasicAuth = newAuth
 
-		if err := replaceSecretInSlice(req.Request.Params, conn); err != nil {
+		if err = replaceSecretInSlice(req.Request.Params, conn); err != nil {
 			return nil, err
 		}
 
-		if err := replaceSecretInSlice(req.Request.Headers, conn); err != nil {
+		if err = replaceSecretInSlice(req.Request.Headers, conn); err != nil {
 			return nil, err
 		}
 
-		if err := replaceSecretInTestCases(req.TestCases, conn); err != nil {
+		if err = replaceSecretInTestCases(req.TestCases, conn); err != nil {
 			return nil, err
 		}
 	}

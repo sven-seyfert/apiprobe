@@ -42,7 +42,7 @@ func Load(filePath string) (*Config, error) {
 
 	var cfg Config
 
-	if err := decoder.Decode(&cfg); err != nil {
+	if err = decoder.Decode(&cfg); err != nil {
 		logger.Errorf(`Failure parsing config file "%s". Error: %v`, filePath, err)
 
 		return nil, err

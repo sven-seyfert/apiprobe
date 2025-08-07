@@ -32,7 +32,7 @@ func BuildOutputFilePath(req *loader.APIRequest, testCaseIndex *int) string {
 // createOutputDir ensures that the parent directory for the given
 // output path exists. If necessary, it creates all missing directories.
 func createOutputDir(outputPath string) error {
-	const permissions = 0755
+	const permissions = 0o755
 
 	if err := os.MkdirAll(filepath.Dir(outputPath), permissions); err != nil {
 		logger.Errorf(`Failed to create output directory "%s". Error: %v"`, outputPath, err)

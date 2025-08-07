@@ -39,7 +39,7 @@ func HasFileContentChanged(output []byte, outputPath string) (bool, error) {
 
 	logger.Infof(`Detected change (diff) in "%s"`, outputPath)
 
-	if err := fileutil.WriteOutputFile(outputPath, output); err != nil {
+	if err = fileutil.WriteOutputFile(outputPath, output); err != nil {
 		return true, err
 	}
 

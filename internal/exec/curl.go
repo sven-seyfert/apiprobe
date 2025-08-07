@@ -48,7 +48,7 @@ func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error
 	if !strings.HasPrefix(statusCode, "2") {
 		logger.Warnf("Non-2xx status code received: status %s", statusCode)
 
-		return nil, statusCode, fmt.Errorf("status %s", statusCode) //nolint:err113
+		return nil, statusCode, fmt.Errorf("status %s", statusCode)
 	}
 
 	return body, statusCode, nil
@@ -63,7 +63,7 @@ func extractStatusCode(output []byte) ([]byte, string, error) {
 	if len(output) < HTTPCodeLength {
 		logger.Warnf("Output too short to contain status code: only %d bytes", len(output))
 
-		return nil, "", fmt.Errorf("only %d bytes", len(output)) //nolint:err113
+		return nil, "", fmt.Errorf("only %d bytes", len(output))
 	}
 
 	body := output[:len(output)-HTTPCodeLength]

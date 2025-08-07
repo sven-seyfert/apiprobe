@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 
+	"zombiezen.com/go/sqlite"
+
 	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
-	"zombiezen.com/go/sqlite"
 )
 
 type CLIFlags struct {
@@ -22,7 +23,7 @@ type CLIFlags struct {
 
 // Init defines and parses the CLI flags and returning their values.
 func Init() *CLIFlags {
-	flag.Usage = func() {
+	flag.Usage = func() { //nolint:reassign
 		fmt.Fprintf(os.Stderr, config.Version+"\n\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n")
 		flag.PrintDefaults()

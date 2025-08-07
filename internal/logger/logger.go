@@ -3,7 +3,7 @@ package logger
 import (
 	"fmt"
 	"io"
-	"log"
+	"log" //nolint:depguard
 	"os"
 	"path/filepath"
 	"runtime"
@@ -19,7 +19,7 @@ func Init() error {
 	day := now.Format("02")
 	logsDir := filepath.Join(".", "logs", yearMonth, day)
 
-	if err := os.MkdirAll(logsDir, os.ModePerm); err != nil {
+	if err := os.MkdirAll(logsDir, os.ModePerm); err != nil { //nolint:gosec
 		Errorf(`Failed to create logs directory "%s". Error: %v`, logsDir, err)
 
 		return err
@@ -30,7 +30,7 @@ func Init() error {
 	logFilePath := filepath.Join(logsDir, filename)
 
 	// Open log file.
-	const permissions = 0644
+	const permissions = 0o644
 
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, permissions)
 	if err != nil {

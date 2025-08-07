@@ -9,12 +9,13 @@ import (
 	"strings"
 	"time"
 
+	"zombiezen.com/go/sqlite"
+
 	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/loader"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
-	"zombiezen.com/go/sqlite"
 )
 
 type Result struct {
@@ -88,7 +89,7 @@ func (r *Report) SaveToFile(filename string) error {
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "    ")
 
-	if err := encoder.Encode(r); err != nil {
+	if err = encoder.Encode(r); err != nil {
 		logger.Errorf("Failure on write file. Error: %v", err)
 
 		return err
@@ -140,7 +141,7 @@ func UpdateHeartbeatTime(cfg *config.Config) error {
 	encoder.SetIndent("", "    ")
 	encoder.SetEscapeHTML(false)
 
-	if err := encoder.Encode(cfg); err != nil {
+	if err = encoder.Encode(cfg); err != nil {
 		logger.Errorf("Failure on write file. Error: %v", err)
 
 		return err
@@ -153,7 +154,8 @@ func UpdateHeartbeatTime(cfg *config.Config) error {
 // WebEx incoming webhook URL.
 func WebExWebhookNotification(ctx context.Context, conn *sqlite.Conn,
 	webhookURL string, spaceSecret string,
-	webhookPayload []byte) {
+	webhookPayload []byte,
+) {
 	url := webhookURL + spaceSecret
 
 	const secretPrefix = "<secret-"

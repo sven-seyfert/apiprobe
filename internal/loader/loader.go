@@ -37,7 +37,7 @@ type Request struct {
 	PostBody    string   `json:"postBody"`
 }
 
-// Test defines the input variations for the requests.
+// TestCases defines the input variations for the requests.
 type TestCases struct {
 	Name         string `json:"name"`
 	ParamsData   string `json:"paramsData"`
@@ -60,9 +60,9 @@ func (req *APIRequest) BuildRequestURL() string {
 	return requestURL.String()
 }
 
-// CurlArgs builds the command-line arguments for a curl invocation based on the
-// HTTP method, URL, headers, authentication
-// and payload specified in the APIRequest.
+// CurlCmdArguments builds the command-line arguments for a curl invocation
+// based on the HTTP method, URL, headers, authentication and payload
+// specified in the APIRequest.
 func (req *APIRequest) CurlCmdArguments() []string {
 	cmdArgs := []string{
 		"--request", req.Request.Method,
@@ -107,9 +107,9 @@ func LoadAllRequests() ([]*APIRequest, error) {
 		}
 
 		if filepath.Ext(path) == ".json" {
-			fileRequest, err := loadRequestFromFile(path, inputDir)
-			if err != nil {
-				return err
+			fileRequest, loadErr := loadRequestFromFile(path, inputDir)
+			if loadErr != nil {
+				return loadErr
 			}
 
 			requests = append(requests, fileRequest...)
@@ -133,7 +133,7 @@ func loadRequestFromFile(path string, inputDir string) ([]*APIRequest, error) {
 
 	var requestData []APIRequest
 
-	if err := json.Unmarshal(bytes, &requestData); err != nil {
+	if err = json.Unmarshal(bytes, &requestData); err != nil {
 		logger.Errorf(`Failed to unmarshal JSON "%s". Error: %v`, path, err)
 
 		return nil, err

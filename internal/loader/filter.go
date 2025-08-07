@@ -1,7 +1,7 @@
 package loader
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 	"strings"
 
@@ -146,15 +146,14 @@ func MergePreRequests(loadedRequests []*APIRequest, filteredRequests []*APIReque
 		if !hexPattern.MatchString(preID) {
 			logger.Errorf(`PreRequestID "%s" has invalid format (not the expected ten character hex hash format).`, preID)
 
-			return nil, fmt.Errorf("invalid format error")
-
+			return nil, errors.New("invalid format error")
 		}
 
 		prev, found := lookupMap[preID]
 		if !found {
 			logger.Errorf(`PreRequestID "%s" not found in loadedRequests.`, preID)
 
-			return nil, fmt.Errorf("not found error")
+			return nil, errors.New("not found error")
 		}
 
 		requestsList = append(requestsList, prev)
