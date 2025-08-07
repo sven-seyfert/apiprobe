@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
+	"github.com/sven-seyfert/apiprobe/internal/auth"
 	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
@@ -105,8 +107,11 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	// Initializes token store.
+	tokenStore := auth.NewTokenStore()
+
 	// Process each API request, optionally with test case variations.
-	res, rep := processRequests(ctx, finalRequests)
+	res, rep := processRequests(ctx, finalRequests, tokenStore)
 
 	// Send notification on error case or on changes.
 	notification(ctx, cfg, conn, res, rep)
@@ -115,7 +120,7 @@ func main() {
 // processRequests iterates over the APIRequests, executes
 // each (including test cases), and writes the results. It returns
 // the aggregated Result and Report.
-func processRequests(ctx context.Context, requests []*loader.APIRequest) (*report.Result, *report.Report) {
+func processRequests(ctx context.Context, requests []*loader.APIRequest, tokenStore *auth.TokenStore) (*report.Result, *report.Report) {
 	res := &report.Result{} //nolint:exhaustruct
 	rep := &report.Report{} //nolint:exhaustruct
 
@@ -134,8 +139,12 @@ func processRequests(ctx context.Context, requests []*loader.APIRequest) (*repor
 
 		testCases := req.TestCases
 
+		if req.PreRequestID != "" {
+			repaceAuthTokenPlaceholderInRequestHeader(req, tokenStore)
+		}
+
 		// Execute first (main) request, regardless of whether additional test cases exist.
-		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep)
+		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore)
 
 		// Execute additional requests depending on the number of defined test cases.
 		for testCaseIndex, testCase := range testCases {
@@ -153,12 +162,39 @@ func processRequests(ctx context.Context, requests []*loader.APIRequest) (*repor
 				modifiedReq.Request.PostBody = testCase.PostBodyData
 			}
 
-			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep)
+			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep, tokenStore)
 			logger.Infof("Test case: %s", testCase.Name)
 		}
 	}
 
 	return res, rep
+}
+
+// repaceAuthTokenPlaceholderInRequestHeader replaces the <auth-token> placeholder
+// in request headers with the corresponding token from the token store, if available.
+// Returns nothing.
+func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStore *auth.TokenStore) {
+	const headerReplacementIndicator = "<auth-token>"
+
+	lookupID := req.PreRequestID
+
+	for idx, header := range req.Request.Headers {
+		if !strings.Contains(header, headerReplacementIndicator) {
+			continue
+		}
+
+		if token, found := tokenStore.Get(lookupID); found {
+			strippedToken := token[:util.Min(10, len(token))]
+
+			logger.Debugf(`Token "%s..." found for auth request "%s".`, strippedToken, lookupID)
+
+			req.Request.Headers[idx] = strings.ReplaceAll(header, headerReplacementIndicator, token)
+
+			break
+		}
+
+		logger.Warnf(`No token found for auth request "%s".`, lookupID)
+	}
 }
 
 // notification sends a summary notification via WebEx webhook.

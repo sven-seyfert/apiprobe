@@ -3,11 +3,13 @@ package exec
 import (
 	"context"
 
+	"github.com/sven-seyfert/apiprobe/internal/auth"
 	"github.com/sven-seyfert/apiprobe/internal/diff"
 	"github.com/sven-seyfert/apiprobe/internal/fileutil"
 	"github.com/sven-seyfert/apiprobe/internal/loader"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 	"github.com/sven-seyfert/apiprobe/internal/report"
+	"github.com/sven-seyfert/apiprobe/internal/util"
 )
 
 // ProcessRequest executes the APIRequest (including optional test cases),
@@ -15,7 +17,7 @@ import (
 // if differences are detected.
 func ProcessRequest(
 	ctx context.Context, idx int, req *loader.APIRequest, testCaseIndex *int,
-	res *report.Result, rep *report.Report) {
+	res *report.Result, rep *report.Report, tokenStore *auth.TokenStore) {
 	if testCaseIndex != nil {
 		logger.NewLine()
 		logger.Debugf("Run: %d, Test case: %d", idx, *testCaseIndex+1)
@@ -49,6 +51,14 @@ func ProcessRequest(
 		} else {
 			rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
 		}
+
+		return
+	}
+
+	if req.IsAuthRequest {
+		addAuthTokenToTokenStore(result, tokenStore, req)
+
+		logger.Debugf("No output file will be written (unnecessary), because generic token result.")
 
 		return
 	}
@@ -95,4 +105,17 @@ func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte
 	}
 
 	return jqOutput, nil
+}
+
+// addAuthTokenToTokenStore attempts to add the token to the provided token store
+// using the request ID as the key. Returns nothing.
+func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *loader.APIRequest) {
+	token := util.TrimQuotes(string(result))
+	strippedToken := token[:util.Min(10, len(token))]
+
+	if added := tokenStore.Add(req.ID, token); added {
+		logger.Debugf(`Token "%s..." for auth request "%s" added to token store.`, strippedToken, req.ID)
+	} else {
+		logger.Warnf(`Token "%s..." for auth request "%s" already exists in token store.`, strippedToken, req.ID)
+	}
 }
