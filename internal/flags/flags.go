@@ -122,7 +122,7 @@ func IsAddSecret(givenSecret string, conn *sqlite.Conn) (bool, error) {
 	}
 
 	fmt.Printf("%d ==> %d\n"+ //nolint:forbidigo
-		"Use this placeholder \"<secret-%s>\" in your JSON file"+
+		"Use this placeholder \"<secret-%s>\" in your JSON file "+
 		"instead of the actual secret value.", countBefore, countAfter, hash)
 
 	complete = true
