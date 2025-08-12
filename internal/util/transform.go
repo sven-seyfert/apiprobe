@@ -12,9 +12,9 @@ func TrimQuotes(value string) string {
 	return value
 }
 
-// Min returns the smaller of two integer values.
-func Min(a, b int) int {
-	if a < b {
+// Max returns the larger of two integer values.
+func Max(a, b int) int {
+	if a > b {
 		return a
 	}
 

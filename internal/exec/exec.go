@@ -111,11 +111,11 @@ func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte
 // using the request ID as the key. Returns nothing.
 func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *loader.APIRequest) {
 	token := util.TrimQuotes(string(result))
-	strippedToken := token[:util.Min(10, len(token))] //nolint:mnd
+	lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
 
 	if added := tokenStore.Add(req.ID, token); added {
-		logger.Debugf(`Token "%s..." for auth request "%s" added to token store.`, strippedToken, req.ID)
+		logger.Debugf(`Token "...%s" for auth request "%s" added to token store.`, lastTokenChars, req.ID)
 	} else {
-		logger.Warnf(`Token "%s..." for auth request "%s" already exists in token store.`, strippedToken, req.ID)
+		logger.Warnf(`Token "...%s" for auth request "%s" already exists in token store.`, lastTokenChars, req.ID)
 	}
 }

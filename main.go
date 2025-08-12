@@ -189,9 +189,9 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
 		}
 
 		if token, found := tokenStore.Get(lookupID); found {
-			strippedToken := token[:util.Min(10, len(token))] //nolint:mnd
+			lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
 
-			logger.Debugf(`Token "%s..." found for auth request "%s".`, strippedToken, lookupID)
+			logger.Debugf(`Token "...%s" found for auth request "%s".`, lastTokenChars, lookupID)
 
 			req.Request.Headers[idx] = strings.ReplaceAll(header, headerReplacementIndicator, token)
 
