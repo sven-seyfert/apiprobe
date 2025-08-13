@@ -43,7 +43,7 @@ title cmd-apiprobe
 cd C:\Store\Repositories\GitHub\apiprobe
 
 @REM Run tests for different environments (by tag)
-@REM and exlude specific request by ID (for test environment).
+@REM and exclude specific request by ID (for test environment).
 call api-monitoring.exe --tags "env-test" --exclude "ff00fceb61"
 call api-monitoring.exe --tags "env-prod" --exclude
 
