@@ -42,8 +42,10 @@ title cmd-apiprobe
 @REM Example path on the target maschine.
 cd C:\Store\Repositories\GitHub\apiprobe
 
-@REM Run tests
-apiprobe.exe
+@REM Run tests for different environments (by tag)
+@REM and exlude specific request by ID (for test environment).
+call api-monitoring.exe --tags "env-test" --exclude "ff00fceb61"
+call api-monitoring.exe --tags "env-prod" --exclude
 
 @REM Increase robustness of finishing previous processing
 ping localhost -n 10
