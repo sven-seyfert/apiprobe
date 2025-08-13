@@ -11,6 +11,26 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.11.0] - 2025-08-13
+
+### Added
+
+- CLI option (flag) '--name' to add a custom test run name. [d373e66](https://github.com/sven-seyfert/apiprobe/commit/d373e6651f5a73666b716ea3472cf0fb62acc113)
+
+### Changed
+
+- Use last n characters of string instead of first n characters (in log file output). [64951e4](https://github.com/sven-seyfert/apiprobe/commit/64951e4982c634bbf0c15cf2ef62b5a7290c5cfc)
+- Apply CLI option '--name' in batch file example. [0cec95c](https://github.com/sven-seyfert/apiprobe/commit/0cec95c98c4b063ee099dc07beb9935e44977568)
+
+### Documented
+
+- Extend remote execution example (batch file example). [8e30d57](https://github.com/sven-seyfert/apiprobe/commit/8e30d5718e955765c3273c22c200fab049f8c9b2)
+- Update README.md file. [5a087da](https://github.com/sven-seyfert/apiprobe/commit/5a087da43d4da7eeee1c9c94fa4c36059be67ea7)
+
+### Styled
+
+- Fix typo in batch file. [d072ca5](https://github.com/sven-seyfert/apiprobe/commit/d072ca58fbdacf03850f5e4c7d2178dc407fbe5a)
+
 ## [0.10.0] - 2025-08-07
 
 ### Added
@@ -177,7 +197,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.7.0...v0.8.0
