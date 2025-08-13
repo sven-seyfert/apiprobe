@@ -44,8 +44,8 @@ cd C:\Store\Repositories\GitHub\apiprobe
 
 @REM Run tests for different environments (by tag)
 @REM and exclude specific request by ID (for test environment).
-call api-monitoring.exe --tags "env-test" --exclude "ff00fceb61"
-call api-monitoring.exe --tags "env-prod" --exclude
+call apiprobe.exe --name "Environment: TEST" --tags "env-test" --exclude "ff00fceb61"
+call apiprobe.exe --name "Environment: PROD" --tags "env-prod"
 
 @REM Increase robustness of finishing previous processing
 ping localhost -n 10
