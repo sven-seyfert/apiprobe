@@ -115,7 +115,7 @@ func main() {
 	res, rep := processRequests(ctx, finalRequests, tokenStore)
 
 	// Send notification on error case or on changes.
-	notification(ctx, cfg, conn, res, rep)
+	notification(ctx, cfg, conn, res, rep, *cliFlags.Name)
 }
 
 // processRequests iterates over the APIRequests, executes
@@ -203,7 +203,7 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
 }
 
 // notification sends a summary notification via WebEx webhook.
-func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, res *report.Result, rep *report.Report) {
+func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, res *report.Result, rep *report.Report, name string) {
 	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
 		return
 	}
@@ -260,15 +260,27 @@ func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, re
 
 	mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
 
+	testRunName := ""
+	if name != "" {
+		testRunName = fmt.Sprintf("`%s`\n\n", name)
+	}
+
 	mdResult := fmt.Sprintf(
-		"Changed files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
+		"%sChanged files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
+		testRunName,
 		res.ChangedFilesCount,
 		res.RequestErrorCount,
 		res.FormatResponseErrorCount,
 	)
 
+	trafficLight := "🔴"
+	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount > 0 {
+		trafficLight = "🟡"
+	}
+
 	mdMessage := fmt.Sprintf(
-		"{markdown: \"#### 🔴 %s\n%s\n\\($code)\n\n%s\"}",
+		"{markdown: \"#### %s %s\n%s\n\\($code)\n\n%s\"}",
+		trafficLight,
 		config.Version,
 		mdResult,
 		hostnameMessage,

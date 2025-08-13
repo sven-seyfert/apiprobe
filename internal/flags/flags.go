@@ -14,6 +14,7 @@ import (
 )
 
 type CLIFlags struct {
+	Name      *string
 	ID        *string
 	Tags      *string
 	Exclude   *string
@@ -28,6 +29,9 @@ func Init() *CLIFlags {
 		fmt.Fprintf(os.Stderr, "Usage:\n")
 		flag.PrintDefaults()
 	}
+
+	nameUsage := "Custom name for this test run (for this execution). Shown in the final notification to help identify the run.\n" +
+		"Example: --name \"Environment: PROD\"\n"
 
 	idUsage := "Specify the ten-character hex hash (id) of the request to run.\n" +
 		"The hash must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
@@ -53,6 +57,7 @@ func Init() *CLIFlags {
 		"Example: --add-secret \"ThisIsMySecretText\"\n"
 
 	cliFlags := &CLIFlags{
+		Name:      flag.String("name", "", nameUsage),
 		ID:        flag.String("id", "", idUsage),
 		Tags:      flag.String("tags", "", tagUsage),
 		Exclude:   flag.String("exclude", "", excludeUsage),
