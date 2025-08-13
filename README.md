@@ -110,6 +110,7 @@ Currently in a stable initial state — core features implemented; more advanced
 | Flags                                | Description                                                                                                                    |
 | ---                                  | ---                                                                                                                            |
 | `--help`                             | Show all flags (switches) and their explanations. Shows also the program version.                                              |
+| `--name "Environment: PROD"`         | Set custom name for the test run (for the execution). Shown in final notification.                                             |
 | `--id "<hex hash>"`                  | Run only the request matching this ID.                                                                                         |
 | `--tags "animals, cars"`             | Run all requests containing any of the comma-separated tags.                                                                   |
 | `--exclude "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
@@ -152,8 +153,8 @@ Currently in a stable initial state — core features implemented; more advanced
 
     ``` bash
     # combination example:
-    # run every request with tag "<tag-name>" except request with specific <ID>
-    go run main.go --tags "env-prod" --exclude "bb11abc987"
+    # run every request with tag "<tag-name>" except request with specific <ID> and name the test run "MyFirstRun"
+    go run main.go --tags "env-prod" --exclude "bb11abc987" --name "MyFirstRun"
     ```
 
 - **Generate new ID**:
