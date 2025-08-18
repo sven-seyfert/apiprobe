@@ -154,8 +154,6 @@ func processRequests(
 
 		logger.Infof(`Run: %d, Test case: %d, File: "%s"`, idx+1, 0, req.JSONFilePath)
 
-		testCases := req.TestCases
-
 		if req.PreRequestID != "" {
 			repaceAuthTokenPlaceholderInRequestHeader(req, tokenStore)
 		}
@@ -164,7 +162,7 @@ func processRequests(
 		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore)
 
 		// Execute additional requests depending on the number of defined test cases.
-		for testCaseIndex, testCase := range testCases {
+		for testCaseIndex, testCase := range req.TestCases {
 			if testCase.ParamsData == "" && testCase.PostBodyData == "" {
 				continue
 			}
