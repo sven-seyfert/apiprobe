@@ -1,6 +1,7 @@
 package loader
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -29,21 +30,85 @@ type APIRequest struct {
 
 // Request holds the HTTP-specific details for an API request.
 type Request struct {
-	Description string   `json:"description"`
-	Method      string   `json:"method"`
-	BaseURL     string   `json:"url"`
-	Endpoint    string   `json:"endpoint"`
-	BasicAuth   string   `json:"basicAuth"`
-	Headers     []string `json:"headers"`
-	Params      []string `json:"params"`
-	PostBody    string   `json:"postBody"`
+	Description string          `json:"description"`
+	Method      string          `json:"method"`
+	BaseURL     string          `json:"url"`
+	Endpoint    string          `json:"endpoint"`
+	BasicAuth   string          `json:"basicAuth"`
+	Headers     []string        `json:"headers"`
+	Params      []string        `json:"params"`
+	PostBodyRaw json.RawMessage `json:"postBody"`
+
+	// Target data type for the POST body format is string.
+	PostBody string `json:"-"`
 }
 
 // TestCases defines the input variations for the requests.
 type TestCases struct {
-	Name         string `json:"name"`
-	ParamsData   string `json:"paramsData"`
-	PostBodyData string `json:"postBodyData"`
+	Name            string          `json:"name"`
+	ParamsData      string          `json:"paramsData"`
+	PostBodyDataRaw json.RawMessage `json:"postBodyData"`
+
+	// Target data type for the POST body format is string.
+	PostBodyData string `json:"-"`
+}
+
+// PreparePostBody prepares the request body (empty, x-www-form-urlencoded
+// or compacted JSON). Returns nil on success or an error if JSON compaction fails.
+func (req *APIRequest) PreparePostBody() error {
+	if len(req.Request.PostBodyRaw) == 0 {
+		req.Request.PostBody = ""
+
+		return nil
+	}
+
+	// Case POST body form is "x-www-form-urlencoded" which is no JSON.
+	if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+		req.Request.PostBody = util.TrimQuotes(string(req.Request.PostBodyRaw))
+
+		return nil
+	}
+
+	var buf bytes.Buffer
+	if err := json.Compact(&buf, req.Request.PostBodyRaw); err != nil {
+		logger.Errorf("Failed by attempting JSON compact. Error: %v", err)
+
+		return err
+	}
+
+	req.Request.PostBody = buf.String()
+
+	return nil
+}
+
+func (req *APIRequest) PreparePostBodyData() error {
+	for idx := range req.TestCases {
+		testCase := &req.TestCases[idx]
+
+		if len(testCase.PostBodyDataRaw) == 0 {
+			testCase.PostBodyData = ""
+
+			continue
+		}
+
+		// Case POST body form is "x-www-form-urlencoded" which is no JSON.
+		if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+			testCase.PostBodyData = util.TrimQuotes(string(testCase.PostBodyDataRaw))
+
+			continue
+		}
+
+		var buf bytes.Buffer
+		if err := json.Compact(&buf, testCase.PostBodyDataRaw); err != nil {
+			logger.Errorf("Failed by attempting JSON compact for test case %d. Error: %v", idx, err)
+
+			return err
+		}
+
+		testCase.PostBodyData = buf.String()
+	}
+
+	return nil
 }
 
 // BuildRequestURL constructs the full request URL by concatenating the BaseURL,

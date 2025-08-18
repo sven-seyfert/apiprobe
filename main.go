@@ -71,7 +71,7 @@ func main() {
 		return
 	}
 
-	// LoadAllRequests loads all API request definitions from JSON files in the input directory.
+	// Load requests from JSON files in the input directory.
 	requests, err := loader.LoadAllRequests()
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to load API request definitions.")
@@ -94,6 +94,18 @@ func main() {
 		logger.Fatalf("Program exits: Failed to gather pre-requests.")
 
 		return
+	}
+
+	// Prepare the requests by compacting the JSON POST body,
+	// handling "x-www-form-urlencoded" and POST body test cases.
+	for _, req := range preparedRequests {
+		if err = req.PreparePostBody(); err != nil {
+			logger.Fatalf("Program exits: Failed to prepare the POST body.")
+		}
+
+		if err = req.PreparePostBodyData(); err != nil {
+			logger.Fatalf("Program exits: Failed to prepare the POST body test cases.")
+		}
 	}
 
 	// Replace secrets placeholders in the requests with actual values.
