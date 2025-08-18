@@ -56,7 +56,9 @@ type TestCases struct {
 // PreparePostBody prepares the request body (empty, x-www-form-urlencoded
 // or compacted JSON). Returns nil on success or an error if JSON compaction fails.
 func (req *APIRequest) PreparePostBody() error {
-	if len(req.Request.PostBodyRaw) == 0 {
+	const emptyPostBodyLength = 2
+
+	if len(string(req.Request.PostBodyRaw)) == emptyPostBodyLength {
 		req.Request.PostBody = ""
 
 		return nil
@@ -85,7 +87,9 @@ func (req *APIRequest) PreparePostBodyData() error {
 	for idx := range req.TestCases {
 		testCase := &req.TestCases[idx]
 
-		if len(testCase.PostBodyDataRaw) == 0 {
+		const emptyPostBodyDataLength = 2
+
+		if len(string(testCase.PostBodyDataRaw)) == emptyPostBodyDataLength {
 			testCase.PostBodyData = ""
 
 			continue
