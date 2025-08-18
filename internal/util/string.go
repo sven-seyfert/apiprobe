@@ -13,10 +13,10 @@ func TrimQuotes(value string) string {
 }
 
 // ContainsSubstring checks if any string in the slice contains the given substring.
-// Returns true if found, otherwise false.
+// The comparison is case-insensitive and returns true if found, otherwise false.
 func ContainsSubstring(slice []string, substr string) bool {
 	for _, value := range slice {
-		if strings.Contains(value, substr) {
+		if strings.Contains(strings.ToLower(value), strings.ToLower(substr)) {
 			return true
 		}
 	}
