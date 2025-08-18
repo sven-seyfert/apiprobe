@@ -3,11 +3,13 @@ package loader
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/sven-seyfert/apiprobe/internal/logger"
+	"github.com/sven-seyfert/apiprobe/internal/util"
 )
 
 // APIRequest represents the structure of each API request definition
@@ -54,7 +56,7 @@ func (req *APIRequest) BuildRequestURL() string {
 
 	if len(req.Request.Params) > 0 {
 		requestURL.WriteString("?")
-		requestURL.WriteString(strings.Join(req.Request.Params, "&"))
+		requestURL.WriteString(url.PathEscape(strings.Join(req.Request.Params, "&")))
 	}
 
 	return requestURL.String()
@@ -78,7 +80,14 @@ func (req *APIRequest) CurlCmdArguments() []string {
 	}
 
 	if req.Request.Method == http.MethodPost && req.Request.PostBody != "" {
-		cmdArgs = append(cmdArgs, "--data", req.Request.PostBody)
+		postBody := req.Request.PostBody
+
+		// Encoding for POST body form "x-www-form-urlencoded".
+		if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+			postBody = url.PathEscape(req.Request.PostBody)
+		}
+
+		cmdArgs = append(cmdArgs, "--data", postBody)
 	}
 
 	if req.Request.BasicAuth != "" {

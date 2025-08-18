@@ -12,11 +12,14 @@ func TrimQuotes(value string) string {
 	return value
 }
 
-// Max returns the larger of two integer values.
-func Max(a, b int) int {
-	if a > b {
-		return a
+// ContainsSubstring checks if any string in the slice contains the given substring.
+// Returns true if found, otherwise false.
+func ContainsSubstring(slice []string, substr string) bool {
+	for _, value := range slice {
+		if strings.Contains(value, substr) {
+			return true
+		}
 	}
 
-	return b
+	return false
 }
