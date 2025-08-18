@@ -203,7 +203,14 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
 }
 
 // notification sends a summary notification via WebEx webhook.
-func notification(ctx context.Context, cfg *config.Config, conn *sqlite.Conn, res *report.Result, rep *report.Report, name string) {
+func notification(
+	ctx context.Context,
+	cfg *config.Config,
+	conn *sqlite.Conn,
+	res *report.Result,
+	rep *report.Report,
+	name string,
+) {
 	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
 		return
 	}
