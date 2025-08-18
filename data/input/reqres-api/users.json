@@ -15,13 +15,13 @@
             "params": [
                 "page=2"
             ],
-            "postBody": ""
+            "postBody": {}
         },
         "testCases": [
             {
                 "name": "Test with invalid page parameter",
                 "paramsData": "page=33",
-                "postBodyData": ""
+                "postBodyData": {}
             }
         ],
         "tags": [
