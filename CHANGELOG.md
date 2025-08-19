@@ -11,6 +11,28 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.12.0] - 2025-08-19
+
+### Changed
+
+- URL encoding for request params (always) and POST body (special case). [edeb1ee](https://github.com/sven-seyfert/apiprobe/commit/edeb1eedf761a18d6270d653f809cf37577f0ade)
+- Set function 'ContainsSubstring' to case-insensitive. [d3af659](https://github.com/sven-seyfert/apiprobe/commit/d3af65945f55f3902b893798c3f90f9a27cedac9)
+- Use JSON object as POST body data (and test case data) instead of escaped JSON string. [9b6a3e2](https://github.com/sven-seyfert/apiprobe/commit/9b6a3e2a0483c70ce048a3a037b14696b051424d)
+- Handle empty POST body data correctly. [f5482dd](https://github.com/sven-seyfert/apiprobe/commit/f5482dd42cdd11b1a3f1a48db3418e41406c5dfe)
+- JSON keys postBody and postBodyData are now JSON objects instead of strings. [f1c2ebf](https://github.com/sven-seyfert/apiprobe/commit/f1c2ebfcdd73cfbd7bbc6e8abccf9426a9875aa5)
+
+### Documented
+
+- Update README.md file. [73f9359](https://github.com/sven-seyfert/apiprobe/commit/73f935938ebc7be305209cc49be5bf8a1805a6a3)
+
+### Refactored
+
+- No extra variable (unnecessary). [685e67c](https://github.com/sven-seyfert/apiprobe/commit/685e67cf813a47285448cf45a7aed5b0af71de03)
+
+### Styled
+
+- Apply golangci-lint suggestions. [15265c6](https://github.com/sven-seyfert/apiprobe/commit/15265c65ee834c3300afd5575276993dd47c45e8)
+
 ## [0.11.0] - 2025-08-13
 
 ### Added
@@ -197,7 +219,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.8.0...v0.9.0
