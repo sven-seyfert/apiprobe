@@ -221,13 +221,13 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
             "basicAuth": "",
             "headers": [],
             "params": [],
-            "postBody": ""
+            "postBody": {}
         },
         "testCases": [
             {
                 "name": "",
                 "paramsData": "",
-                "postBodyData": ""
+                "postBodyData": {}
             }
         ],
         "tags": [
@@ -260,23 +260,32 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
                 "pageSize=25",
                 "page=3"
             ],
-            "postBody": "{\"Username\": \"John Doe\", \"Password\": \"<secret-b4c3d2e1f0>\"}"
+            "postBody": {
+                "Username": "John Doe",
+                "Password": "<secret-b4c3d2e1f0>"
+            }
         },
         "testCases": [
             {
                 "name": "Test with Marry Doe",
                 "paramsData": "",
-                "postBodyData": "{\"Username\": \"Marry Doe\", \"Password\": \"<secret-ff00ee11cc>\"}"
+                "postBodyData": {
+                    "Username": "Marry Doe",
+                    "Password": "<secret-ff00ee11cc>"
+                }
             },
             {
                 "name": "Test with Julia Ismo",
                 "paramsData": "",
-                "postBodyData": "{\"Username\": \"Julia Ismo\", \"Password\": \"<secret-cc11ee00ff>\"}"
+                "postBodyData": {
+                    "Username": "Julia Ismo",
+                    "Password": "<secret-cc11ee00ff>"
+                }
             },
             {
                 "name": "Test with John Doe and different animalId",
                 "paramsData": "animalId=4567",
-                "postBodyData": ""
+                "postBodyData": {}
             }
         ],
         "tags": [
@@ -292,7 +301,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 #### *Explanation*
 
 Mandatory = (M)<br>
-Mandatory for POST = (P)
+Mandatory for POST request = (P)
 
 | JSON key                   | JSON value description                                                                                                                                                                               | Default value                               |
 | --                         | ---                                                                                                                                                                                                  | ---                                         |
@@ -307,13 +316,15 @@ Mandatory for POST = (P)
 | **request.basicAuth**      | User and password for a basic authentification; format \<user\>:\<password\>.                                                                                                                        | "" (empty string)                           |
 | **request.headers**        | Request header list (one or n headers).                                                                                                                                                              | [] (empty string array)                     |
 | **request.params**         | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                                                                                                       | [] (empty string array)                     |
-| **request.postBody** (P)   | JSON message body (payload) for POST requests; data have to be JSON valid (escaping " ==> \").                                                                                                       | "" (empty string)                           |
+| **request.postBody** (P)   | JSON message body (payload) for POST requests. Usually it's a JSON structure, but there is an exception (see footnote). [^1]                                                                         | {} (empty JSON object)                      |
 | **testCases**              | Data driven test data list (one or n test data entries); these variations apply to query params or post body. See [minimal definition](#minimal-definition).                                         |                                             |
 | **testCases.name**         | Define the name of your test case.                                                                                                                                                                   | "" (empty string)                           |
 | **testCases.paramsData**   | Define which query parameter should be applied (replaced) in request.params for the test cases. See [advanced definition](#advanced-definition).                                                     | "" (empty string)                           |
-| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. See [advanced definition](#advanced-definition).                                                       | "" (empty string)                           |
+| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. [^1] See [advanced definition](#advanced-definition).                                                  | {} (empty JSON object)                      |
 | **tags**                   | Representation of the topic, of a application, environment etc.                                                                                                                                      | [] (empty string array)                     |
 | **jq**                     | JSON query syntax; prettify JSON response (default ".").                                                                                                                                             | "." (dot is the fallback if "" is provided) |
+
+[^1]: In case header "x-www-form-urlencoded" (full: "Content-Type: application/x-www-form-urlencoded") is set, the POST body is not JSON. Therefore a string can be set which represents the encoded key-value pair.
 
 ### Secret management
 
