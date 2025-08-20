@@ -1,54 +1,54 @@
 {
-  "page": 2,
-  "per_page": 6,
-  "total": 12,
-  "total_pages": 2,
   "data": [
     {
-      "id": 7,
+      "avatar": "https://reqres.in/img/faces/7-image.jpg",
       "email": "michael.lawson@reqres.in",
       "first_name": "Michael",
-      "last_name": "Lawson",
-      "avatar": "https://reqres.in/img/faces/7-image.jpg"
+      "id": 7,
+      "last_name": "Lawson"
     },
     {
-      "id": 8,
+      "avatar": "https://reqres.in/img/faces/8-image.jpg",
       "email": "lindsay.ferguson@reqres.in",
       "first_name": "Lindsay",
-      "last_name": "Ferguson",
-      "avatar": "https://reqres.in/img/faces/8-image.jpg"
+      "id": 8,
+      "last_name": "Ferguson"
     },
     {
-      "id": 9,
+      "avatar": "https://reqres.in/img/faces/9-image.jpg",
       "email": "tobias.funke@reqres.in",
       "first_name": "Tobias",
-      "last_name": "Funke",
-      "avatar": "https://reqres.in/img/faces/9-image.jpg"
+      "id": 9,
+      "last_name": "Funke"
     },
     {
-      "id": 10,
+      "avatar": "https://reqres.in/img/faces/10-image.jpg",
       "email": "byron.fields@reqres.in",
       "first_name": "Byron",
-      "last_name": "Fields",
-      "avatar": "https://reqres.in/img/faces/10-image.jpg"
+      "id": 10,
+      "last_name": "Fields"
     },
     {
-      "id": 11,
+      "avatar": "https://reqres.in/img/faces/11-image.jpg",
       "email": "george.edwards@reqres.in",
       "first_name": "George",
-      "last_name": "Edwards",
-      "avatar": "https://reqres.in/img/faces/11-image.jpg"
+      "id": 11,
+      "last_name": "Edwards"
     },
     {
-      "id": 12,
+      "avatar": "https://reqres.in/img/faces/12-image.jpg",
       "email": "rachel.howell@reqres.in",
       "first_name": "Rachel",
-      "last_name": "Howell",
-      "avatar": "https://reqres.in/img/faces/12-image.jpg"
+      "id": 12,
+      "last_name": "Howell"
     }
   ],
+  "page": 2,
+  "per_page": 6,
   "support": {
-    "url": "https://contentcaddy.io?utm_source=reqres&utm_medium=json&utm_campaign=referral",
-    "text": "Tired of writing endless social media content? Let Content Caddy generate it for you."
-  }
+    "text": "Tired of writing endless social media content? Let Content Caddy generate it for you.",
+    "url": "https://contentcaddy.io?utm_source=reqres\u0026utm_medium=json\u0026utm_campaign=referral"
+  },
+  "total": 12,
+  "total_pages": 2
 }
