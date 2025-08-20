@@ -1,19 +1,11 @@
 package report
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
-	"net/http"
 	"os"
-	"strings"
 	"time"
 
-	"zombiezen.com/go/sqlite"
-
 	"github.com/sven-seyfert/apiprobe/internal/config"
-	"github.com/sven-seyfert/apiprobe/internal/crypto"
-	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/loader"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 )
@@ -148,38 +140,4 @@ func UpdateHeartbeatTime(cfg *config.Config) error {
 	}
 
 	return nil
-}
-
-// WebExWebhookNotification sends the given JSON payload to the configured
-// WebEx incoming webhook URL.
-func WebExWebhookNotification(ctx context.Context, conn *sqlite.Conn,
-	webhookURL string, spaceSecret string,
-	webhookPayload []byte,
-) {
-	url := webhookURL + spaceSecret
-
-	const secretPrefix = "<secret-"
-
-	if strings.Contains(spaceSecret, secretPrefix) {
-		spaceSecret = crypto.ExtractSecretHash(spaceSecret)
-		spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
-		url = webhookURL + crypto.Deobfuscate(spaceIdentifier)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(webhookPayload))
-	if err != nil {
-		logger.Errorf("Error on new request. Error: %v", err)
-
-		return
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		logger.Errorf("Error on send request. Error: %v", err)
-
-		return
-	}
-	defer resp.Body.Close()
 }

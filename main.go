@@ -2,13 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-
-	"zombiezen.com/go/sqlite"
 
 	"github.com/sven-seyfert/apiprobe/internal/auth"
 	"github.com/sven-seyfert/apiprobe/internal/config"
@@ -127,7 +124,7 @@ func main() {
 	res, rep := processRequests(ctx, finalRequests, tokenStore)
 
 	// Send notification on error case or on changes.
-	notification(ctx, cfg, conn, res, rep, *cliFlags.Name)
+	report.Notification(ctx, cfg, conn, res, rep, *cliFlags.Name)
 }
 
 // processRequests iterates over the APIRequests, executes
@@ -210,113 +207,4 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
 
 		logger.Warnf(`No token found for auth request "%s".`, lookupID)
 	}
-}
-
-// notification sends a summary notification via WebEx webhook.
-func notification(
-	ctx context.Context,
-	cfg *config.Config,
-	conn *sqlite.Conn,
-	res *report.Result,
-	rep *report.Report,
-	name string,
-) {
-	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
-		return
-	}
-
-	const reportFile = "./logs/report.json"
-
-	hostname, _ := os.Hostname()
-	hostnameMessage := fmt.Sprintf("Message from: __%s__ (hostname)", hostname)
-
-	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
-		_ = os.Remove(reportFile)
-
-		isHeartbeatTime, err := report.IsHeartbeatTime(cfg)
-		if err != nil {
-			return
-		}
-
-		if !isHeartbeatTime {
-			return
-		}
-
-		if err = report.UpdateHeartbeatTime(cfg); err != nil {
-			return
-		}
-
-		mdMessage := fmt.Sprintf(
-			`{"markdown":"#### 💙 %s\nHeartbeat: __still alive__\n\n%s"}`,
-			config.Version,
-			hostnameMessage,
-		)
-
-		webhookPayload := []byte(mdMessage)
-
-		report.WebExWebhookNotification(ctx, conn,
-			cfg.Notification.WebEx.WebhookURL,
-			cfg.Notification.WebEx.Space,
-			webhookPayload)
-
-		return
-	}
-
-	if err := rep.SaveToFile(reportFile); err != nil {
-		logger.Errorf("Error on save file. Error: %v", err)
-
-		return
-	}
-
-	data, err := os.ReadFile(reportFile)
-	if err != nil {
-		logger.Errorf("Error on read file. Error: %v", err)
-
-		return
-	}
-
-	mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
-
-	testRunName := ""
-	if name != "" {
-		testRunName = fmt.Sprintf("`%s`\n\n", name)
-	}
-
-	mdResult := fmt.Sprintf(
-		"%sChanged files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
-		testRunName,
-		res.ChangedFilesCount,
-		res.RequestErrorCount,
-		res.FormatResponseErrorCount,
-	)
-
-	trafficLight := "🔴"
-	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount > 0 {
-		trafficLight = "🟡"
-	}
-
-	mdMessage := fmt.Sprintf(
-		"{markdown: \"#### %s %s\n%s\n\\($code)\n\n%s\"}",
-		trafficLight,
-		config.Version,
-		mdResult,
-		hostnameMessage,
-	)
-
-	jqArgs := []string{
-		"-nr",
-		"--arg",
-		"code", mdCodeBlock,
-		mdMessage,
-	}
-
-	webhookPayload, err := exec.RunJQ(ctx, jqArgs, nil)
-	if err != nil {
-		return
-	}
-
-	report.WebExWebhookNotification(ctx, conn,
-		cfg.Notification.WebEx.WebhookURL,
-		cfg.Notification.WebEx.Space,
-		webhookPayload)
 }
