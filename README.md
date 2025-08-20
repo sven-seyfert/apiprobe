@@ -66,7 +66,7 @@ Currently in a stable initial state — core features implemented; more advanced
 
 - Go 1.20+ installed ([download](https://golang.org/dl/)) or simply run the executable instead.
 - Ensure `$GOPATH/bin` is in your `PATH`.
-- Dependency binaries `curl` and `jq` in `./lib/`.
+- Dependency (binary) `curl` in `./lib/`.
 - SQLite available (preinstalled on the most OS and systems).
 
 ### Installation
@@ -80,7 +80,7 @@ Currently in a stable initial state — core features implemented; more advanced
 
 2. Ensure dependencies are available:
 
-   `curl` and `jq` in the `./lib/` folder or adjust paths in `./internal/exec/curl.go` and `./internal/exec/jq.go`.
+   `curl` in the `./lib/` folder or adjust the path in `./internal/exec/curl.go`.
 
 3. Run or build the program:
 
@@ -293,7 +293,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
             "cars",
             "env-prod"
         ],
-        "jq": "."
+        "jq": ".data = (.data | sort_by(.type))"
     }
 ]
 ```
@@ -389,7 +389,7 @@ apiprobe/
 │   ├── seed.csv        # Initial secrets data
 │   └── store.db        # SQLite database
 ├── internal/           # Go packages
-├── lib/                # Dependency binaries (curl & jq)
+├── lib/                # Dependency binary (curl)
 ├── logs/               # Execution logs (auto-generated)
 ├── remote/             # Windows Task Scheduler templates
 ├── CHANGELOG.md        # Version history
@@ -448,11 +448,13 @@ Distributed under the MPL-2.0 License. See [LICENSE](https://github.com/sven-sey
 
 - Opportunity by [GitHub](https://github.com)
 - Badges by [Shields](https://shields.io) and [SimpleIcons](https://simpleicons.org)
-- Thanks to the authors, maintainers and contributors of the various projects
-  - [golang](https://github.com/golang/go) by the Go team at Google; License: [BSD-3-Clause](https://github.com/golang/go?tab=BSD-3-Clause-1-ov-file#readme)
-  - [cURL](https://github.com/curl/curl) by Daniel Stenberg; License: [MIT](https://github.com/sven-seyfert/apiprobe/blob/main/lib/curl-license.txt)
-  - [jq](https://github.com/jqlang/jq) by Stephen Dolan; License: [MIT](https://github.com/sven-seyfert/apiprobe/blob/main/lib/jq-license.txt)
+- Thanks to the authors, maintainers and contributors of the various projects and products
+  - [golang](https://github.com/golang/go) by the Go team at Google; License: [BSD-3-Clause](https://github.com/golang/go/blob/master/LICENSE)
+  - [cURL](https://github.com/curl/curl) by Daniel Stenberg; License: [MIT](lib/curl-license.txt)
+  - [jq](https://github.com/jqlang/jq) by Stephen Dolan; License: [MIT](https://github.com/jqlang/jq?tab=License-1-ov-file)
+  - [gojq](https://github.com/itchyny/gojq) by itchyny; License: [MIT](https://github.com/itchyny/gojq/blob/main/LICENSE)
   - [SQLite](https://www.sqlite.org/copyright.html) by Richard Hipp; License: [Public Domain](https://www.sqlite.org/copyright.html)
+  - [go-sqlite](https://github.com/zombiezen/go-sqlite) by Roxy Light; License: [ISC](https://github.com/zombiezen/go-sqlite/blob/main/LICENSE)
 
 ##
 
