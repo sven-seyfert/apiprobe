@@ -11,6 +11,23 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.13.0] - 2025-08-20
+
+### Changed
+
+- Replace external JQ dependency (binary) usage by 'gojq' library usage. [2a331da](https://github.com/sven-seyfert/apiprobe/commit/2a331da1ca253ff5a4f1dd5a7fc749e2190a5de4)
+- Adjust and extract notification functionality into separate go package. [615c413](https://github.com/sven-seyfert/apiprobe/commit/615c413c22d206531946a2726e482ce444a62d6e)
+- Dependency update (and go mod tidy). [aba60f2](https://github.com/sven-seyfert/apiprobe/commit/aba60f249186f8bd02c000ee3dc1b3515d9a18d9)
+- Output with sorted JSON nodes (because of the usage of 'gojq' library). [8ffe0f8](https://github.com/sven-seyfert/apiprobe/commit/8ffe0f8d2858cdc01fc9d29085fd353bd1b7613e)
+
+### Documented
+
+- Update README.md file. [3980f18](https://github.com/sven-seyfert/apiprobe/commit/3980f18a1d850779c2d17bee647a6e5f39ee11f0)
+
+### Removed
+
+- External dependency (binary) jq.exe. [702a846](https://github.com/sven-seyfert/apiprobe/commit/702a8465c7ab6618e8fd1d0bcb6a6ca6f9875c17)
+
 ## [0.12.0] - 2025-08-19
 
 ### Changed
@@ -219,7 +236,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.9.0...v0.10.0
