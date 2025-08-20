@@ -2,6 +2,7 @@ package exec
 
 import (
 	"context"
+	"strings"
 
 	"github.com/sven-seyfert/apiprobe/internal/auth"
 	"github.com/sven-seyfert/apiprobe/internal/diff"
@@ -16,8 +17,13 @@ import (
 // compares the response against existing output, and triggers the webhook
 // if differences are detected.
 func ProcessRequest(
-	ctx context.Context, idx int, req *loader.APIRequest, testCaseIndex *int,
-	res *report.Result, rep *report.Report, tokenStore *auth.TokenStore,
+	ctx context.Context,
+	idx int,
+	req *loader.APIRequest,
+	testCaseIndex *int,
+	res *report.Result,
+	rep *report.Report,
+	tokenStore *auth.TokenStore,
 ) {
 	if testCaseIndex != nil {
 		logger.NewLine()
@@ -98,8 +104,13 @@ func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string
 // formatResponse formats the curl output using jq
 // and returns the filtered result.
 func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte) ([]byte, error) {
-	jqArgs := []string{req.JqCommand}
-	jqOutput, err := RunJQ(ctx, jqArgs, response)
+	// If response is not JSON ("content-type: application/json"),
+	// it's plain text and therefore there is no need for jq formatting.
+	if !strings.HasPrefix(string(response), "{") && !strings.HasPrefix(string(response), "[") {
+		return response, nil
+	}
+
+	jqOutput, err := GoJQ(ctx, req.JqCommand, response)
 	if err != nil {
 		return nil, err
 	}
