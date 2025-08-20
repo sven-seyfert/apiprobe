@@ -10,13 +10,13 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-// GoJQ executes the jq query given by jqArgs against inputJSON.
+// GoJQ executes the jq query given by jqCommand against inputJSON.
 // Returns the encoded JSON ([]byte) of the query result or an error.
-func GoJQ(ctx context.Context, jqArgs string, inputJSON []byte) ([]byte, error) {
+func GoJQ(ctx context.Context, jqCommand string, inputJSON []byte) ([]byte, error) {
 	const defaultJQPrettifyFilter = "."
 
-	if jqArgs == "" {
-		jqArgs = defaultJQPrettifyFilter
+	if jqCommand == "" {
+		jqCommand = defaultJQPrettifyFilter
 	}
 
 	var input any
@@ -26,7 +26,7 @@ func GoJQ(ctx context.Context, jqArgs string, inputJSON []byte) ([]byte, error) 
 		return nil, err
 	}
 
-	code, err := compileQuery(jqArgs)
+	code, err := compileQuery(jqCommand)
 	if err != nil {
 		return nil, err
 	}
@@ -39,12 +39,12 @@ func GoJQ(ctx context.Context, jqArgs string, inputJSON []byte) ([]byte, error) 
 	return encodeResults(results)
 }
 
-// compileQuery parses and compiles the provided jqArgs into *gojq.Code.
+// compileQuery parses and compiles the provided jqCommand into *gojq.Code.
 // Returns the compiled code or an error if parsing/compilation fails.
-func compileQuery(jqArgs string) (*gojq.Code, error) {
-	query, err := gojq.Parse(jqArgs)
+func compileQuery(jqCommand string) (*gojq.Code, error) {
+	query, err := gojq.Parse(jqCommand)
 	if err != nil {
-		logger.Errorf("Failed to parse jqArgs. Error: %v", err)
+		logger.Errorf("Failed to parse jqCommand. Error: %v", err)
 
 		return nil, err
 	}
