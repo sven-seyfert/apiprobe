@@ -83,6 +83,10 @@ func (req *APIRequest) PreparePostBody() error {
 	return nil
 }
 
+// PreparePostBodyData processes the raw POST body data of all test cases.
+// It normalizes the content based on header type, compacts JSON when needed,
+// and sets the processed result into PostBodyData.
+// Returns an error if JSON compaction fails, otherwise nil.
 func (req *APIRequest) PreparePostBodyData() error {
 	for idx := range req.TestCases {
 		testCase := &req.TestCases[idx]
