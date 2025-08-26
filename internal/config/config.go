@@ -7,7 +7,7 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.13.0 - 2025-08-20"
+const Version = "APIProbe 📡 v0.14.0 - 2025-08-26"
 
 type Heartbeat struct {
 	IntervalInHours   int    `json:"intervalInHours"`

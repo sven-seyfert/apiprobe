@@ -54,61 +54,61 @@
 		<div id="topbar">
 			<div id="nav">
 				<select id="files">
-				
+
 				<option value="file0">github.com/sven-seyfert/apiprobe/internal/auth/token.go (0.0%)</option>
-				
+
 				<option value="file1">github.com/sven-seyfert/apiprobe/internal/config/config.go (0.0%)</option>
-				
+
 				<option value="file2">github.com/sven-seyfert/apiprobe/internal/crypto/obfuscator.go (0.0%)</option>
-				
+
 				<option value="file3">github.com/sven-seyfert/apiprobe/internal/crypto/secrets.go (0.0%)</option>
-				
+
 				<option value="file4">github.com/sven-seyfert/apiprobe/internal/db/sqlite.go (0.0%)</option>
-				
+
 				<option value="file5">github.com/sven-seyfert/apiprobe/internal/diff/diff.go (0.0%)</option>
-				
+
 				<option value="file6">github.com/sven-seyfert/apiprobe/internal/exec/curl.go (0.0%)</option>
-				
+
 				<option value="file7">github.com/sven-seyfert/apiprobe/internal/exec/exec.go (0.0%)</option>
-				
+
 				<option value="file8">github.com/sven-seyfert/apiprobe/internal/exec/jq.go (63.3%)</option>
-				
+
 				<option value="file9">github.com/sven-seyfert/apiprobe/internal/fileutil/file.go (0.0%)</option>
-				
+
 				<option value="file10">github.com/sven-seyfert/apiprobe/internal/fileutil/path.go (0.0%)</option>
-				
+
 				<option value="file11">github.com/sven-seyfert/apiprobe/internal/flags/flags.go (0.0%)</option>
-				
+
 				<option value="file12">github.com/sven-seyfert/apiprobe/internal/loader/filter.go (0.0%)</option>
-				
+
 				<option value="file13">github.com/sven-seyfert/apiprobe/internal/loader/loader.go (0.0%)</option>
-				
+
 				<option value="file14">github.com/sven-seyfert/apiprobe/internal/logger/logger.go (16.7%)</option>
-				
+
 				<option value="file15">github.com/sven-seyfert/apiprobe/internal/report/notify.go (0.0%)</option>
-				
+
 				<option value="file16">github.com/sven-seyfert/apiprobe/internal/report/report.go (0.0%)</option>
-				
+
 				<option value="file17">github.com/sven-seyfert/apiprobe/internal/util/math.go (0.0%)</option>
-				
+
 				<option value="file18">github.com/sven-seyfert/apiprobe/internal/util/querier.go (0.0%)</option>
-				
+
 				<option value="file19">github.com/sven-seyfert/apiprobe/internal/util/string.go (0.0%)</option>
-				
+
 				<option value="file20">github.com/sven-seyfert/apiprobe/main.go (0.0%)</option>
-				
+
 				</select>
 			</div>
 			<div id="legend">
 				<span>not tracked</span>
-			
+
 				<span class="cov0">not covered</span>
 				<span class="cov8">covered</span>
-			
+
 			</div>
 		</div>
 		<div id="content">
-		
+
 		<pre class="file" id="file0" style="display: none">package auth
 
 // TokenStore maintains a map of request IDs to API tokens.
@@ -147,7 +147,7 @@ func (t *TokenStore) Get(id string) (string, bool) <span class="cov0" title="0">
         <span class="cov0" title="0">return "", false</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file1" style="display: none">package config
 
 import (
@@ -157,7 +157,7 @@ import (
         "github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.13.0 - 2025-08-20"
+const Version = "APIProbe 📡 v0.14.0 - 2025-08-26"
 
 type Heartbeat struct {
         IntervalInHours   int    `json:"intervalInHours"`
@@ -201,7 +201,7 @@ func Load(filePath string) (*Config, error) <span class="cov0" title="0">{
         <span class="cov0" title="0">return &amp;cfg, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file2" style="display: none">package crypto
 
 import (
@@ -275,7 +275,7 @@ func HexHash() (string, error) <span class="cov0" title="0">{
         return hexStr[:charCount], nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file3" style="display: none">package crypto
 
 import (
@@ -427,7 +427,7 @@ func ExtractSecretHash(input string) string <span class="cov0" title="0">{
         <span class="cov0" title="0">return matches[1]</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file4" style="display: none">package db
 
 import (
@@ -629,7 +629,7 @@ func SelectHash(conn *sqlite.Conn, hash string) (string, error) <span class="cov
         return secret, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file5" style="display: none">package diff
 
 import (
@@ -678,7 +678,7 @@ func HasFileContentChanged(output []byte, outputPath string) (bool, error) <span
         <span class="cov0" title="0">return true, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file6" style="display: none">package exec
 
 import (
@@ -753,7 +753,7 @@ func extractStatusCode(output []byte) ([]byte, string, error) <span class="cov0"
         return body, statusCode, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file7" style="display: none">package exec
 
 import (
@@ -887,7 +887,7 @@ func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *l
         }</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file8" style="display: none">package exec
 
 import (
@@ -1038,7 +1038,7 @@ func safeErrorString(err error) string <span class="cov0" title="0">{
         <span class="cov0" title="0">return errMsg</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file9" style="display: none">package fileutil
 
 import (
@@ -1077,7 +1077,7 @@ func WriteOutputFile(outputPath string, output []byte) error <span class="cov0" 
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file10" style="display: none">package fileutil
 
 import (
@@ -1123,7 +1123,7 @@ func createOutputDir(outputPath string) error <span class="cov0" title="0">{
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file11" style="display: none">package flags
 
 import (
@@ -1262,7 +1262,7 @@ func IsAddSecret(givenSecret string, conn *sqlite.Conn) (bool, error) <span clas
         return complete, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file12" style="display: none">package loader
 
 import (
@@ -1447,7 +1447,7 @@ func removeDuplicates(requestsList []*APIRequest) []*APIRequest <span class="cov
         <span class="cov0" title="0">return unique</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file13" style="display: none">package loader
 
 import (
@@ -1689,7 +1689,7 @@ func loadRequestFromFile(path string, inputDir string) ([]*APIRequest, error) <s
         <span class="cov0" title="0">return request, nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file14" style="display: none">package logger
 
 import (
@@ -1784,7 +1784,7 @@ func occurrence() string <span class="cov8" title="1">{
         <span class="cov8" title="1">return fmt.Sprintf("(%s:%d)\n", filepath.Base(file), line)</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file15" style="display: none">package report
 
 import (
@@ -1945,7 +1945,7 @@ func webExWebhookNotification(
         <span class="cov0" title="0">defer resp.Body.Close()</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file16" style="display: none">package report
 
 import (
@@ -2090,7 +2090,7 @@ func UpdateHeartbeatTime(cfg *config.Config) error <span class="cov0" title="0">
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file17" style="display: none">package util
 
 // Max returns the larger of two integer values.
@@ -2102,7 +2102,7 @@ func Max(a, b int) int <span class="cov0" title="0">{
         <span class="cov0" title="0">return b</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file18" style="display: none">package util
 
 import (
@@ -2138,7 +2138,7 @@ func ReplaceQueryParam(params []string, testCaseValue string) []string <span cla
         <span class="cov0" title="0">return newParams</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file19" style="display: none">package util
 
 import "strings"
@@ -2165,7 +2165,7 @@ func ContainsSubstring(slice []string, substr string) bool <span class="cov0" ti
         <span class="cov0" title="0">return false</span>
 }
 </pre>
-		
+
 		<pre class="file" id="file20" style="display: none">package main
 
 import (
@@ -2377,7 +2377,7 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
         }
 }
 </pre>
-		
+
 		</div>
 	</body>
 	<script>
