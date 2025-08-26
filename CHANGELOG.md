@@ -11,6 +11,26 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.14.0] - 2025-08-26
+
+### Added
+
+- Code coverage (further improvements to follow). [baaa834](https://github.com/sven-seyfert/apiprobe/commit/baaa8349b95d63c61f38032be515485133bb0399)
+
+### Changed
+
+- Increase cURL timeouts to improve execution robustness (some APIs are slower than others). [6e15fe8](https://github.com/sven-seyfert/apiprobe/commit/6e15fe893feee414bd1a8c1e628cb448ada45991)
+
+### Documented
+
+- Add missing function comment in loader.go file. [99dfe3c](https://github.com/sven-seyfert/apiprobe/commit/99dfe3ca46eafa4383f19b1e127cc37682065b74)
+- Update README.md file. [8b052b0](https://github.com/sven-seyfert/apiprobe/commit/8b052b0fd0089737874a76ab55631f61441c2537)
+
+### Refactored
+
+- Trivial renamings. [255cfe3](https://github.com/sven-seyfert/apiprobe/commit/255cfe3425c299a7e0dd685c68dc9c4b3c70ba87)
+- Add blackbox unit tests for jq.go file. [06230d7](https://github.com/sven-seyfert/apiprobe/commit/06230d7778493c7d4a4d5f6f96e0d24ee8c0ea9a)
+
 ## [0.13.0] - 2025-08-20
 
 ### Changed
@@ -236,7 +256,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.10.0...v0.11.0
