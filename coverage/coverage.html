@@ -1,0 +1,2410 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>auth: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/sven-seyfert/apiprobe/internal/auth/token.go (0.0%)</option>
+				
+				<option value="file1">github.com/sven-seyfert/apiprobe/internal/config/config.go (0.0%)</option>
+				
+				<option value="file2">github.com/sven-seyfert/apiprobe/internal/crypto/obfuscator.go (0.0%)</option>
+				
+				<option value="file3">github.com/sven-seyfert/apiprobe/internal/crypto/secrets.go (0.0%)</option>
+				
+				<option value="file4">github.com/sven-seyfert/apiprobe/internal/db/sqlite.go (0.0%)</option>
+				
+				<option value="file5">github.com/sven-seyfert/apiprobe/internal/diff/diff.go (0.0%)</option>
+				
+				<option value="file6">github.com/sven-seyfert/apiprobe/internal/exec/curl.go (0.0%)</option>
+				
+				<option value="file7">github.com/sven-seyfert/apiprobe/internal/exec/exec.go (0.0%)</option>
+				
+				<option value="file8">github.com/sven-seyfert/apiprobe/internal/exec/jq.go (63.3%)</option>
+				
+				<option value="file9">github.com/sven-seyfert/apiprobe/internal/fileutil/file.go (0.0%)</option>
+				
+				<option value="file10">github.com/sven-seyfert/apiprobe/internal/fileutil/path.go (0.0%)</option>
+				
+				<option value="file11">github.com/sven-seyfert/apiprobe/internal/flags/flags.go (0.0%)</option>
+				
+				<option value="file12">github.com/sven-seyfert/apiprobe/internal/loader/filter.go (0.0%)</option>
+				
+				<option value="file13">github.com/sven-seyfert/apiprobe/internal/loader/loader.go (0.0%)</option>
+				
+				<option value="file14">github.com/sven-seyfert/apiprobe/internal/logger/logger.go (16.7%)</option>
+				
+				<option value="file15">github.com/sven-seyfert/apiprobe/internal/report/notify.go (0.0%)</option>
+				
+				<option value="file16">github.com/sven-seyfert/apiprobe/internal/report/report.go (0.0%)</option>
+				
+				<option value="file17">github.com/sven-seyfert/apiprobe/internal/util/math.go (0.0%)</option>
+				
+				<option value="file18">github.com/sven-seyfert/apiprobe/internal/util/querier.go (0.0%)</option>
+				
+				<option value="file19">github.com/sven-seyfert/apiprobe/internal/util/string.go (0.0%)</option>
+				
+				<option value="file20">github.com/sven-seyfert/apiprobe/main.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package auth
+
+// TokenStore maintains a map of request IDs to API tokens.
+// Each key is a 10 character hex hash, and each value
+// is the corresponding token.
+type TokenStore struct {
+        data map[string]string
+}
+
+// NewTokenStore initializes and returns a new TokenStore.
+func NewTokenStore() *TokenStore <span class="cov0" title="0">{
+        return &amp;TokenStore{
+                data: make(map[string]string),
+        }
+}</span>
+
+// Add inserts a token for the given id if it does not already exist.
+// Returns true if the token was added, false if the id already exists.
+func (t *TokenStore) Add(id, token string) bool <span class="cov0" title="0">{
+        if _, exists := t.data[id]; exists </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov0" title="0">t.data[id] = token
+
+        return true</span>
+}
+
+// Get retrieves the token for the given id. Returns the token and
+// true if found, or "" and false otherwise.
+func (t *TokenStore) Get(id string) (string, bool) <span class="cov0" title="0">{
+        if t, found := t.data[id]; found </span><span class="cov0" title="0">{
+                return t, true
+        }</span>
+
+        <span class="cov0" title="0">return "", false</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package config
+
+import (
+        "encoding/json"
+        "os"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+const Version = "APIProbe 📡 v0.13.0 - 2025-08-20"
+
+type Heartbeat struct {
+        IntervalInHours   int    `json:"intervalInHours"`
+        LastHeartbeatTime string `json:"lastHeartbeatTime"`
+}
+
+type Notification struct {
+        WebEx *struct {
+                Active     bool   `json:"active"`
+                WebhookURL string `json:"webhookUrl"`
+                Space      string `json:"space"`
+        } `json:"webEx"`
+}
+
+type Config struct {
+        Heartbeat    Heartbeat    `json:"heartbeat"`
+        Notification Notification `json:"notification"`
+}
+
+// Load opens the JSON configuration file, decodes its contents into
+// a Config struct and returns the loaded configuration or an error.
+func Load(filePath string) (*Config, error) <span class="cov0" title="0">{
+        file, err := os.Open(filePath)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failure opening config file "%s". Error: %v`, filePath, err)
+
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        decoder := json.NewDecoder(file)
+
+        var cfg Config
+
+        if err = decoder.Decode(&amp;cfg); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failure parsing config file "%s". Error: %v`, filePath, err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;cfg, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package crypto
+
+import (
+        "crypto/rand"
+        "encoding/base64"
+        "encoding/hex"
+        "fmt"
+        "math/big"
+        "strings"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// Obfuscate encodes a string with Base64 and random characters
+// to produce a token.
+func Obfuscate(data string) string <span class="cov0" title="0">{
+        core := base64.StdEncoding.EncodeToString([]byte(data))
+        core = strings.ReplaceAll(core, "=", "-")
+
+        return fmt.Sprintf("ey%s.%s%s%s.%s", chars(9), chars(2), core, chars(6), chars(24)) //nolint:mnd
+}</span>
+
+// Deobfuscate decodes a token back into its original plaintext.
+func Deobfuscate(data string) string <span class="cov0" title="0">{
+        if data == "" </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">core := data[14 : len(data)-31]
+        core = strings.ReplaceAll(core, "-", "=")
+
+        byteString, err := base64.StdEncoding.DecodeString(core)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Warnf("Decryption failed: %s", err)
+
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">return string(byteString)</span>
+}
+
+// chars returns a random alphanumeric string of the specified length.
+func chars(length int) string <span class="cov0" title="0">{
+        const alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+        byteString := make([]byte, length)
+
+        for idx := range byteString </span><span class="cov0" title="0">{
+                nBig, _ := rand.Int(rand.Reader, big.NewInt(int64(len(alphaNum))))
+
+                byteString[idx] = alphaNum[nBig.Int64()]
+        }</span>
+
+        <span class="cov0" title="0">return string(byteString)</span>
+}
+
+// HexHash returns a cryptographically secure random hex string of length 10.
+// It reads the needed random bytes, encodes them, and truncates to 10 chars.
+func HexHash() (string, error) <span class="cov0" title="0">{
+        const charCount = 10
+
+        byteLen := (charCount + 1) / 2 //nolint:mnd
+        buf := make([]byte, byteLen)
+
+        if _, err := rand.Read(buf); err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">hexStr := hex.EncodeToString(buf)
+
+        return hexStr[:charCount], nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package crypto
+
+import (
+        "fmt"
+        "regexp"
+        "strings"
+
+        "zombiezen.com/go/sqlite"
+
+        "github.com/sven-seyfert/apiprobe/internal/db"
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// HandleSecrets iterates over each APIRequest in filteredRequests, finds all
+// placeholders '&lt;secret-&lt;hash&gt;&gt;' in PostBody, BasicAuth, Params, Headers and TestCases,
+// retrieves the real secret from the database, deobfuscates it, and replaces the
+// placeholder. Returns an error immediately if any DB lookup fails.
+func HandleSecrets(filteredRequests []*loader.APIRequest, conn *sqlite.Conn) ([]*loader.APIRequest, error) <span class="cov0" title="0">{
+        for _, req := range filteredRequests </span><span class="cov0" title="0">{
+                newBody, err := replaceSecretInString(req.Request.PostBody, conn)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">req.Request.PostBody = newBody
+
+                newAuth, err := replaceSecretInString(req.Request.BasicAuth, conn)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">req.Request.BasicAuth = newAuth
+
+                if err = replaceSecretInSlice(req.Request.Params, conn); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">if err = replaceSecretInSlice(req.Request.Headers, conn); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">if err = replaceSecretInTestCases(req.TestCases, conn); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov0" title="0">return filteredRequests, nil</span>
+}
+
+// replaceSecretInString searches a single string for '&lt;secret-&lt;hash&gt;&gt;'
+// patterns. For each found hash, it retrieves the secret from the database,
+// deobfuscates it, and replaces the placeholder in the string.
+// Returns an error if DB lookup fails.
+func replaceSecretInString(str string, conn *sqlite.Conn) (string, error) <span class="cov0" title="0">{
+        const secretPrefix = "&lt;secret-"
+
+        if !strings.Contains(str, secretPrefix) </span><span class="cov0" title="0">{
+                return str, nil
+        }</span>
+
+        <span class="cov0" title="0">secretHash := ExtractSecretHash(str)
+
+        if secretHash == "" </span><span class="cov0" title="0">{
+                logger.Warnf("No valid secret hash found in string: %s", str)
+
+                return str, nil
+        }</span>
+
+        <span class="cov0" title="0">secret, err := db.SelectHash(conn, secretHash)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Debugf(`Failed to retrieve secret for hash "%s": %v`, secretHash, err)
+
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">if secret != "" </span><span class="cov0" title="0">{
+                from := fmt.Sprintf("%s%s&gt;", secretPrefix, secretHash)
+                to := Deobfuscate(secret)
+
+                return strings.ReplaceAll(str, from, to), nil
+        }</span>
+
+        <span class="cov0" title="0">logger.Warnf(`Secret value "%s" not found`, secretHash)
+
+        return str, nil</span>
+}
+
+// replaceSecretInSlice iterates over a slice of strings, calls replaceSecretInString
+// on each element, and updates the slice in-place.
+// Returns the first error encountered, if any.
+func replaceSecretInSlice(reqSlice []string, conn *sqlite.Conn) error <span class="cov0" title="0">{
+        for idx, val := range reqSlice </span><span class="cov0" title="0">{
+                newVal, err := replaceSecretInString(val, conn)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">reqSlice[idx] = newVal</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// replaceSecretInTestCases iterates over all test cases and replaces secrets
+// in the ParamsData and PostBodyData fields in-place.
+// Returns the first error encountered, if any.
+func replaceSecretInTestCases(testCases []loader.TestCases, conn *sqlite.Conn) error <span class="cov0" title="0">{
+        for idx := range testCases </span><span class="cov0" title="0">{
+                testCase := &amp;testCases[idx]
+
+                var err error
+
+                if testCase.ParamsData != "" </span><span class="cov0" title="0">{
+                        testCase.ParamsData, err = replaceSecretInString(testCase.ParamsData, conn)
+                        if err != nil </span><span class="cov0" title="0">{
+                                logger.Errorf(`Error replacing secret in ParamsData of test "%q".`, testCase.Name)
+
+                                return err
+                        }</span>
+                }
+
+                <span class="cov0" title="0">if testCase.PostBodyData != "" </span><span class="cov0" title="0">{
+                        testCase.PostBodyData, err = replaceSecretInString(testCase.PostBodyData, conn)
+                        if err != nil </span><span class="cov0" title="0">{
+                                logger.Errorf(`Error replacing secret in PostBodyData of test "%q".`, testCase.Name)
+
+                                return err
+                        }</span>
+                }
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// ExtractSecretHash uses a precompiled regex to extract the hash from
+// a '&lt;secret-&lt;hash&gt;&gt;' placeholder. Returns the hash without angle brackets
+// or prefix or an empty string if no match is found.
+func ExtractSecretHash(input string) string <span class="cov0" title="0">{
+        pattern := regexp.MustCompile(`&lt;secret-([^&gt;]+)&gt;`)
+        matches := pattern.FindStringSubmatch(input)
+
+        if len(matches) &lt; 2 </span><span class="cov0" title="0">{ //nolint:mnd
+                logger.Warnf(`"No secret hash found: "%s"`, input)
+
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">return matches[1]</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package db
+
+import (
+        "encoding/csv"
+        "fmt"
+        "io"
+        "os"
+        "strings"
+
+        "zombiezen.com/go/sqlite"
+        "zombiezen.com/go/sqlite/sqlitex"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// Init opens or creates the SQLite database file at './db/store.db',
+// ensures that the 'secrets' table exists and returns the active
+// connection to the caller.
+func Init() (*sqlite.Conn, error) <span class="cov0" title="0">{
+        // Create database.
+        conn, err := sqlite.OpenConn("./db/store.db", sqlite.OpenReadWrite, sqlite.OpenCreate)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to open database. Error: %v", err)
+
+                return nil, err
+        }</span>
+
+        // Create table if it does not exist.
+        <span class="cov0" title="0">createTableSQL := `
+                CREATE TABLE IF NOT EXISTS secrets (
+                        hash   TEXT PRIMARY KEY,
+                        secret TEXT NOT NULL
+                );`
+
+        err = sqlitex.ExecuteTransient(conn, createTableSQL, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to create database. Error: %v", err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return conn, nil</span>
+}
+
+// InsertSeedData checks if the 'secrets' table is empty;
+// if so, reads './db/seed.csv', constructs a bulk-insert SQL statement
+// and populates the table. Returns an error if any operation fails.
+func InsertSeedData(conn *sqlite.Conn) error <span class="cov0" title="0">{
+        // Check if the table is empty.
+        count, err := GetTableEntryCount(conn)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if count &gt; 0 </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        // Insert data (bulk insert).
+        <span class="cov0" title="0">SQLValues, err := readSeedData()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">bulkInsertSQL := "INSERT INTO secrets(hash, secret) VALUES" + SQLValues
+
+        err = sqlitex.ExecuteTransient(conn, bulkInsertSQL, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to insert data. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// GetTableEntryCount returns the total number of rows in the 'secrets'
+// table by executing 'SELECT COUNT(*)'.
+func GetTableEntryCount(conn *sqlite.Conn) (int, error) <span class="cov0" title="0">{
+        var count int
+
+        countSQL := "SELECT COUNT(*) FROM secrets"
+        err := sqlitex.ExecuteTransient(conn, countSQL, &amp;sqlitex.ExecOptions{
+                Args:  nil,
+                Named: nil,
+                ResultFunc: func(stmt *sqlite.Stmt) error </span><span class="cov0" title="0">{
+                        count = stmt.ColumnInt(0)
+
+                        return nil
+                }</span>,
+        })
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to query table count. Error: %v", err)
+
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">return count, nil</span>
+}
+
+// readSeedData reads './db/seed.csv', each line containing 'hash,secret'
+// and returns a string suitable for a SQL VALUES clause for a bulk insert.
+func readSeedData() (string, error) <span class="cov0" title="0">{
+        file, err := os.Open("./db/seed.csv")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failure opening file. Error: %v", err)
+
+                return "", err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        reader := csv.NewReader(file)
+
+        var values []string
+
+        for </span><span class="cov0" title="0">{
+                record, readErr := reader.Read()
+                if readErr == io.EOF </span><span class="cov0" title="0">{
+                        break</span>
+                }
+
+                <span class="cov0" title="0">if readErr != nil </span><span class="cov0" title="0">{
+                        logger.Errorf("Failure reading file. Error: %v", readErr)
+
+                        return "", readErr
+                }</span>
+
+                <span class="cov0" title="0">hash := record[0]
+                secret := record[1]
+                values = append(values, fmt.Sprintf("('%s', '%s')", hash, secret))</span>
+        }
+
+        <span class="cov0" title="0">joinedValues := strings.Join(values, ",\n    ")
+        bulkInsertSQL := fmt.Sprintf("\n    %s;", joinedValues)
+
+        return bulkInsertSQL, nil</span>
+}
+
+// InsertSecret stores a new (hash, secret) pair into the 'secrets' table
+// using parameterized SQL to avoid injection. Returns an error if insertion fails.
+func InsertSecret(conn *sqlite.Conn, hash string, secret string) error <span class="cov0" title="0">{
+        stmt, _, err := conn.PrepareTransient("INSERT INTO secrets(hash, secret) VALUES (?, ?)")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to prepare insert statement. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
+                if err = stmt.Finalize(); err != nil </span><span class="cov0" title="0">{
+                        logger.Errorf("Failed to finalize statement. Error: %v", err)
+                }</span>
+        }()
+
+        <span class="cov0" title="0">stmt.BindText(1, hash)
+        stmt.BindText(2, secret) //nolint:mnd
+
+        if _, err = stmt.Step(); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to execute insert statement. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// SelectHash queries the 'secrets' table for the given hash
+// and returns its stored secret. Returns an empty string if no row is found
+// or an error on failure.
+func SelectHash(conn *sqlite.Conn, hash string) (string, error) <span class="cov0" title="0">{
+        stmt, _, err := conn.PrepareTransient("SELECT secret FROM secrets WHERE hash = ?")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to prepare select statement. Error: %v", err)
+
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
+                if err = stmt.Finalize(); err != nil </span><span class="cov0" title="0">{
+                        logger.Errorf("Failed to finalize statement. Error: %v", err)
+                }</span>
+        }()
+
+        <span class="cov0" title="0">stmt.BindText(1, hash)
+
+        hasRow, err := stmt.Step()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to execute select statement. Error: %v", err)
+
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">if !hasRow </span><span class="cov0" title="0">{
+                return "", nil
+        }</span>
+
+        <span class="cov0" title="0">secret := stmt.ColumnText(0)
+
+        return secret, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package diff
+
+import (
+        "crypto/sha256"
+        "os"
+
+        "github.com/sven-seyfert/apiprobe/internal/fileutil"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// HasFileContentChanged compares the SHA256 checksum of the given output
+// bytes against the current contents of outputPath. If they differ,
+// writes the new content to file and returns true;
+// otherwise logs 'No change' and returns false.
+func HasFileContentChanged(output []byte, outputPath string) (bool, error) <span class="cov0" title="0">{
+        err := fileutil.EnsureFileExists(outputPath)
+        if err != nil </span><span class="cov0" title="0">{
+                return false, err
+        }</span>
+
+        <span class="cov0" title="0">newHash := sha256.Sum256(output)
+
+        var prevHash [32]byte
+
+        existing, err := os.ReadFile(outputPath)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to read file "%s"`, outputPath)
+
+                return false, err
+        }</span>
+
+        <span class="cov0" title="0">prevHash = sha256.Sum256(existing)
+
+        if newHash == prevHash </span><span class="cov0" title="0">{
+                logger.Infof(`No change for "%s"`, outputPath)
+
+                return false, nil
+        }</span>
+
+        <span class="cov0" title="0">logger.Infof(`Detected change (diff) in "%s"`, outputPath)
+
+        if err = fileutil.WriteOutputFile(outputPath, output); err != nil </span><span class="cov0" title="0">{
+                return true, err
+        }</span>
+
+        <span class="cov0" title="0">return true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package exec
+
+import (
+        "bytes"
+        "context"
+        "fmt"
+        "os/exec"
+        "strings"
+        "time"
+
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// runCurl executes an external 'curl' command with specified timeouts
+// and write-out flags, captures its stdout, splits the HTTP status code
+// and returns the response body if the status code is 2xx;
+// otherwise, returns an error.
+func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) <span class="cov0" title="0">{
+        cmdArgs := req.CurlCmdArguments()
+
+        var stdout bytes.Buffer
+
+        cmd := exec.CommandContext(ctx, "./lib/curl.exe", cmdArgs...)
+        cmd.Stdout = &amp;stdout
+
+        logger.Debugf(`Executing endpoint request "%s"`, req.Request.Endpoint)
+        logger.Infof(`Description: "%s"`, req.Request.Description)
+
+        start := time.Now()
+
+        if err := cmd.Run(); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Curl execution failed. Error: %v", err)
+
+                return nil, "", fmt.Errorf("curl error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">duration := time.Since(start)
+        rawOutput := stdout.Bytes()
+
+        body, statusCode, err := extractStatusCode(rawOutput)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, "", err
+        }</span>
+
+        <span class="cov0" title="0">logger.Debugf("Status: %s, Duration: %dms", statusCode, duration.Milliseconds())
+
+        if !strings.HasPrefix(statusCode, "2") </span><span class="cov0" title="0">{
+                logger.Warnf("Non-2xx status code received: status %s", statusCode)
+
+                return nil, statusCode, fmt.Errorf("status %s", statusCode)
+        }</span>
+
+        <span class="cov0" title="0">return body, statusCode, nil</span>
+}
+
+// extractStatusCode splits the raw output from curl (where the last
+// three bytes encode the HTTP status code) into the response body
+// and the status code string.
+func extractStatusCode(output []byte) ([]byte, string, error) <span class="cov0" title="0">{
+        const HTTPCodeLength = 3
+
+        if len(output) &lt; HTTPCodeLength </span><span class="cov0" title="0">{
+                logger.Warnf("Output too short to contain status code: only %d bytes", len(output))
+
+                return nil, "", fmt.Errorf("only %d bytes", len(output))
+        }</span>
+
+        <span class="cov0" title="0">body := output[:len(output)-HTTPCodeLength]
+        statusCode := string(output[len(output)-HTTPCodeLength:])
+
+        return body, statusCode, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package exec
+
+import (
+        "context"
+        "strings"
+
+        "github.com/sven-seyfert/apiprobe/internal/auth"
+        "github.com/sven-seyfert/apiprobe/internal/diff"
+        "github.com/sven-seyfert/apiprobe/internal/fileutil"
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+        "github.com/sven-seyfert/apiprobe/internal/report"
+        "github.com/sven-seyfert/apiprobe/internal/util"
+)
+
+// ProcessRequest executes the APIRequest (including optional test cases),
+// compares the response against existing output, and triggers the webhook
+// if differences are detected.
+func ProcessRequest(
+        ctx context.Context,
+        idx int,
+        req *loader.APIRequest,
+        testCaseIndex *int,
+        res *report.Result,
+        rep *report.Report,
+        tokenStore *auth.TokenStore,
+) <span class="cov0" title="0">{
+        if testCaseIndex != nil </span><span class="cov0" title="0">{
+                logger.NewLine()
+                logger.Debugf("Run: %d, Test case: %d", idx, *testCaseIndex+1)
+        }</span>
+
+        <span class="cov0" title="0">const noTestCaseIndicator = -1
+
+        outputFile := fileutil.BuildOutputFilePath(req, testCaseIndex)
+
+        response, statusCode, err := executeRequest(ctx, req)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
+                res.IncreaseRequestErrorCount()
+
+                if testCaseIndex != nil </span><span class="cov0" title="0">{
+                        rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+                }</span> else<span class="cov0" title="0"> {
+                        rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+                }</span>
+
+                <span class="cov0" title="0">return</span>
+        }
+
+        <span class="cov0" title="0">result, err := formatResponse(ctx, req, response)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed processing JSON query by JQ. Error: %v", err)
+                res.IncreaseFormatErrorCount()
+
+                if testCaseIndex != nil </span><span class="cov0" title="0">{
+                        rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+                }</span> else<span class="cov0" title="0"> {
+                        rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+                }</span>
+
+                <span class="cov0" title="0">return</span>
+        }
+
+        <span class="cov0" title="0">if req.IsAuthRequest </span><span class="cov0" title="0">{
+                addAuthTokenToTokenStore(result, tokenStore, req)
+
+                logger.Debugf("No output file will be written (unnecessary), because generic token result.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">hasChanged, err := diff.HasFileContentChanged(result, outputFile)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("%v", err)
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">if !hasChanged </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res.IncreaseChangedFilesCount()
+
+        if testCaseIndex != nil </span><span class="cov0" title="0">{
+                rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+        }</span> else<span class="cov0" title="0"> {
+                rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+        }</span>
+}
+
+// executeRequest wraps runCurl to perform the HTTP request defined by APIRequest
+// and returns the raw response body and status code.
+func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) <span class="cov0" title="0">{
+        curlOutput, statusCode, err := runCurl(ctx, req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, statusCode, err
+        }</span>
+
+        <span class="cov0" title="0">return curlOutput, statusCode, nil</span>
+}
+
+// formatResponse formats the curl output using jq
+// and returns the filtered result.
+func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte) ([]byte, error) <span class="cov0" title="0">{
+        // If response is not JSON ("content-type: application/json"),
+        // it's plain text and therefore there is no need for jq formatting.
+        if !strings.HasPrefix(string(response), "{") &amp;&amp; !strings.HasPrefix(string(response), "[") </span><span class="cov0" title="0">{
+                return response, nil
+        }</span>
+
+        <span class="cov0" title="0">jqOutput, err := GoJQ(ctx, req.JqCommand, response)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return jqOutput, nil</span>
+}
+
+// addAuthTokenToTokenStore attempts to add the token to the provided token store
+// using the request ID as the key. Returns nothing.
+func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *loader.APIRequest) <span class="cov0" title="0">{
+        token := util.TrimQuotes(string(result))
+        lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
+
+        if added := tokenStore.Add(req.ID, token); added </span><span class="cov0" title="0">{
+                logger.Debugf(`Token "...%s" for auth request "%s" added to token store.`, lastTokenChars, req.ID)
+        }</span> else<span class="cov0" title="0"> {
+                logger.Warnf(`Token "...%s" for auth request "%s" already exists in token store.`, lastTokenChars, req.ID)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package exec
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+
+        "github.com/itchyny/gojq"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// GoJQ executes the jq query given by jqCommand against inputJSON.
+// Returns the encoded JSON ([]byte) of the query result or an error.
+func GoJQ(ctx context.Context, jqCommand string, inputJSON []byte) ([]byte, error) <span class="cov8" title="1">{
+        const defaultJQPrettifyFilter = "."
+
+        if jqCommand == "" </span><span class="cov8" title="1">{
+                jqCommand = defaultJQPrettifyFilter
+        }</span>
+
+        <span class="cov8" title="1">var input any
+        if err := json.Unmarshal(inputJSON, &amp;input); err != nil </span><span class="cov8" title="1">{
+                logger.Errorf("Failed to unmarshal input (invalid input json). Error: %v", err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">code, err := compileQuery(jqCommand)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">results, err := runQuery(ctx, code, input)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return encodeResults(results)</span>
+}
+
+// compileQuery parses and compiles the provided jqCommand into *gojq.Code.
+// Returns the compiled code or an error if parsing/compilation fails.
+func compileQuery(jqCommand string) (*gojq.Code, error) <span class="cov8" title="1">{
+        query, err := gojq.Parse(jqCommand)
+        if err != nil </span><span class="cov8" title="1">{
+                logger.Errorf("Failed to parse jqCommand. Error: %v", err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">code, err := gojq.Compile(query)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to compile jq. Error: %v", err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return code, nil</span>
+}
+
+// runQuery executes the compiled gojq code with the provided context and input,
+// collects all produced values and handles gojq.HaltError specially.
+// Returns a slice of results ([]any) or an error.
+func runQuery(ctx context.Context, code *gojq.Code, input any) ([]any, error) <span class="cov8" title="1">{
+        iter := code.RunWithContext(ctx, input)
+        results := []any{}
+
+        for </span><span class="cov8" title="1">{
+                nextVal, isOk := iter.Next()
+                if !isOk </span><span class="cov8" title="1">{
+                        break</span>
+                }
+
+                // If the iterator produced a non-error value,
+                // append and continue early.
+                <span class="cov8" title="1">errVal, isErr := nextVal.(error)
+                if !isErr </span><span class="cov8" title="1">{
+                        results = append(results, nextVal)
+
+                        continue</span>
+                }
+
+                // Handle error values
+                <span class="cov0" title="0">if halt, ok := errVal.(*gojq.HaltError); ok </span><span class="cov0" title="0">{ //nolint:errorlint
+                        if halt.Value() == nil </span><span class="cov0" title="0">{
+                                break</span>
+                        }
+
+                        // If HaltError carries a value,
+                        // append it and continue.
+                        <span class="cov0" title="0">if ve, okay := errVal.(interface{ Value() any }); okay </span><span class="cov0" title="0">{
+                                results = append(results, ve.Value())
+
+                                continue</span>
+                        }
+
+                        <span class="cov0" title="0">logger.Errorf("Failed to run query. JQ halt error with non-nil value (type=%T).", errVal)
+
+                        return nil, errVal</span>
+                }
+
+                <span class="cov0" title="0">logger.Errorf("Failed to run query. JQ runtime error: %s (type=%T)", safeErrorString(errVal), errVal)
+
+                return nil, errVal</span>
+        }
+
+        <span class="cov8" title="1">return results, nil</span>
+}
+
+// encodeResults marshals results to indented JSON. If results contains exactly
+// one element, that element is marshaled directly; otherwise the whole slice
+// is marshaled. Returns the JSON bytes ([]byte) or an error.
+func encodeResults(results []any) ([]byte, error) <span class="cov8" title="1">{
+        var out any
+
+        if len(results) == 1 </span><span class="cov8" title="1">{
+                out = results[0]
+        }</span> else<span class="cov8" title="1"> {
+                out = results
+        }</span>
+
+        <span class="cov8" title="1">enc, err := json.MarshalIndent(out, "", "  ")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to marshal indent. Marshal output: %v", err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return enc, nil</span>
+}
+
+// safeErrorString returns err.Error(), but recovers and returns a fallback
+// string if calling Error() panics.
+func safeErrorString(err error) string <span class="cov0" title="0">{
+        var errMsg string
+
+        func() </span><span class="cov0" title="0">{
+                defer func() </span><span class="cov0" title="0">{
+                        if rec := recover(); rec != nil </span><span class="cov0" title="0">{
+                                errMsg = fmt.Sprintf("error.Error() panicked: %v (error type=%T)", rec, err)
+                        }</span>
+                }()
+
+                <span class="cov0" title="0">errMsg = err.Error()</span>
+        }()
+
+        <span class="cov0" title="0">return errMsg</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package fileutil
+
+import (
+        "os"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// EnsureFileExists ensures that the target file and its directory exist,
+// creating them if necessary.
+func EnsureFileExists(outputPath string) error <span class="cov0" title="0">{
+        if _, err := os.Stat(outputPath); os.IsNotExist(err) </span><span class="cov0" title="0">{
+                if err = createOutputDir(outputPath); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if err = WriteOutputFile(outputPath, nil); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// WriteOutputFile writes byte content to the specified file
+// with defined permissions.
+func WriteOutputFile(outputPath string, output []byte) error <span class="cov0" title="0">{
+        const permissions = 0o644
+
+        if err := os.WriteFile(outputPath, output, permissions); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to write file "%s". Error: %v`, outputPath, err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package fileutil
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+        "strings"
+
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// BuildOutputFilePath computes the output file path for a
+// given APIRequest and optional test case index, by inserting
+// '-test-case-XX' into the JSON file name and nesting under
+// './data/output'.
+func BuildOutputFilePath(req *loader.APIRequest, testCaseIndex *int) string <span class="cov0" title="0">{
+        outputDir := "./data/output"
+
+        fileExt := filepath.Ext(req.JSONFilePath)
+        file := req.JSONFilePath
+
+        if testCaseIndex != nil </span><span class="cov0" title="0">{
+                file = strings.Replace(file, fileExt, fmt.Sprintf("-test-case-%02d%s", *testCaseIndex+1, fileExt), 1)
+        }</span> else<span class="cov0" title="0"> {
+                file = strings.Replace(file, fileExt, fmt.Sprintf("-test-case-%02d%s", 0, fileExt), 1)
+        }</span>
+
+        <span class="cov0" title="0">return filepath.Join(outputDir, file)</span>
+}
+
+// createOutputDir ensures that the parent directory for the given
+// output path exists. If necessary, it creates all missing directories.
+func createOutputDir(outputPath string) error <span class="cov0" title="0">{
+        const permissions = 0o755
+
+        if err := os.MkdirAll(filepath.Dir(outputPath), permissions); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to create output directory "%s". Error: %v"`, outputPath, err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package flags
+
+import (
+        "flag"
+        "fmt"
+        "os"
+
+        "zombiezen.com/go/sqlite"
+
+        "github.com/sven-seyfert/apiprobe/internal/config"
+        "github.com/sven-seyfert/apiprobe/internal/crypto"
+        "github.com/sven-seyfert/apiprobe/internal/db"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+type CLIFlags struct {
+        Name      *string
+        ID        *string
+        Tags      *string
+        Exclude   *string
+        NewID     *bool
+        AddSecret *string
+}
+
+// Init defines and parses the CLI flags and returning their values.
+func Init() *CLIFlags <span class="cov0" title="0">{
+        flag.Usage = func() </span><span class="cov0" title="0">{ //nolint:reassign
+                fmt.Fprintf(os.Stderr, config.Version+"\n\n")
+                fmt.Fprintf(os.Stderr, "Usage:\n")
+                flag.PrintDefaults()
+        }</span>
+
+        <span class="cov0" title="0">nameUsage := "Custom name for this test run (for this execution). Shown in the final notification to help identify the run.\n" +
+                "Example: --name \"Environment: PROD\"\n"
+
+        idUsage := "Specify the ten-character hex hash (id) of the request to run.\n" +
+                "The hash must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
+                "In combination with the --exclude flag, exclude will be prioritized.\n" +
+                "Example: --id \"ff00fceb61\"\n"
+
+        tagUsage := "Specify a comma-separated list of tags to select which requests to run.\n" +
+                "Tags must match the JSON \"tags\" value, in the JSON definition (input) files.\n" +
+                "In combination with the --exclude flag, exclude will be prioritized.\n" +
+                "Example: --tags \"reqres, booker\"\n"
+
+        excludeUsage := "Specify a comma-separated list of IDs (hashes) to exclude from the execution.\n" +
+                "The IDs must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
+                "Example: --exclude \"bb5599abcd, ff00fceb61\"\n"
+
+        newIDUsage := "Generate a new ten-character hex hash (id) for the \n" +
+                "JSON \"id\" value, in the JSON definition (input) file.\n" +
+                "Example: --new-id\n"
+
+        addSecretUsage := "Stores a secret (e.g., API request token, api-key, a bearer token or\n" +
+                "other request secrets) in the database and return a placeholder such as \"&lt;secret-b29ff12b50&gt;\".\n" +
+                "Use this placeholder in your JSON definition (input) file instead of the actual secret value.\n" +
+                "Example: --add-secret \"ThisIsMySecretText\"\n"
+
+        cliFlags := &amp;CLIFlags{
+                Name:      flag.String("name", "", nameUsage),
+                ID:        flag.String("id", "", idUsage),
+                Tags:      flag.String("tags", "", tagUsage),
+                Exclude:   flag.String("exclude", "", excludeUsage),
+                NewID:     flag.Bool("new-id", false, newIDUsage),
+                AddSecret: flag.String("add-secret", "", addSecretUsage),
+        }
+
+        flag.Parse()
+
+        return cliFlags</span>
+}
+
+// IsNewID checks whether a new ID should be generated, and if so,
+// produces a cryptographically secure hex hash and prints it and
+// returns an instruction to exit the program or not.
+func IsNewID(isNewID bool) (bool, error) <span class="cov0" title="0">{
+        complete := false
+
+        if !isNewID </span><span class="cov0" title="0">{
+                return complete, nil
+        }</span>
+
+        <span class="cov0" title="0">hash, err := crypto.HexHash()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to generate new ID. Error: %v", err)
+
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">fmt.Printf(`Use this ID "%s" in your JSON file, key "id".`, hash) //nolint:forbidigo
+
+        complete = true
+
+        return complete, nil</span>
+}
+
+// IsAddSecret validates the provided secret string and, if non-empty,
+// generates a cryptographically secure hex hash to serve as a placeholder
+// and prints it and returns an instruction to exit the program or not.
+func IsAddSecret(givenSecret string, conn *sqlite.Conn) (bool, error) <span class="cov0" title="0">{
+        complete := false
+
+        if givenSecret == "" </span><span class="cov0" title="0">{
+                return complete, nil
+        }</span>
+
+        <span class="cov0" title="0">hash, err := crypto.HexHash()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to generate new ID. Error: %v", err)
+
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">DBValidSecret := crypto.Obfuscate(givenSecret)
+
+        countBefore, err := db.GetTableEntryCount(conn)
+        if err != nil </span><span class="cov0" title="0">{
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">if err = db.InsertSecret(conn, hash, DBValidSecret); err != nil </span><span class="cov0" title="0">{
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">countAfter, err := db.GetTableEntryCount(conn)
+        if err != nil </span><span class="cov0" title="0">{
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">fmt.Printf("%d ==&gt; %d\n"+ //nolint:forbidigo
+                "Use this placeholder \"&lt;secret-%s&gt;\" in your JSON file "+
+                "instead of the actual secret value.", countBefore, countAfter, hash)
+
+        complete = true
+
+        return complete, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package loader
+
+import (
+        "errors"
+        "regexp"
+        "strings"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// ExcludeRequestsByID returns a filtered slice of APIRequest, excluding any
+// requests whose IDs are listed in the comma-separated excludeIDs string.
+func ExcludeRequestsByID(requests []*APIRequest, excludeIDs string) []*APIRequest <span class="cov0" title="0">{
+        if excludeIDs == "" </span><span class="cov0" title="0">{
+                return requests
+        }</span>
+
+        <span class="cov0" title="0">idList := strings.Split(excludeIDs, ",")
+        excludeSet := make(map[string]struct{})
+
+        for _, id := range idList </span><span class="cov0" title="0">{
+                id = strings.TrimSpace(id)
+                if id != "" </span><span class="cov0" title="0">{
+                        excludeSet[id] = struct{}{}
+                }</span>
+        }
+
+        <span class="cov0" title="0">var filteredRequests []*APIRequest
+
+        for _, req := range requests </span><span class="cov0" title="0">{
+                if _, found := excludeSet[req.ID]; !found </span><span class="cov0" title="0">{
+                        filteredRequests = append(filteredRequests, req)
+                }</span>
+        }
+
+        <span class="cov0" title="0">return filteredRequests</span>
+}
+
+// FilterRequests filters the given slice of APIRequest by the '--id'
+// and '--tags' flags. It returns a slice of matching requests and a
+// boolean flag that is true if no requests matched the filters.
+func FilterRequests(requests []*APIRequest, id string, tags string) ([]*APIRequest, bool) <span class="cov0" title="0">{ //nolint:varnamelen
+        if len(requests) == 0 </span><span class="cov0" title="0">{
+                logger.Warnf(`No requests found.`)
+
+                return requests, true
+        }</span>
+
+        // Filter requests by ID.
+        <span class="cov0" title="0">if id != "" </span><span class="cov0" title="0">{
+                if req := filterByID(requests, id); req != nil </span><span class="cov0" title="0">{
+                        return []*APIRequest{req}, false
+                }</span>
+
+                <span class="cov0" title="0">logger.Warnf(`No request with id (hex hash) "%s" found.`, id)
+
+                return requests, true</span>
+        }
+
+        // Or filter requests by tags.
+        <span class="cov0" title="0">if tags != "" </span><span class="cov0" title="0">{
+                tagsList := strings.Split(tags, ",")
+                wantedTags := make([]string, 0, len(tagsList))
+
+                for _, tag := range tagsList </span><span class="cov0" title="0">{
+                        tag = strings.TrimSpace(tag)
+                        if tag != "" </span><span class="cov0" title="0">{
+                                wantedTags = append(wantedTags, tag)
+                        }</span>
+                }
+
+                <span class="cov0" title="0">filteredRequests := filterByTags(requests, wantedTags)
+                if len(filteredRequests) &gt; 0 </span><span class="cov0" title="0">{
+                        return filteredRequests, false
+                }</span>
+
+                <span class="cov0" title="0">logger.Warnf(`No requests found for tags "%s".`, tags)
+
+                return requests, true</span>
+        }
+
+        // Or use the fallback (return all requests).
+        <span class="cov0" title="0">return requests, false</span>
+}
+
+// filterByID searches a slice of APIRequest for the given ID
+// and returns the first matching object.
+func filterByID(requests []*APIRequest, id string) *APIRequest <span class="cov0" title="0">{
+        for _, req := range requests </span><span class="cov0" title="0">{
+                if req.ID == id </span><span class="cov0" title="0">{
+                        return req
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// filterByTags returns all APIRequest objects whose tags intersect
+// with the desired tag list.
+func filterByTags(requests []*APIRequest, wantedTags []string) []*APIRequest <span class="cov0" title="0">{
+        // Build a set (map) for O|1 lookup of desired tags.
+        wantedSet := make(map[string]struct{}, len(wantedTags))
+        for _, w := range wantedTags </span><span class="cov0" title="0">{
+                wantedSet[w] = struct{}{}
+        }</span>
+
+        <span class="cov0" title="0">var filteredRequests []*APIRequest
+
+        // Check each request only once.
+        for _, req := range requests </span><span class="cov0" title="0">{
+                for _, tag := range req.Tags </span><span class="cov0" title="0">{
+                        if _, ok := wantedSet[tag]; ok </span><span class="cov0" title="0">{
+                                filteredRequests = append(filteredRequests, req)
+
+                                break</span>
+                        }
+                }
+        }
+
+        <span class="cov0" title="0">return filteredRequests</span>
+}
+
+// MergePreRequests constructs a merged requests list in which, for each
+// filtered request having a PreRequestID, the corresponding loaded request
+// is prepended before the filtered requests. It returns the gathered/merged
+// APIRequest list without duplicates.
+func MergePreRequests(loadedRequests []*APIRequest, filteredRequests []*APIRequest) ([]*APIRequest, error) <span class="cov0" title="0">{
+        lookupMap := make(map[string]*APIRequest, len(loadedRequests))
+
+        for _, loadedReq := range loadedRequests </span><span class="cov0" title="0">{
+                lookupMap[loadedReq.ID] = loadedReq
+        }</span>
+
+        <span class="cov0" title="0">const tenCharHexHashPattern = `^[a-fA-F0-9]{10}$`
+
+        hexPattern := regexp.MustCompile(tenCharHexHashPattern)
+        requestsList := make([]*APIRequest, 0, len(loadedRequests)+len(filteredRequests))
+
+        // Handle possible pre-requests by PreRequestID.
+        for _, filteredReq := range filteredRequests </span><span class="cov0" title="0">{
+                preID := filteredReq.PreRequestID
+                if preID == "" </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">if !hexPattern.MatchString(preID) </span><span class="cov0" title="0">{
+                        logger.Errorf(`PreRequestID "%s" has invalid format (not the expected ten character hex hash format).`, preID)
+
+                        return nil, errors.New("invalid format error")
+                }</span>
+
+                <span class="cov0" title="0">prev, found := lookupMap[preID]
+                if !found </span><span class="cov0" title="0">{
+                        logger.Errorf(`PreRequestID "%s" not found in loadedRequests.`, preID)
+
+                        return nil, errors.New("not found error")
+                }</span>
+
+                <span class="cov0" title="0">requestsList = append(requestsList, prev)</span>
+        }
+
+        // Append all filtered requests (to be behind the pre-requests).
+        <span class="cov0" title="0">requestsList = append(requestsList, filteredRequests...)
+
+        return removeDuplicates(requestsList), nil</span>
+}
+
+// removeDuplicates returns a new slice of APIRequest pointers with
+// duplicates removed, keeping only the first occurrence of each
+// request based on its ID.
+func removeDuplicates(requestsList []*APIRequest) []*APIRequest <span class="cov0" title="0">{
+        seen := make(map[string]bool, len(requestsList))
+        unique := make([]*APIRequest, 0, len(requestsList))
+
+        for _, req := range requestsList </span><span class="cov0" title="0">{
+                if !seen[req.ID] </span><span class="cov0" title="0">{
+                        seen[req.ID] = true
+                        unique = append(unique, req)
+                }</span>
+        }
+
+        <span class="cov0" title="0">return unique</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package loader
+
+import (
+        "bytes"
+        "encoding/json"
+        "net/http"
+        "net/url"
+        "os"
+        "path/filepath"
+        "strings"
+
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+        "github.com/sven-seyfert/apiprobe/internal/util"
+)
+
+// APIRequest represents the structure of each API request definition
+// as specified in the input JSON configuration.
+type APIRequest struct {
+        ID            string      `json:"id"`
+        IsAuthRequest bool        `json:"isAuthRequest"`
+        PreRequestID  string      `json:"preRequestId"`
+        Request       Request     `json:"request"`
+        TestCases     []TestCases `json:"testCases"`
+        Tags          []string    `json:"tags"`
+        JqCommand     string      `json:"jq"`
+
+        // Relative JSON file path.
+        JSONFilePath string `json:"-"`
+}
+
+// Request holds the HTTP-specific details for an API request.
+type Request struct {
+        Description string          `json:"description"`
+        Method      string          `json:"method"`
+        BaseURL     string          `json:"url"`
+        Endpoint    string          `json:"endpoint"`
+        BasicAuth   string          `json:"basicAuth"`
+        Headers     []string        `json:"headers"`
+        Params      []string        `json:"params"`
+        PostBodyRaw json.RawMessage `json:"postBody"`
+
+        // Target data type for the POST body format is string.
+        PostBody string `json:"-"`
+}
+
+// TestCases defines the input variations for the requests.
+type TestCases struct {
+        Name            string          `json:"name"`
+        ParamsData      string          `json:"paramsData"`
+        PostBodyDataRaw json.RawMessage `json:"postBodyData"`
+
+        // Target data type for the POST body format is string.
+        PostBodyData string `json:"-"`
+}
+
+// PreparePostBody prepares the request body (empty, x-www-form-urlencoded
+// or compacted JSON). Returns nil on success or an error if JSON compaction fails.
+func (req *APIRequest) PreparePostBody() error <span class="cov0" title="0">{
+        const emptyPostBodyLength = 2
+
+        if len(string(req.Request.PostBodyRaw)) == emptyPostBodyLength </span><span class="cov0" title="0">{
+                req.Request.PostBody = ""
+
+                return nil
+        }</span>
+
+        // Case POST body form is "x-www-form-urlencoded" which is no JSON.
+        <span class="cov0" title="0">if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                req.Request.PostBody = util.TrimQuotes(string(req.Request.PostBodyRaw))
+
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">var buf bytes.Buffer
+        if err := json.Compact(&amp;buf, req.Request.PostBodyRaw); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed by attempting JSON compact. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">req.Request.PostBody = buf.String()
+
+        return nil</span>
+}
+
+// PreparePostBodyData processes the raw POST body data of all test cases.
+// It normalizes the content based on header type, compacts JSON when needed,
+// and sets the processed result into PostBodyData.
+// Returns an error if JSON compaction fails, otherwise nil.
+func (req *APIRequest) PreparePostBodyData() error <span class="cov0" title="0">{
+        for idx := range req.TestCases </span><span class="cov0" title="0">{
+                testCase := &amp;req.TestCases[idx]
+
+                const emptyPostBodyDataLength = 2
+
+                if len(string(testCase.PostBodyDataRaw)) == emptyPostBodyDataLength </span><span class="cov0" title="0">{
+                        testCase.PostBodyData = ""
+
+                        continue</span>
+                }
+
+                // Case POST body form is "x-www-form-urlencoded" which is no JSON.
+                <span class="cov0" title="0">if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                        testCase.PostBodyData = util.TrimQuotes(string(testCase.PostBodyDataRaw))
+
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">var buf bytes.Buffer
+                if err := json.Compact(&amp;buf, testCase.PostBodyDataRaw); err != nil </span><span class="cov0" title="0">{
+                        logger.Errorf("Failed by attempting JSON compact for test case %d. Error: %v", idx, err)
+
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">testCase.PostBodyData = buf.String()</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// BuildRequestURL constructs the full request URL by concatenating the BaseURL,
+// Endpoint, and optional query parameters defined in the APIRequest.
+func (req *APIRequest) BuildRequestURL() string <span class="cov0" title="0">{
+        var requestURL strings.Builder
+
+        requestURL.WriteString(req.Request.BaseURL)
+        requestURL.WriteString(req.Request.Endpoint)
+
+        if len(req.Request.Params) &gt; 0 </span><span class="cov0" title="0">{
+                requestURL.WriteString("?")
+                requestURL.WriteString(url.PathEscape(strings.Join(req.Request.Params, "&amp;")))
+        }</span>
+
+        <span class="cov0" title="0">return requestURL.String()</span>
+}
+
+// CurlCmdArguments builds the command-line arguments for a curl invocation
+// based on the HTTP method, URL, headers, authentication and payload
+// specified in the APIRequest.
+func (req *APIRequest) CurlCmdArguments() []string <span class="cov0" title="0">{
+        cmdArgs := []string{
+                "--request", req.Request.Method,
+                "--silent", "--location", "--insecure",
+                "--connect-timeout", "8",
+                "--max-time", "24",
+                "--url", req.BuildRequestURL(),
+                "--write-out", "%{http_code}",
+        }
+
+        if req.Request.Method == http.MethodGet </span><span class="cov0" title="0">{
+                cmdArgs = append(cmdArgs, "--get")
+        }</span>
+
+        <span class="cov0" title="0">if req.Request.Method == http.MethodPost &amp;&amp; req.Request.PostBody != "" </span><span class="cov0" title="0">{
+                postBody := req.Request.PostBody
+
+                // Encoding for POST body form "x-www-form-urlencoded".
+                if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                        postBody = url.PathEscape(req.Request.PostBody)
+                }</span>
+
+                <span class="cov0" title="0">cmdArgs = append(cmdArgs, "--data", postBody)</span>
+        }
+
+        <span class="cov0" title="0">if req.Request.BasicAuth != "" </span><span class="cov0" title="0">{
+                cmdArgs = append(cmdArgs, "--user", req.Request.BasicAuth)
+        }</span>
+
+        <span class="cov0" title="0">for _, h := range req.Request.Headers </span><span class="cov0" title="0">{
+                cmdArgs = append(cmdArgs, "--header", h)
+        }</span>
+
+        <span class="cov0" title="0">return cmdArgs</span>
+}
+
+// LoadAllRequests recursively walks the input directory, parses all JSON files
+// and returns APIRequest pointers.
+func LoadAllRequests() ([]*APIRequest, error) <span class="cov0" title="0">{
+        const inputDir = "./data/input"
+
+        var requests []*APIRequest
+
+        err := filepath.Walk(inputDir, func(path string, _ os.FileInfo, err error) error </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        logger.Errorf("Failed to walk path. Error: %v", err)
+
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if filepath.Ext(path) == ".json" </span><span class="cov0" title="0">{
+                        fileRequest, loadErr := loadRequestFromFile(path, inputDir)
+                        if loadErr != nil </span><span class="cov0" title="0">{
+                                return loadErr
+                        }</span>
+
+                        <span class="cov0" title="0">requests = append(requests, fileRequest...)</span>
+                }
+
+                <span class="cov0" title="0">return nil</span>
+        })
+
+        <span class="cov0" title="0">return requests, err</span>
+}
+
+// loadRequestFromFile reads a JSON file, unmarshals it into APIRequest structs
+// and assigns the file path.
+func loadRequestFromFile(path string, inputDir string) ([]*APIRequest, error) <span class="cov0" title="0">{
+        bytes, err := os.ReadFile(path)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to read file "%s". Error: %v`, path, err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">var requestData []APIRequest
+
+        if err = json.Unmarshal(bytes, &amp;requestData); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to unmarshal JSON "%s". Error: %v`, path, err)
+
+                return nil, err
+        }</span>
+
+        // Store JSON file path in each request (relative to ./data/input).
+        <span class="cov0" title="0">relPath, err := filepath.Rel(inputDir, path)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to get relative path "%s". Error: %v`, path, err)
+
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">request := make([]*APIRequest, len(requestData))
+
+        for idx := range requestData </span><span class="cov0" title="0">{
+                requestData[idx].JSONFilePath = relPath
+                request[idx] = &amp;requestData[idx]
+        }</span>
+
+        <span class="cov0" title="0">return request, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package logger
+
+import (
+        "fmt"
+        "io"
+        "log" //nolint:depguard
+        "os"
+        "path/filepath"
+        "runtime"
+        "time"
+)
+
+// Init sets up the logger, creates a new log file,
+// directs output to both console and file, and
+// returns an error if initialization fails.
+func Init() error <span class="cov0" title="0">{
+        now := time.Now()
+        yearMonth := now.Format("2006-01")
+        day := now.Format("02")
+        logsDir := filepath.Join(".", "logs", yearMonth, day)
+
+        if err := os.MkdirAll(logsDir, os.ModePerm); err != nil </span><span class="cov0" title="0">{ //nolint:gosec
+                Errorf(`Failed to create logs directory "%s". Error: %v`, logsDir, err)
+
+                return err
+        }</span>
+
+        // Generate unique log file (./logs/2025-06/18/2025-06-18-12-58-54.938.log).
+        <span class="cov0" title="0">filename := now.Format("2006-01-02-15-04-05.000") + ".log"
+        logFilePath := filepath.Join(logsDir, filename)
+
+        // Open log file.
+        const permissions = 0o644
+
+        logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, permissions)
+        if err != nil </span><span class="cov0" title="0">{
+                Errorf(`Failed to open log file "%s". Error: %v`, logFilePath, err)
+
+                return err
+        }</span>
+
+        // Set log output to console and to file.
+        <span class="cov0" title="0">log.SetOutput(io.MultiWriter(os.Stdout, logFile))
+
+        return nil</span>
+}
+
+// NewLine logs a blank line without timestamp or prefix.
+func NewLine() <span class="cov0" title="0">{
+        oldFlags := log.Flags()
+
+        log.SetFlags(0)
+        log.Println()
+        log.SetFlags(oldFlags)
+}</span>
+
+// Fatalf logs a formatted fatal message with context.
+func Fatalf(format string, args ...interface{}) <span class="cov0" title="0">{
+        log.Printf("[FATAL] %s %s", fmt.Sprintf(format, args...), occurrence())
+}</span>
+
+// Errorf logs a formatted error message with context.
+func Errorf(format string, args ...interface{}) <span class="cov8" title="1">{
+        log.Printf("[ERROR] %s %s", fmt.Sprintf(format, args...), occurrence())
+}</span>
+
+// Warnf logs a formatted warning message with context.
+func Warnf(format string, args ...interface{}) <span class="cov0" title="0">{
+        log.Printf("[WARN]  %s %s", fmt.Sprintf(format, args...), occurrence())
+}</span>
+
+// Infof logs a formatted informational message with context.
+func Infof(format string, args ...interface{}) <span class="cov0" title="0">{
+        log.Printf("[INFO]  %s %s", fmt.Sprintf(format, args...), occurrence())
+}</span>
+
+// Debugf logs a formatted debug message with context.
+func Debugf(format string, args ...interface{}) <span class="cov0" title="0">{
+        log.Printf("[DEBUG] %s %s", fmt.Sprintf(format, args...), occurrence())
+}</span>
+
+// occurrence retrieves the caller’s file and line number
+// for log entries.
+func occurrence() string <span class="cov8" title="1">{
+        const skip = 2
+
+        _, file, line, ok := runtime.Caller(skip)
+        if !ok </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov8" title="1">return fmt.Sprintf("(%s:%d)\n", filepath.Base(file), line)</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package report
+
+import (
+        "bytes"
+        "context"
+        "encoding/json"
+        "fmt"
+        "net/http"
+        "os"
+        "strings"
+
+        "zombiezen.com/go/sqlite"
+
+        "github.com/sven-seyfert/apiprobe/internal/config"
+        "github.com/sven-seyfert/apiprobe/internal/crypto"
+        "github.com/sven-seyfert/apiprobe/internal/db"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+// Notification sends a summary notification via WebEx webhook.
+func Notification(
+        ctx context.Context,
+        cfg *config.Config,
+        conn *sqlite.Conn,
+        res *Result,
+        rep *Report,
+        name string,
+) <span class="cov0" title="0">{
+        if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">const reportFile = "./logs/report.json"
+
+        hostname, _ := os.Hostname()
+        hostnameMessage := fmt.Sprintf("Message from: __%s__ (hostname)", hostname)
+
+        if res.RequestErrorCount == 0 &amp;&amp; res.FormatResponseErrorCount == 0 &amp;&amp; res.ChangedFilesCount == 0 </span><span class="cov0" title="0">{
+                _ = os.Remove(reportFile)
+
+                isHeartbeatTime, err := IsHeartbeatTime(cfg)
+                if err != nil </span><span class="cov0" title="0">{
+                        return
+                }</span>
+
+                <span class="cov0" title="0">if !isHeartbeatTime </span><span class="cov0" title="0">{
+                        return
+                }</span>
+
+                <span class="cov0" title="0">if err = UpdateHeartbeatTime(cfg); err != nil </span><span class="cov0" title="0">{
+                        return
+                }</span>
+
+                <span class="cov0" title="0">mdMessage := fmt.Sprintf(
+                        `{"markdown":"#### 💙 %s\nHeartbeat: __still alive__\n\n%s"}`,
+                        config.Version,
+                        hostnameMessage,
+                )
+
+                webhookPayload := []byte(mdMessage)
+
+                webExWebhookNotification(ctx, conn,
+                        cfg.Notification.WebEx.WebhookURL,
+                        cfg.Notification.WebEx.Space,
+                        webhookPayload)
+
+                return</span>
+        }
+
+        <span class="cov0" title="0">if err := rep.SaveToFile(reportFile); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Error on save file. Error: %v", err)
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">data, err := os.ReadFile(reportFile)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Error on read file. Error: %v", err)
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
+
+        testRunName := ""
+        if name != "" </span><span class="cov0" title="0">{
+                testRunName = fmt.Sprintf("`%s`\n\n", name)
+        }</span>
+
+        <span class="cov0" title="0">mdResult := fmt.Sprintf(
+                "%sChanged files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
+                testRunName,
+                res.ChangedFilesCount,
+                res.RequestErrorCount,
+                res.FormatResponseErrorCount,
+        )
+
+        trafficLight := "🔴"
+        if res.RequestErrorCount == 0 &amp;&amp; res.FormatResponseErrorCount == 0 &amp;&amp; res.ChangedFilesCount &gt; 0 </span><span class="cov0" title="0">{
+                trafficLight = "🟡"
+        }</span>
+
+        <span class="cov0" title="0">mdMessage := fmt.Sprintf(
+                "#### %s %s\n%s\n%s\n\n%s",
+                trafficLight,
+                config.Version,
+                mdResult,
+                mdCodeBlock,
+                hostnameMessage,
+        )
+
+        payload := map[string]string{
+                "markdown": mdMessage,
+        }
+
+        webhookPayload, _ := json.Marshal(payload)
+
+        webExWebhookNotification(ctx, conn,
+                cfg.Notification.WebEx.WebhookURL,
+                cfg.Notification.WebEx.Space,
+                webhookPayload)</span>
+}
+
+// webExWebhookNotification sends the given JSON payload to the configured
+// WebEx incoming webhook URL.
+func webExWebhookNotification(
+        ctx context.Context,
+        conn *sqlite.Conn,
+        webhookURL string,
+        spaceSecret string,
+        webhookPayload []byte,
+) <span class="cov0" title="0">{
+        url := webhookURL + spaceSecret
+
+        const secretPrefix = "&lt;secret-"
+
+        if strings.Contains(spaceSecret, secretPrefix) </span><span class="cov0" title="0">{
+                spaceSecret = crypto.ExtractSecretHash(spaceSecret)
+                spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
+                url = webhookURL + crypto.Deobfuscate(spaceIdentifier)
+        }</span>
+
+        <span class="cov0" title="0">req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(webhookPayload))
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Error on new request. Error: %v", err)
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">req.Header.Set("Content-Type", "application/json")
+
+        resp, err := http.DefaultClient.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Error on send request. Error: %v", err)
+
+                return
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package report
+
+import (
+        "encoding/json"
+        "os"
+        "time"
+
+        "github.com/sven-seyfert/apiprobe/internal/config"
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+)
+
+type Result struct {
+        RequestErrorCount        int
+        FormatResponseErrorCount int
+        ChangedFilesCount        int
+}
+
+// IncreaseRequestErrorCount increments the Result counter for failed HTTP requests.
+func (res *Result) IncreaseRequestErrorCount() <span class="cov0" title="0">{
+        res.RequestErrorCount++
+}</span>
+
+// IncreaseFormatErrorCount increments the Result counter for JSON formatting or jq errors.
+func (res *Result) IncreaseFormatErrorCount() <span class="cov0" title="0">{
+        res.FormatResponseErrorCount++
+}</span>
+
+// IncreaseChangedFilesCount increments the Result counter for the number of output files that have changed.
+func (res *Result) IncreaseChangedFilesCount() <span class="cov0" title="0">{
+        res.ChangedFilesCount++
+}</span>
+
+type Request struct {
+        ID             string `json:"id"`
+        Description    string `json:"description"`
+        Endpoint       string `json:"endpoint"`
+        StatusCode     string `json:"statusCode"`
+        OutputFilePath string `json:"outputFilePath"`
+        TestCase       string `json:"testCase"`
+}
+
+type Report struct {
+        Requests []Request `json:"issues"`
+}
+
+// AddReportData records a single API request’s result, its ID, description,
+// endpoint, status code, output file path and test case into the Report.
+func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) <span class="cov0" title="0">{
+        const noTestCaseIndicator = -1
+
+        testCase := ""
+
+        if testCaseIndex != noTestCaseIndicator </span><span class="cov0" title="0">{
+                testCase = req.TestCases[testCaseIndex].Name
+        }</span>
+
+        <span class="cov0" title="0">request := Request{
+                ID:             req.ID,
+                Description:    req.Request.Description,
+                Endpoint:       req.Request.Endpoint,
+                StatusCode:     statusCode,
+                OutputFilePath: outputFilePath,
+                TestCase:       testCase,
+        }
+
+        r.Requests = append(r.Requests, request)</span>
+}
+
+// SaveToFile creates a file with the given name and writes the report as
+// pretty-printed JSON. Returns an error if file creation or writing fails.
+func (r *Report) SaveToFile(filename string) error <span class="cov0" title="0">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failure on create file. Error: %v", err)
+
+                return err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        encoder := json.NewEncoder(file)
+        encoder.SetIndent("", "    ")
+
+        if err = encoder.Encode(r); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failure on write file. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// IsHeartbeatTime checks whether enough time has passed
+// since the last heartbeat and returns true if a new
+// heartbeat should be sent, or false otherwise,
+// along with any error encountered.
+func IsHeartbeatTime(cfg *config.Config) (bool, error) <span class="cov0" title="0">{
+        lastHeartbeatTime := cfg.Heartbeat.LastHeartbeatTime
+        if lastHeartbeatTime == "" </span><span class="cov0" title="0">{
+                return true, nil
+        }</span>
+
+        <span class="cov0" title="0">threshold := time.Hour * time.Duration(cfg.Heartbeat.IntervalInHours)
+
+        lastTime, err := time.Parse(time.RFC3339, lastHeartbeatTime)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Invalid datetime "%s". Error: %v\n`, lastHeartbeatTime, err)
+
+                return false, err
+        }</span>
+
+        <span class="cov0" title="0">diff := time.Since(lastTime)
+
+        return diff &gt;= threshold, nil</span>
+}
+
+// UpdateHeartbeatTime writes the current UTC time (RFC3339) into
+// cfg.Heartbeat.LastHeartbeatTime and persists the entire config
+// back to the JSON file, returning an error if persistence fails.
+func UpdateHeartbeatTime(cfg *config.Config) error <span class="cov0" title="0">{
+        cfg.Heartbeat.LastHeartbeatTime = time.Now().UTC().Format(time.RFC3339)
+
+        file, err := os.Create("./config/config.json")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failure on create file. Error: %v", err)
+
+                return err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        encoder := json.NewEncoder(file)
+
+        encoder.SetIndent("", "    ")
+        encoder.SetEscapeHTML(false)
+
+        if err = encoder.Encode(cfg); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failure on write file. Error: %v", err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package util
+
+// Max returns the larger of two integer values.
+func Max(a, b int) int <span class="cov0" title="0">{
+        if a &gt; b </span><span class="cov0" title="0">{
+                return a
+        }</span>
+
+        <span class="cov0" title="0">return b</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package util
+
+import (
+        "strings"
+)
+
+// ReplaceQueryParam returns a copy of the given params slice, with the
+// key from testCaseValue replaced if present, or appended otherwise.
+func ReplaceQueryParam(params []string, testCaseValue string) []string <span class="cov0" title="0">{
+        const subStringCount = 2
+
+        keyToReplace := strings.SplitN(testCaseValue, "=", subStringCount)[0]
+        replaced := false
+
+        newParams := make([]string, len(params))
+        copy(newParams, params)
+
+        for idx, param := range newParams </span><span class="cov0" title="0">{
+                parts := strings.SplitN(param, "=", subStringCount)
+
+                if len(parts) == subStringCount &amp;&amp; parts[0] == keyToReplace </span><span class="cov0" title="0">{
+                        newParams[idx] = testCaseValue
+                        replaced = true
+
+                        break</span>
+                }
+        }
+
+        <span class="cov0" title="0">if !replaced </span><span class="cov0" title="0">{
+                newParams = append(newParams, testCaseValue) //nolint:makezero
+        }</span>
+
+        <span class="cov0" title="0">return newParams</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package util
+
+import "strings"
+
+// TrimQuotes removes leading and trailing double quotes and trailing
+// CRLF from the given string. Returns the cleaned string.
+func TrimQuotes(value string) string <span class="cov0" title="0">{
+        value = strings.TrimPrefix(value, `"`)
+        value = strings.TrimSuffix(value, "\r\n")
+        value = strings.TrimSuffix(value, `"`)
+
+        return value
+}</span>
+
+// ContainsSubstring checks if any string in the slice contains the given substring.
+// The comparison is case-insensitive and returns true if found, otherwise false.
+func ContainsSubstring(slice []string, substr string) bool <span class="cov0" title="0">{
+        for _, value := range slice </span><span class="cov0" title="0">{
+                if strings.Contains(strings.ToLower(value), strings.ToLower(substr)) </span><span class="cov0" title="0">{
+                        return true
+                }</span>
+        }
+
+        <span class="cov0" title="0">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package main
+
+import (
+        "context"
+        "os"
+        "os/signal"
+        "strings"
+        "syscall"
+
+        "github.com/sven-seyfert/apiprobe/internal/auth"
+        "github.com/sven-seyfert/apiprobe/internal/config"
+        "github.com/sven-seyfert/apiprobe/internal/crypto"
+        "github.com/sven-seyfert/apiprobe/internal/db"
+        "github.com/sven-seyfert/apiprobe/internal/exec"
+        "github.com/sven-seyfert/apiprobe/internal/flags"
+        "github.com/sven-seyfert/apiprobe/internal/loader"
+        "github.com/sven-seyfert/apiprobe/internal/logger"
+        "github.com/sven-seyfert/apiprobe/internal/report"
+        "github.com/sven-seyfert/apiprobe/internal/util"
+)
+
+// main initializes the logger and database, parses command-line flags loads
+// configuration and seeds the database. It then loads and filters API request
+// definitions, injects secrets, establishes a cancellation-aware context,
+// processes each request and finally sends notifications based on errors
+// or detected changes.
+func main() <span class="cov0" title="0">{
+        if err := logger.Init(); err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to initialize logger.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">conn, err := db.Init()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to initialize database.")
+
+                return
+        }</span>
+        <span class="cov0" title="0">defer conn.Close()
+
+        cliFlags := flags.Init()
+
+        // Load config file and values.
+        cfg, err := config.Load("./config/config.json")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to load config file.")
+
+                return
+        }</span>
+
+        // Handle command-line flags.
+        <span class="cov0" title="0">complete, err := flags.IsNewID(*cliFlags.NewID)
+        if complete || err != nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">complete, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
+        if complete || err != nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        // Fill database with default seed data.
+        <span class="cov0" title="0">err = db.InsertSeedData(conn)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to fill database with seed default data.")
+
+                return
+        }</span>
+
+        // Load requests from JSON files in the input directory.
+        <span class="cov0" title="0">requests, err := loader.LoadAllRequests()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to load API request definitions.")
+
+                return
+        }</span>
+
+        // Exclude requests based on IDs.
+        <span class="cov0" title="0">filteredRequests := loader.ExcludeRequestsByID(requests, *cliFlags.Exclude)
+
+        // Filter requests based on single id (ten character long hex hash) or by flags.
+        filteredRequests, notFound := loader.FilterRequests(filteredRequests, *cliFlags.ID, *cliFlags.Tags)
+        if notFound </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        // Merge possible pre-requests (prepend) with the filtered requests.
+        <span class="cov0" title="0">preparedRequests, err := loader.MergePreRequests(requests, filteredRequests)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to gather pre-requests.")
+
+                return
+        }</span>
+
+        // Prepare the requests by compacting the JSON POST body,
+        // handling "x-www-form-urlencoded" and POST body test cases.
+        <span class="cov0" title="0">for _, req := range preparedRequests </span><span class="cov0" title="0">{
+                if err = req.PreparePostBody(); err != nil </span><span class="cov0" title="0">{
+                        logger.Fatalf("Program exits: Failed to prepare the POST body.")
+                }</span>
+
+                <span class="cov0" title="0">if err = req.PreparePostBodyData(); err != nil </span><span class="cov0" title="0">{
+                        logger.Fatalf("Program exits: Failed to prepare the POST body test cases.")
+                }</span>
+        }
+
+        // Replace secrets placeholders in the requests with actual values.
+        <span class="cov0" title="0">finalRequests, err := crypto.HandleSecrets(preparedRequests, conn)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Fatalf("Program exits: Failed to handle secrets in requests.")
+
+                return
+        }</span>
+
+        // Only once requests are loaded successfully, set up signal-cancellation context.
+        <span class="cov0" title="0">ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+        defer stop()
+
+        // Initializes token store.
+        tokenStore := auth.NewTokenStore()
+
+        // Process each API request, optionally with test case variations.
+        res, rep := processRequests(ctx, finalRequests, tokenStore)
+
+        // Send notification on error case or on changes.
+        report.Notification(ctx, cfg, conn, res, rep, *cliFlags.Name)</span>
+}
+
+// processRequests iterates over the APIRequests, executes
+// each (including test cases), and writes the results. It returns
+// the aggregated Result and Report.
+func processRequests(
+        ctx context.Context,
+        requests []*loader.APIRequest,
+        tokenStore *auth.TokenStore,
+) (*report.Result, *report.Report) <span class="cov0" title="0">{
+        res := &amp;report.Result{}
+        rep := &amp;report.Report{}
+
+        for idx, req := range requests </span><span class="cov0" title="0">{
+                if ctx.Err() != nil </span><span class="cov0" title="0">{
+                        logger.Debugf("Received cancellation signal. Stopping request processing.")
+
+                        return res, rep
+                }</span>
+
+                <span class="cov0" title="0">if idx &gt; 0 </span><span class="cov0" title="0">{
+                        logger.NewLine()
+                }</span>
+
+                <span class="cov0" title="0">logger.Infof(`Run: %d, Test case: %d, File: "%s"`, idx+1, 0, req.JSONFilePath)
+
+                if req.PreRequestID != "" </span><span class="cov0" title="0">{
+                        repaceAuthTokenPlaceholderInRequestHeader(req, tokenStore)
+                }</span>
+
+                // Execute first (main) request, regardless of whether additional test cases exist.
+                <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore)
+
+                // Execute additional requests depending on the number of defined test cases.
+                for testCaseIndex, testCase := range req.TestCases </span><span class="cov0" title="0">{
+                        if testCase.ParamsData == "" &amp;&amp; testCase.PostBodyData == "" </span><span class="cov0" title="0">{
+                                continue</span>
+                        }
+
+                        <span class="cov0" title="0">modifiedReq := *req
+
+                        if testCase.ParamsData != "" </span><span class="cov0" title="0">{
+                                modifiedReq.Request.Params = util.ReplaceQueryParam(req.Request.Params, testCase.ParamsData)
+                        }</span>
+
+                        <span class="cov0" title="0">if testCase.PostBodyData != "" </span><span class="cov0" title="0">{
+                                modifiedReq.Request.PostBody = testCase.PostBodyData
+                        }</span>
+
+                        <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, &amp;modifiedReq, &amp;testCaseIndex, res, rep, tokenStore)
+                        logger.Infof("Test case: %s", testCase.Name)</span>
+                }
+        }
+
+        <span class="cov0" title="0">return res, rep</span>
+}
+
+// repaceAuthTokenPlaceholderInRequestHeader replaces the &lt;auth-token&gt; placeholder
+// in request headers with the corresponding token from the token store, if available.
+// Returns nothing.
+func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStore *auth.TokenStore) <span class="cov0" title="0">{
+        const headerReplacementIndicator = "&lt;auth-token&gt;"
+
+        lookupID := req.PreRequestID
+
+        for idx, header := range req.Request.Headers </span><span class="cov0" title="0">{
+                if !strings.Contains(header, headerReplacementIndicator) </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">if token, found := tokenStore.Get(lookupID); found </span><span class="cov0" title="0">{
+                        lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
+
+                        logger.Debugf(`Token "...%s" found for auth request "%s".`, lastTokenChars, lookupID)
+
+                        req.Request.Headers[idx] = strings.ReplaceAll(header, headerReplacementIndicator, token)
+
+                        break</span>
+                }
+
+                <span class="cov0" title="0">logger.Warnf(`No token found for auth request "%s".`, lookupID)</span>
+        }
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
