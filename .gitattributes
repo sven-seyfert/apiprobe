@@ -1,0 +1,2 @@
+# Exclude HTML files from language statistics
+coverage/*.html linguist-vendored
