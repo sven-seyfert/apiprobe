@@ -64,13 +64,6 @@ func (req *APIRequest) PreparePostBody() error {
 		return nil
 	}
 
-	// Case POST body form is "x-www-form-urlencoded" which is no JSON.
-	if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
-		req.Request.PostBody = util.TrimQuotes(string(req.Request.PostBodyRaw))
-
-		return nil
-	}
-
 	var buf bytes.Buffer
 	if err := json.Compact(&buf, req.Request.PostBodyRaw); err != nil {
 		logger.Errorf("Failed by attempting JSON compact. Error: %v", err)
@@ -79,6 +72,19 @@ func (req *APIRequest) PreparePostBody() error {
 	}
 
 	req.Request.PostBody = buf.String()
+
+	// Case POST body is JSON.
+	if !util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+		return nil
+	}
+
+	// Case POST body form is "x-www-form-urlencoded" which is no JSON.
+	formURL, err := transformToFormURL(req.Request.PostBody)
+	if err != nil {
+		return err
+	}
+
+	req.Request.PostBody = formURL
 
 	return nil
 }
@@ -99,13 +105,6 @@ func (req *APIRequest) PreparePostBodyData() error {
 			continue
 		}
 
-		// Case POST body form is "x-www-form-urlencoded" which is no JSON.
-		if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
-			testCase.PostBodyData = util.TrimQuotes(string(testCase.PostBodyDataRaw))
-
-			continue
-		}
-
 		var buf bytes.Buffer
 		if err := json.Compact(&buf, testCase.PostBodyDataRaw); err != nil {
 			logger.Errorf("Failed by attempting JSON compact for test case %d. Error: %v", idx, err)
@@ -114,9 +113,50 @@ func (req *APIRequest) PreparePostBodyData() error {
 		}
 
 		testCase.PostBodyData = buf.String()
+
+		// Case POST body is JSON.
+		if !util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+			continue
+		}
+
+		// Case POST body form is "x-www-form-urlencoded" which is no JSON.
+		formURL, err := transformToFormURL(testCase.PostBodyData)
+		if err != nil {
+			return err
+		}
+
+		testCase.PostBodyData = formURL
 	}
 
 	return nil
+}
+
+// transformToFormURL converts a JSON string representing a flat map[string]string
+// into a URL-encoded form string and returns the decoded form. An error is
+// returned if JSON unmarshalling or URL query unescape fails.
+func transformToFormURL(jsonStr string) (string, error) {
+	var params map[string]string
+	if err := json.Unmarshal([]byte(jsonStr), &params); err != nil {
+		logger.Errorf(`Failed to unmarshal JSON "%v".`, err)
+
+		return "", err
+	}
+
+	formValues := url.Values{}
+	for key, value := range params {
+		formValues.Set(key, value)
+	}
+
+	encodedForm := formValues.Encode()
+
+	rawForm, err := url.QueryUnescape(encodedForm)
+	if err != nil {
+		logger.Errorf(`Failed to query unescape "%v".`, err)
+
+		return "", err
+	}
+
+	return rawForm, nil
 }
 
 // BuildRequestURL constructs the full request URL by concatenating the BaseURL,
