@@ -55,6 +55,11 @@ func main() {
 		return
 	}
 
+	complete, err = flags.IsNewFile(*cliFlags.NewFile)
+	if complete || err != nil {
+		return
+	}
+
 	complete, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
 	if complete || err != nil {
 		return

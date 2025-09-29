@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"zombiezen.com/go/sqlite"
 
@@ -19,6 +21,7 @@ type CLIFlags struct {
 	Tags      *string
 	Exclude   *string
 	NewID     *bool
+	NewFile   *bool
 	AddSecret *string
 }
 
@@ -51,6 +54,9 @@ func Init() *CLIFlags {
 		"JSON \"id\" value, in the JSON definition (input) file.\n" +
 		"Example: --new-id\n"
 
+	newFileUsage := "Generate a new JSON template file.\n" +
+		"Example: --new-file\n"
+
 	addSecretUsage := "Stores a secret (e.g., API request token, api-key, a bearer token or\n" +
 		"other request secrets) in the database and return a placeholder such as \"<secret-b29ff12b50>\".\n" +
 		"Use this placeholder in your JSON definition (input) file instead of the actual secret value.\n" +
@@ -62,6 +68,7 @@ func Init() *CLIFlags {
 		Tags:      flag.String("tags", "", tagUsage),
 		Exclude:   flag.String("exclude", "", excludeUsage),
 		NewID:     flag.Bool("new-id", false, newIDUsage),
+		NewFile:   flag.Bool("new-file", false, newFileUsage),
 		AddSecret: flag.String("add-secret", "", addSecretUsage),
 	}
 
@@ -92,6 +99,91 @@ func IsNewID(isNewID bool) (bool, error) {
 	complete = true
 
 	return complete, nil
+}
+
+// IsNewFile checks if a new file should be created. If true, it generates an ID,
+// writes a new template JSON file, and returns true on success. Returns false
+// and an error if any step fails.
+func IsNewFile(isNewFile bool) (bool, error) {
+	complete := false
+
+	if !isNewFile {
+		return complete, nil
+	}
+
+	hash, err := crypto.HexHash()
+	if err != nil {
+		logger.Errorf("Failed to generate new ID. Error: %v", err)
+
+		return complete, err
+	}
+
+	if err = writeNewTemplateJSONFile(hash); err != nil {
+		return complete, err
+	}
+
+	complete = true
+
+	return complete, nil
+}
+
+// writeNewTemplateJSONFile creates a new JSON file with a given ID as content.
+// Returns an error if directory creation or file writing fails.
+func writeNewTemplateJSONFile(hash string) error {
+	content := `[
+    {
+        "id": "${ID}",
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "...",
+            "method": "GET",
+            "url": "https://...",
+            "endpoint": "/...",
+            "basicAuth": "",
+            "headers": [],
+            "params": [],
+            "postBody": {}
+        },
+        "testCases": [
+            {
+                "name": "",
+                "paramsData": "",
+                "postBodyData": {}
+            }
+        ],
+        "tags": [
+            "env-prod"
+        ],
+        "jq": ""
+    }
+]`
+
+	const (
+		path              = "./data/input/"
+		file              = "new-template.json"
+		createPermissions = 0o755
+		writePermissions  = 0o644
+	)
+
+	err := os.MkdirAll(filepath.Dir(path), createPermissions)
+	if err != nil {
+		logger.Errorf(`Failed to create data/input directory "%s". Error: %v`, file, err)
+
+		return err
+	}
+
+	filePath := filepath.Join(path, file)
+	content = strings.Replace(content, "${ID}", hash, 1)
+
+	err = os.WriteFile(filePath, []byte(content), writePermissions)
+	if err != nil {
+		logger.Errorf(`Failed to write file "%s". Error: %v`, filePath, err)
+
+		return err
+	}
+
+	return nil
 }
 
 // IsAddSecret validates the provided secret string and, if non-empty,
