@@ -6,7 +6,7 @@ BUILD_DIR := dist
 COVERAGE_DIR := coverage
 PLATFORMS := windows/amd64 windows/arm64 darwin/amd64 darwin/arm64
 
-.PHONY: help run build zip cross release lint test cover tidy clean
+.PHONY: help run build zip cross release lint test cover tidy clean format
 
 help: ## Show available commands
 	@echo "Available commands:"
@@ -55,3 +55,6 @@ clean: ## Remove build artifacts
 	@rm -f $(BINARY_NAME)$(EXT) $(BINARY_NAME).zip
 	@rm -rf ./$(BUILD_DIR)
 	@rm -rf ./$(COVERAGE_DIR)
+
+format: ## Format the file (LF instead of CRLF) using gofmt
+	go fmt ./...
