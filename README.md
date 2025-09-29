@@ -115,6 +115,7 @@ Currently in a stable initial state — core features implemented; more advanced
 | `--tags "animals, cars"`             | Run all requests containing any of the comma-separated tags.                                                                   |
 | `--exclude "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
 | `--new-id`                           | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
+| `--new-file`                         | Generate a new JSON template file. Generate a new JSON definition file, enter values/data, done.                               |
 | `--add-secret "<value>"`             | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
@@ -163,6 +164,14 @@ Currently in a stable initial state — core features implemented; more advanced
     go run main.go --new-id
     # or by executable (faster)
     ./apiprobe.exe --new-id
+    ```
+
+- **Generate new JSON template definition file**:
+
+    ``` bash
+    go run main.go --new-file
+    # or by executable (faster)
+    ./apiprobe.exe --new-file
     ```
 
 - **Add new secret**:
@@ -316,15 +325,13 @@ Mandatory for POST request = (P)
 | **request.basicAuth**      | User and password for a basic authentification; format \<user\>:\<password\>.                                                                                                                        | "" (empty string)                           |
 | **request.headers**        | Request header list (one or n headers).                                                                                                                                                              | [] (empty string array)                     |
 | **request.params**         | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                                                                                                       | [] (empty string array)                     |
-| **request.postBody** (P)   | JSON message body (payload) for POST requests. Usually it's a JSON structure, but there is an exception (see footnote). [^1]                                                                         | {} (empty JSON object)                      |
+| **request.postBody** (P)   | JSON message body (payload) for POST requests. Custom JSON object.                                                                                                                                   | {} (empty JSON object)                      |
 | **testCases**              | Data driven test data list (one or n test data entries); these variations apply to query params or post body. See [minimal definition](#minimal-definition).                                         |                                             |
 | **testCases.name**         | Define the name of your test case.                                                                                                                                                                   | "" (empty string)                           |
 | **testCases.paramsData**   | Define which query parameter should be applied (replaced) in request.params for the test cases. See [advanced definition](#advanced-definition).                                                     | "" (empty string)                           |
-| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. [^1] See [advanced definition](#advanced-definition).                                                  | {} (empty JSON object)                      |
+| **testCases.postBodyData** | Define post body data that will be applied (replaced) in request.postBody for the test cases. See [advanced definition](#advanced-definition).                                                       | {} (empty JSON object)                      |
 | **tags**                   | Representation of the topic, of a application, environment etc.                                                                                                                                      | [] (empty string array)                     |
 | **jq**                     | JSON query syntax; prettify JSON response (default ".").                                                                                                                                             | "." (dot is the fallback if "" is provided) |
-
-[^1]: In case header "x-www-form-urlencoded" (full: "Content-Type: application/x-www-form-urlencoded") is set, the POST body is not JSON. Therefore a string can be set which represents the encoded key-value pair.
 
 ### Secret management
 
