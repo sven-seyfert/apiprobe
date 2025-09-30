@@ -11,6 +11,25 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.15.0] - 2025-09-30
+
+### Added
+
+- File .gitattributes to exclude HTML from language statistics. [70727a0](https://github.com/sven-seyfert/apiprobe/commit/70727a02c98ef06a162f0681fba9ae71203cf402)
+- CLI option/flag to create a new JSON template file. [9521ba1](https://github.com/sven-seyfert/apiprobe/commit/9521ba15aefd8607a5ce3bd11472d567b36b74b9)
+
+### Changed
+
+- Adjust post body handling to use post body JSON object instead of form-urlencoded string. [a158a21](https://github.com/sven-seyfert/apiprobe/commit/a158a2153551bf247acb874fe90d2ad9848e41e2)
+- Makefile by additional format command (for go fmt). [676cc24](https://github.com/sven-seyfert/apiprobe/commit/676cc24b9f78ea7a6ec5d4a75230a0a0b0cbc7a2)
+
+### Documented
+
+- Add CLI option/flag '--new-file' and change postBody JSON key description. [cce0226](https://github.com/sven-seyfert/apiprobe/commit/cce0226f66f5a8b08a2951de1f29abc0a4a7ff20)
+- Update function comment of 'writeNewTemplateJSONFile'. [126170c](https://github.com/sven-seyfert/apiprobe/commit/126170cb1cc370f8012dc25121dff99a65b067d1)
+- Extend description of flag/option '--new-file'. [b90b6f9](https://github.com/sven-seyfert/apiprobe/commit/b90b6f9bf1519ac5750c1ff23078cc0bcdb4be77)
+- Update code coverage. [a1e92d6](https://github.com/sven-seyfert/apiprobe/commit/a1e92d62c9cee936746f3a4d46e5f4b22dea4992)
+
 ## [0.14.0] - 2025-08-26
 
 ### Added
@@ -256,7 +275,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.11.0...v0.12.0
