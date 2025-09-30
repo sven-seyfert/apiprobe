@@ -157,7 +157,7 @@ import (
         "github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.14.0 - 2025-08-26"
+const Version = "APIProbe 📡 v0.15.0 - 2025-09-30"
 
 type Heartbeat struct {
         IntervalInHours   int    `json:"intervalInHours"`
@@ -1130,6 +1130,8 @@ import (
         "flag"
         "fmt"
         "os"
+        "path/filepath"
+        "strings"
 
         "zombiezen.com/go/sqlite"
 
@@ -1145,6 +1147,7 @@ type CLIFlags struct {
         Tags      *string
         Exclude   *string
         NewID     *bool
+        NewFile   *bool
         AddSecret *string
 }
 
@@ -1177,6 +1180,10 @@ func Init() *CLIFlags <span class="cov0" title="0">{
                 "JSON \"id\" value, in the JSON definition (input) file.\n" +
                 "Example: --new-id\n"
 
+        newFileUsage := "Generate a new JSON definition template file.\n" +
+                "Then enter the request values/data and done.\n" +
+                "Example: --new-file\n"
+
         addSecretUsage := "Stores a secret (e.g., API request token, api-key, a bearer token or\n" +
                 "other request secrets) in the database and return a placeholder such as \"&lt;secret-b29ff12b50&gt;\".\n" +
                 "Use this placeholder in your JSON definition (input) file instead of the actual secret value.\n" +
@@ -1188,6 +1195,7 @@ func Init() *CLIFlags <span class="cov0" title="0">{
                 Tags:      flag.String("tags", "", tagUsage),
                 Exclude:   flag.String("exclude", "", excludeUsage),
                 NewID:     flag.Bool("new-id", false, newIDUsage),
+                NewFile:   flag.Bool("new-file", false, newFileUsage),
                 AddSecret: flag.String("add-secret", "", addSecretUsage),
         }
 
@@ -1218,6 +1226,92 @@ func IsNewID(isNewID bool) (bool, error) <span class="cov0" title="0">{
         complete = true
 
         return complete, nil</span>
+}
+
+// IsNewFile checks if a new file should be created. If true, it generates an ID,
+// writes a new template JSON file, and returns true on success. Returns false
+// and an error if any step fails.
+func IsNewFile(isNewFile bool) (bool, error) <span class="cov0" title="0">{
+        complete := false
+
+        if !isNewFile </span><span class="cov0" title="0">{
+                return complete, nil
+        }</span>
+
+        <span class="cov0" title="0">hash, err := crypto.HexHash()
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf("Failed to generate new ID. Error: %v", err)
+
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">if err = writeNewTemplateJSONFile(hash); err != nil </span><span class="cov0" title="0">{
+                return complete, err
+        }</span>
+
+        <span class="cov0" title="0">complete = true
+
+        return complete, nil</span>
+}
+
+// writeNewTemplateJSONFile creates a new JSON definition file (a template)
+// with a given ID as content. Returns an error if directory creation
+// or file writing fails.
+func writeNewTemplateJSONFile(hash string) error <span class="cov0" title="0">{
+        content := `[
+    {
+        "id": "${ID}",
+        "isAuthRequest": false,
+        "preRequestId": "",
+        "request": {
+            "description": "...",
+            "method": "GET",
+            "url": "https://...",
+            "endpoint": "/...",
+            "basicAuth": "",
+            "headers": [],
+            "params": [],
+            "postBody": {}
+        },
+        "testCases": [
+            {
+                "name": "",
+                "paramsData": "",
+                "postBodyData": {}
+            }
+        ],
+        "tags": [
+            "env-prod"
+        ],
+        "jq": ""
+    }
+]`
+
+        const (
+                path              = "./data/input/"
+                file              = "new-template.json"
+                createPermissions = 0o755
+                writePermissions  = 0o644
+        )
+
+        err := os.MkdirAll(filepath.Dir(path), createPermissions)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to create data/input directory "%s". Error: %v`, file, err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">filePath := filepath.Join(path, file)
+        content = strings.Replace(content, "${ID}", hash, 1)
+
+        err = os.WriteFile(filePath, []byte(content), writePermissions)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to write file "%s". Error: %v`, filePath, err)
+
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
 }
 
 // IsAddSecret validates the provided secret string and, if non-empty,
@@ -1514,13 +1608,6 @@ func (req *APIRequest) PreparePostBody() error <span class="cov0" title="0">{
                 return nil
         }</span>
 
-        // Case POST body form is "x-www-form-urlencoded" which is no JSON.
-        <span class="cov0" title="0">if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
-                req.Request.PostBody = util.TrimQuotes(string(req.Request.PostBodyRaw))
-
-                return nil
-        }</span>
-
         <span class="cov0" title="0">var buf bytes.Buffer
         if err := json.Compact(&amp;buf, req.Request.PostBodyRaw); err != nil </span><span class="cov0" title="0">{
                 logger.Errorf("Failed by attempting JSON compact. Error: %v", err)
@@ -1529,6 +1616,19 @@ func (req *APIRequest) PreparePostBody() error <span class="cov0" title="0">{
         }</span>
 
         <span class="cov0" title="0">req.Request.PostBody = buf.String()
+
+        // Case POST body is JSON.
+        if !util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        // Case POST body form is "x-www-form-urlencoded" which is no JSON.
+        <span class="cov0" title="0">formURL, err := transformToFormURL(req.Request.PostBody)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">req.Request.PostBody = formURL
 
         return nil</span>
 }
@@ -1549,13 +1649,6 @@ func (req *APIRequest) PreparePostBodyData() error <span class="cov0" title="0">
                         continue</span>
                 }
 
-                // Case POST body form is "x-www-form-urlencoded" which is no JSON.
-                <span class="cov0" title="0">if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
-                        testCase.PostBodyData = util.TrimQuotes(string(testCase.PostBodyDataRaw))
-
-                        continue</span>
-                }
-
                 <span class="cov0" title="0">var buf bytes.Buffer
                 if err := json.Compact(&amp;buf, testCase.PostBodyDataRaw); err != nil </span><span class="cov0" title="0">{
                         logger.Errorf("Failed by attempting JSON compact for test case %d. Error: %v", idx, err)
@@ -1563,10 +1656,51 @@ func (req *APIRequest) PreparePostBodyData() error <span class="cov0" title="0">
                         return err
                 }</span>
 
-                <span class="cov0" title="0">testCase.PostBodyData = buf.String()</span>
+                <span class="cov0" title="0">testCase.PostBodyData = buf.String()
+
+                // Case POST body is JSON.
+                if !util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+
+                // Case POST body form is "x-www-form-urlencoded" which is no JSON.
+                <span class="cov0" title="0">formURL, err := transformToFormURL(testCase.PostBodyData)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">testCase.PostBodyData = formURL</span>
         }
 
         <span class="cov0" title="0">return nil</span>
+}
+
+// transformToFormURL converts a JSON string representing a flat map[string]string
+// into a URL-encoded form string and returns the decoded form. An error is
+// returned if JSON unmarshalling or URL query unescape fails.
+func transformToFormURL(jsonStr string) (string, error) <span class="cov0" title="0">{
+        var params map[string]string
+        if err := json.Unmarshal([]byte(jsonStr), &amp;params); err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to unmarshal JSON "%v".`, err)
+
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">formValues := url.Values{}
+        for key, value := range params </span><span class="cov0" title="0">{
+                formValues.Set(key, value)
+        }</span>
+
+        <span class="cov0" title="0">encodedForm := formValues.Encode()
+
+        rawForm, err := url.QueryUnescape(encodedForm)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Errorf(`Failed to query unescape "%v".`, err)
+
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">return rawForm, nil</span>
 }
 
 // BuildRequestURL constructs the full request URL by concatenating the BaseURL,
@@ -2219,6 +2353,11 @@ func main() <span class="cov0" title="0">{
 
         // Handle command-line flags.
         <span class="cov0" title="0">complete, err := flags.IsNewID(*cliFlags.NewID)
+        if complete || err != nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">complete, err = flags.IsNewFile(*cliFlags.NewFile)
         if complete || err != nil </span><span class="cov0" title="0">{
                 return
         }</span>
