@@ -115,7 +115,7 @@ Currently in a stable initial state — core features implemented; more advanced
 | `--tags "animals, cars"`             | Run all requests containing any of the comma-separated tags.                                                                   |
 | `--exclude "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
 | `--new-id`                           | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
-| `--new-file`                         | Generate a new JSON template file. Generate a new JSON definition file, enter values/data, done.                               |
+| `--new-file`                         | Generates a new JSON definition template file. Then enter the request values/data and done.                                    |
 | `--add-secret "<value>"`             | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
@@ -166,7 +166,7 @@ Currently in a stable initial state — core features implemented; more advanced
     ./apiprobe.exe --new-id
     ```
 
-- **Generate new JSON template definition file**:
+- **Generate new JSON definition template file**:
 
     ``` bash
     go run main.go --new-file

@@ -54,7 +54,8 @@ func Init() *CLIFlags {
 		"JSON \"id\" value, in the JSON definition (input) file.\n" +
 		"Example: --new-id\n"
 
-	newFileUsage := "Generate a new JSON template file.\n" +
+	newFileUsage := "Generate a new JSON definition template file.\n" +
+		"Then enter the request values/data and done.\n" +
 		"Example: --new-file\n"
 
 	addSecretUsage := "Stores a secret (e.g., API request token, api-key, a bearer token or\n" +
