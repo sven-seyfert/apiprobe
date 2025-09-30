@@ -127,8 +127,9 @@ func IsNewFile(isNewFile bool) (bool, error) {
 	return complete, nil
 }
 
-// writeNewTemplateJSONFile creates a new JSON file with a given ID as content.
-// Returns an error if directory creation or file writing fails.
+// writeNewTemplateJSONFile creates a new JSON definition file (a template)
+// with a given ID as content. Returns an error if directory creation
+// or file writing fails.
 func writeNewTemplateJSONFile(hash string) error {
 	content := `[
     {
