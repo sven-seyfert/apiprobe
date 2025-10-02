@@ -192,23 +192,25 @@ func (req *APIRequest) CurlCmdArguments() []string {
 		cmdArgs = append(cmdArgs, "--get")
 	}
 
-	if req.Request.Method == http.MethodPost && req.Request.PostBody != "" {
-		postBody := req.Request.PostBody
+	if req.Request.Method == http.MethodPost || req.Request.Method == http.MethodPut {
+		if req.Request.PostBody != "" {
+			postBody := req.Request.PostBody
 
-		// Encoding for POST body form "x-www-form-urlencoded".
-		if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
-			postBody = url.PathEscape(req.Request.PostBody)
+			// Encoding for POST/PUT body form "x-www-form-urlencoded".
+			if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") {
+				postBody = url.PathEscape(req.Request.PostBody)
+			}
+
+			cmdArgs = append(cmdArgs, "--data", postBody)
 		}
-
-		cmdArgs = append(cmdArgs, "--data", postBody)
 	}
 
 	if req.Request.BasicAuth != "" {
 		cmdArgs = append(cmdArgs, "--user", req.Request.BasicAuth)
 	}
 
-	for _, h := range req.Request.Headers {
-		cmdArgs = append(cmdArgs, "--header", h)
+	for _, header := range req.Request.Headers {
+		cmdArgs = append(cmdArgs, "--header", header)
 	}
 
 	return cmdArgs
