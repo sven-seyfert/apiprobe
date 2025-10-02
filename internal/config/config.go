@@ -23,6 +23,7 @@ type Notification struct {
 }
 
 type Config struct {
+	DebugMode    bool         `json:"debugMode"`
 	Heartbeat    Heartbeat    `json:"heartbeat"`
 	Notification Notification `json:"notification"`
 }

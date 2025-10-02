@@ -126,7 +126,7 @@ func main() {
 	tokenStore := auth.NewTokenStore()
 
 	// Process each API request, optionally with test case variations.
-	res, rep := processRequests(ctx, finalRequests, tokenStore)
+	res, rep := processRequests(ctx, finalRequests, tokenStore, cfg.DebugMode)
 
 	// Send notification on error case or on changes.
 	report.Notification(ctx, cfg, conn, res, rep, *cliFlags.Name)
@@ -139,6 +139,7 @@ func processRequests(
 	ctx context.Context,
 	requests []*loader.APIRequest,
 	tokenStore *auth.TokenStore,
+	debugMode bool,
 ) (*report.Result, *report.Report) {
 	res := &report.Result{}
 	rep := &report.Report{}
@@ -161,7 +162,7 @@ func processRequests(
 		}
 
 		// Execute first (main) request, regardless of whether additional test cases exist.
-		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore)
+		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore, debugMode)
 
 		// Execute additional requests depending on the number of defined test cases.
 		for testCaseIndex, testCase := range req.TestCases {
@@ -179,7 +180,7 @@ func processRequests(
 				modifiedReq.Request.PostBody = testCase.PostBodyData
 			}
 
-			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep, tokenStore)
+			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep, tokenStore, debugMode)
 			logger.Infof("Test case: %s", testCase.Name)
 		}
 	}

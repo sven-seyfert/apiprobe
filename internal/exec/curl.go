@@ -16,12 +16,17 @@ import (
 // and write-out flags, captures its stdout, splits the HTTP status code
 // and returns the response body if the status code is 2xx;
 // otherwise, returns an error.
-func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) {
+func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) {
 	cmdArgs := req.CurlCmdArguments()
 
 	var stdout bytes.Buffer
 
 	cmd := exec.CommandContext(ctx, "./lib/curl.exe", cmdArgs...)
+
+	if debugMode {
+		fmt.Printf("\n%s\n\n", buildCurlFormat(cmd.String())) //nolint:forbidigo
+	}
+
 	cmd.Stdout = &stdout
 
 	logger.Debugf(`Executing endpoint request "%s"`, req.Request.Endpoint)

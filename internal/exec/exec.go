@@ -24,6 +24,7 @@ func ProcessRequest(
 	res *report.Result,
 	rep *report.Report,
 	tokenStore *auth.TokenStore,
+	debugMode bool,
 ) {
 	if testCaseIndex != nil {
 		logger.NewLine()
@@ -34,7 +35,7 @@ func ProcessRequest(
 
 	outputFile := fileutil.BuildOutputFilePath(req, testCaseIndex)
 
-	response, statusCode, err := executeRequest(ctx, req)
+	response, statusCode, err := executeRequest(ctx, req, debugMode)
 	if err != nil {
 		logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
 		res.IncreaseRequestErrorCount()
@@ -92,8 +93,8 @@ func ProcessRequest(
 
 // executeRequest wraps runCurl to perform the HTTP request defined by APIRequest
 // and returns the raw response body and status code.
-func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) {
-	curlOutput, statusCode, err := runCurl(ctx, req)
+func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) {
+	curlOutput, statusCode, err := runCurl(ctx, req, debugMode)
 	if err != nil {
 		return nil, statusCode, err
 	}
