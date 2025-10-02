@@ -6,7 +6,7 @@ BUILD_DIR := dist
 COVERAGE_DIR := coverage
 PLATFORMS := windows/amd64 windows/arm64 darwin/amd64 darwin/arm64
 
-.PHONY: help run build zip cross release lint test cover tidy clean format
+.PHONY: help run build zip cross release lint test cover deps tidy clean format
 
 help: ## Show available commands
 	@echo "Available commands:"
@@ -47,6 +47,9 @@ cover: ## Generate coverage report
 	@mkdir -p $(COVERAGE_DIR)
 	go test -v ./... -coverprofile=$(COVERAGE_DIR)/coverage.out ./...
 	go tool cover -html=$(COVERAGE_DIR)/coverage.out -o ./$(COVERAGE_DIR)/coverage.html
+
+deps: ## Update go.mod dependencies
+	go get -u ./...
 
 tidy: ## Ensure go.mod dependencies are tidy
 	go mod tidy
