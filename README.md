@@ -9,7 +9,7 @@
 [![release](https://img.shields.io/github/release/sven-seyfert/apiprobe.svg?color=slateblue&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/releases/latest)
 [![docs](https://img.shields.io/badge/docs-github--pages-steelblue.svg?style=flat-square&logo=markdown&logoColor=white)](https://sven-seyfert.github.io/apiprobe/)
 [![go report](https://img.shields.io/badge/report-A+-green.svg?style=flat-square&logo=go&logoColor=white)](https://goreportcard.com/report/github.com/sven-seyfert/apiprobe)
-[![go coverage](https://img.shields.io/badge/coverage-Ø_28%25-seagreen.svg?style=flat-square&logo=go&logoColor=white)](https://raw.githack.com/sven-seyfert/apiprobe/main/coverage/coverage.html)
+[![go coverage](https://img.shields.io/badge/coverage-Ø_20%25-seagreen.svg?style=flat-square&logo=go&logoColor=white)](https://raw.githack.com/sven-seyfert/apiprobe/main/coverage/coverage.html)
 [![go.mod version)](https://img.shields.io/github/go-mod/go-version/sven-seyfert/apiprobe?color=lightskyblue&label=go.mod&style=flat-square&logo=go&logoColor=white)](https://github.com/sven-seyfert/apiprobe/blob/main/go.mod)
 [![last commit](https://img.shields.io/github/last-commit/sven-seyfert/apiprobe.svg?color=darkgoldenrod&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/commits/main)
 [![contributors](https://img.shields.io/github/contributors/sven-seyfert/apiprobe.svg?color=darkolivegreen&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/graphs/contributors)
@@ -196,9 +196,9 @@ For example, to schedule a daily run at 2 AM, import the XML and adjust the `<
 
 ## Configuration
 
-🏃‍♂️ [config.json](#configjson) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
+🏃‍♂️ [apiprobe.json](#apiprobejson) | [JSON definitions](#json-definitions) | [Secret management](#secret-management)
 
-### config.json
+### apiprobe.json
 
 Setup your webhook URL for WebEx, MS Teams etc. At the moment only WebEx is available (more to be developed).
 
@@ -224,7 +224,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
         "preRequestId": "",
         "request": {
             "description": "Short description of the request (purpose)",
-            "method": "GET|POST",
+            "method": "GET|POST|PUT",
             "url": "https://api.example.com",
             "endpoint": "/api/path",
             "basicAuth": "",
@@ -257,7 +257,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
         "preRequestId": "",
         "request": {
             "description": "Short description of the request (purpose)",
-            "method": "GET|POST",
+            "method": "GET|POST|PUT",
             "url": "https://api.example.com",
             "endpoint": "/api/path",
             "basicAuth": "<secret-b4c3d2e1f0>",
@@ -319,7 +319,7 @@ Mandatory for POST request = (P)
 | **preRequestId**           | ID of the preconditional request to run before this one. The response payload (e.g. token) of that pre-request will automatically be made available to this request’s headers or body if referenced. | "" (empty string)                           |
 | **request**                | JSON node for all request related values.                                                                                                                                                            |                                             |
 | **request.description**    | Endpoint description (purpose).                                                                                                                                                                      | "" (empty string)                           |
-| **request.method** (M)     | HTTP Method; currently only GET and POST requests are supported.                                                                                                                                     |                                             |
+| **request.method** (M)     | HTTP Method; currently only GET, POST and PUT requests are supported.                                                                                                                                |                                             |
 | **request.url** (M)        | Interface (API) URL                                                                                                                                                                                  |                                             |
 | **request.endpoint** (M)   | Request endpoint.                                                                                                                                                                                    |                                             |
 | **request.basicAuth**      | User and password for a basic authentification; format \<user\>:\<password\>.                                                                                                                        | "" (empty string)                           |
@@ -388,7 +388,7 @@ apiprobe/
 ├── assets/
 │   └── images/         # Images, screenshots
 ├── config/
-│   └── config.json     # User defined config entries (like notification settings)
+│   └── apiprobe.json   # User defined config entries (like notification settings)
 ├── data/
 │   ├── input/          # JSON request definitions organized by service and environment
 │   └── output/         # Auto-generated responses (snapshots)

@@ -54,61 +54,63 @@
 		<div id="topbar">
 			<div id="nav">
 				<select id="files">
-
+				
 				<option value="file0">github.com/sven-seyfert/apiprobe/internal/auth/token.go (0.0%)</option>
-
+				
 				<option value="file1">github.com/sven-seyfert/apiprobe/internal/config/config.go (0.0%)</option>
-
+				
 				<option value="file2">github.com/sven-seyfert/apiprobe/internal/crypto/obfuscator.go (0.0%)</option>
-
+				
 				<option value="file3">github.com/sven-seyfert/apiprobe/internal/crypto/secrets.go (0.0%)</option>
-
+				
 				<option value="file4">github.com/sven-seyfert/apiprobe/internal/db/sqlite.go (0.0%)</option>
-
+				
 				<option value="file5">github.com/sven-seyfert/apiprobe/internal/diff/diff.go (0.0%)</option>
-
-				<option value="file6">github.com/sven-seyfert/apiprobe/internal/exec/curl.go (0.0%)</option>
-
-				<option value="file7">github.com/sven-seyfert/apiprobe/internal/exec/exec.go (0.0%)</option>
-
-				<option value="file8">github.com/sven-seyfert/apiprobe/internal/exec/jq.go (63.3%)</option>
-
-				<option value="file9">github.com/sven-seyfert/apiprobe/internal/fileutil/file.go (0.0%)</option>
-
-				<option value="file10">github.com/sven-seyfert/apiprobe/internal/fileutil/path.go (0.0%)</option>
-
-				<option value="file11">github.com/sven-seyfert/apiprobe/internal/flags/flags.go (0.0%)</option>
-
-				<option value="file12">github.com/sven-seyfert/apiprobe/internal/loader/filter.go (0.0%)</option>
-
-				<option value="file13">github.com/sven-seyfert/apiprobe/internal/loader/loader.go (0.0%)</option>
-
-				<option value="file14">github.com/sven-seyfert/apiprobe/internal/logger/logger.go (16.7%)</option>
-
-				<option value="file15">github.com/sven-seyfert/apiprobe/internal/report/notify.go (0.0%)</option>
-
-				<option value="file16">github.com/sven-seyfert/apiprobe/internal/report/report.go (0.0%)</option>
-
-				<option value="file17">github.com/sven-seyfert/apiprobe/internal/util/math.go (0.0%)</option>
-
-				<option value="file18">github.com/sven-seyfert/apiprobe/internal/util/querier.go (0.0%)</option>
-
-				<option value="file19">github.com/sven-seyfert/apiprobe/internal/util/string.go (0.0%)</option>
-
-				<option value="file20">github.com/sven-seyfert/apiprobe/main.go (0.0%)</option>
-
+				
+				<option value="file6">github.com/sven-seyfert/apiprobe/internal/exec/curl-format.go (0.0%)</option>
+				
+				<option value="file7">github.com/sven-seyfert/apiprobe/internal/exec/curl.go (0.0%)</option>
+				
+				<option value="file8">github.com/sven-seyfert/apiprobe/internal/exec/exec.go (0.0%)</option>
+				
+				<option value="file9">github.com/sven-seyfert/apiprobe/internal/exec/jq.go (63.3%)</option>
+				
+				<option value="file10">github.com/sven-seyfert/apiprobe/internal/fileutil/file.go (0.0%)</option>
+				
+				<option value="file11">github.com/sven-seyfert/apiprobe/internal/fileutil/path.go (0.0%)</option>
+				
+				<option value="file12">github.com/sven-seyfert/apiprobe/internal/flags/flags.go (0.0%)</option>
+				
+				<option value="file13">github.com/sven-seyfert/apiprobe/internal/loader/filter.go (0.0%)</option>
+				
+				<option value="file14">github.com/sven-seyfert/apiprobe/internal/loader/loader.go (0.0%)</option>
+				
+				<option value="file15">github.com/sven-seyfert/apiprobe/internal/logger/logger.go (16.7%)</option>
+				
+				<option value="file16">github.com/sven-seyfert/apiprobe/internal/report/notify.go (0.0%)</option>
+				
+				<option value="file17">github.com/sven-seyfert/apiprobe/internal/report/report.go (0.0%)</option>
+				
+				<option value="file18">github.com/sven-seyfert/apiprobe/internal/util/math.go (0.0%)</option>
+				
+				<option value="file19">github.com/sven-seyfert/apiprobe/internal/util/querier.go (0.0%)</option>
+				
+				<option value="file20">github.com/sven-seyfert/apiprobe/internal/util/string.go (0.0%)</option>
+				
+				<option value="file21">github.com/sven-seyfert/apiprobe/main.go (0.0%)</option>
+				
 				</select>
 			</div>
 			<div id="legend">
 				<span>not tracked</span>
-
+			
 				<span class="cov0">not covered</span>
 				<span class="cov8">covered</span>
-
+			
 			</div>
 		</div>
 		<div id="content">
-
+		
 		<pre class="file" id="file0" style="display: none">package auth
 
 // TokenStore maintains a map of request IDs to API tokens.
@@ -147,7 +149,7 @@ func (t *TokenStore) Get(id string) (string, bool) <span class="cov0" title="0">
         <span class="cov0" title="0">return "", false</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file1" style="display: none">package config
 
 import (
@@ -157,7 +159,7 @@ import (
         "github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.15.0 - 2025-09-30"
+const Version = "APIProbe 📡 v0.16.0 - 2025-10-02"
 
 type Heartbeat struct {
         IntervalInHours   int    `json:"intervalInHours"`
@@ -173,6 +175,7 @@ type Notification struct {
 }
 
 type Config struct {
+        DebugMode    bool         `json:"debugMode"`
         Heartbeat    Heartbeat    `json:"heartbeat"`
         Notification Notification `json:"notification"`
 }
@@ -201,7 +204,7 @@ func Load(filePath string) (*Config, error) <span class="cov0" title="0">{
         <span class="cov0" title="0">return &amp;cfg, nil</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file2" style="display: none">package crypto
 
 import (
@@ -275,7 +278,7 @@ func HexHash() (string, error) <span class="cov0" title="0">{
         return hexStr[:charCount], nil</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file3" style="display: none">package crypto
 
 import (
@@ -427,7 +430,7 @@ func ExtractSecretHash(input string) string <span class="cov0" title="0">{
         <span class="cov0" title="0">return matches[1]</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file4" style="display: none">package db
 
 import (
@@ -629,7 +632,7 @@ func SelectHash(conn *sqlite.Conn, hash string) (string, error) <span class="cov
         return secret, nil</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file5" style="display: none">package diff
 
 import (
@@ -678,8 +681,135 @@ func HasFileContentChanged(output []byte, outputPath string) (bool, error) <span
         <span class="cov0" title="0">return true, nil</span>
 }
 </pre>
-
+		
 		<pre class="file" id="file6" style="display: none">package exec
+
+import "strings"
+
+type token struct {
+        option   string
+        value    string
+        hasValue bool
+}
+
+// buildCurlFormat formats a given input string into a multi-line,
+// indented curl command. Returns the formatted curl command as a
+// string or an empty string if input is invalid.
+func buildCurlFormat(input string) string <span class="cov0" title="0">{
+        parts := strings.Fields(input)
+        if len(parts) == 0 </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">const (
+                executable = "curl"
+                indent     = "     "
+                backslash  = " \\"
+        )
+
+        tokens := parseTokens(parts[1:])
+        isFirstOption := true
+
+        var lines []string
+
+        for _, tok := range tokens </span><span class="cov0" title="0">{
+                if !tok.hasValue </span><span class="cov0" title="0">{
+                        if isFirstOption </span><span class="cov0" title="0">{
+                                lines = append(lines, executable+" "+tok.option+backslash)
+                                isFirstOption = false
+                        }</span> else<span class="cov0" title="0"> {
+                                lines = append(lines, indent+tok.option+backslash)
+                        }</span>
+
+                        <span class="cov0" title="0">continue</span>
+                }
+
+                <span class="cov0" title="0">formattedValue := quoteValue(tok.option, tok.value)
+
+                if isFirstOption </span><span class="cov0" title="0">{
+                        lines = append(lines, executable+" "+tok.option+" "+formattedValue+backslash)
+                        isFirstOption = false
+                }</span> else<span class="cov0" title="0"> {
+                        lines = append(lines, indent+tok.option+" "+formattedValue+backslash)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if len(lines) == 0 </span><span class="cov0" title="0">{
+                return executable
+        }</span>
+
+        <span class="cov0" title="0">result := strings.Join(lines, "\n")
+        result = strings.TrimRight(result, backslash)
+
+        return result</span>
+}
+
+// parseTokens parses command line parts into tokens with options and values.
+// Returns a slice of token structs.
+func parseTokens(parts []string) []token <span class="cov0" title="0">{
+        var tokens []token
+
+        valueFlags := map[string]struct{}{
+                "--request":         {},
+                "--connect-timeout": {},
+                "--max-time":        {},
+                "--url":             {},
+                "--write-out":       {},
+                "--data":            {},
+                "--user":            {},
+                "--header":          {},
+        }
+
+        for idx := 0; idx &lt; len(parts); idx++ </span><span class="cov0" title="0">{
+                part := parts[idx]
+
+                if !strings.HasPrefix(part, "-") </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">if _, ok := valueFlags[part]; !ok </span><span class="cov0" title="0">{
+                        tokens = append(tokens, token{option: part, value: "", hasValue: false})
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">value := ""
+                nextIndex := idx + 1
+
+                for nextIndex &lt; len(parts) &amp;&amp; !strings.HasPrefix(parts[nextIndex], "-") </span><span class="cov0" title="0">{
+                        if value != "" </span><span class="cov0" title="0">{
+                                value += " "
+                        }</span>
+
+                        <span class="cov0" title="0">value += parts[nextIndex]
+                        nextIndex++</span>
+                }
+
+                <span class="cov0" title="0">tokens = append(tokens, token{option: part, value: value, hasValue: true})
+                idx = nextIndex - 1</span>
+        }
+
+        <span class="cov0" title="0">return tokens</span>
+}
+
+// quoteValue adds appropriate quoting to a flag value based on the flag type.
+// Returns the quoted value as a string.
+func quoteValue(flag, value string) string <span class="cov0" title="0">{
+        switch flag </span>{
+        case "--request", "--connect-timeout", "--max-time":<span class="cov0" title="0">
+                return value</span>
+        default:<span class="cov0" title="0">
+                return "'" + escapeSingleQuotes(value) + "'"</span>
+        }
+}
+
+// escapeSingleQuotes escapes single quotes in a string for shell safety.
+// Returns the escaped string.
+func escapeSingleQuotes(s string) string <span class="cov0" title="0">{
+        return strings.ReplaceAll(s, "'", "'\\''")
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package exec
 
 import (
         "bytes"
@@ -697,13 +827,18 @@ import (
 // and write-out flags, captures its stdout, splits the HTTP status code
 // and returns the response body if the status code is 2xx;
 // otherwise, returns an error.
-func runCurl(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) <span class="cov0" title="0">{
+func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) <span class="cov0" title="0">{
         cmdArgs := req.CurlCmdArguments()
 
         var stdout bytes.Buffer
 
         cmd := exec.CommandContext(ctx, "./lib/curl.exe", cmdArgs...)
-        cmd.Stdout = &amp;stdout
+
+        if debugMode </span><span class="cov0" title="0">{
+                fmt.Printf("\n%s\n\n", buildCurlFormat(cmd.String())) //nolint:forbidigo
+        }</span>
+
+        <span class="cov0" title="0">cmd.Stdout = &amp;stdout
 
         logger.Debugf(`Executing endpoint request "%s"`, req.Request.Endpoint)
         logger.Infof(`Description: "%s"`, req.Request.Description)
@@ -753,8 +888,8 @@ func extractStatusCode(output []byte) ([]byte, string, error) <span class="cov0"
         return body, statusCode, nil</span>
 }
 </pre>
-
-		<pre class="file" id="file7" style="display: none">package exec
+		
+		<pre class="file" id="file8" style="display: none">package exec
 
 import (
         "context"
@@ -780,6 +915,7 @@ func ProcessRequest(
         res *report.Result,
         rep *report.Report,
         tokenStore *auth.TokenStore,
+        debugMode bool,
 ) <span class="cov0" title="0">{
         if testCaseIndex != nil </span><span class="cov0" title="0">{
                 logger.NewLine()
@@ -790,7 +926,7 @@ func ProcessRequest(
 
         outputFile := fileutil.BuildOutputFilePath(req, testCaseIndex)
 
-        response, statusCode, err := executeRequest(ctx, req)
+        response, statusCode, err := executeRequest(ctx, req, debugMode)
         if err != nil </span><span class="cov0" title="0">{
                 logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
                 res.IncreaseRequestErrorCount()
@@ -848,8 +984,8 @@ func ProcessRequest(
 
 // executeRequest wraps runCurl to perform the HTTP request defined by APIRequest
 // and returns the raw response body and status code.
-func executeRequest(ctx context.Context, req *loader.APIRequest) ([]byte, string, error) <span class="cov0" title="0">{
-        curlOutput, statusCode, err := runCurl(ctx, req)
+func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) <span class="cov0" title="0">{
+        curlOutput, statusCode, err := runCurl(ctx, req, debugMode)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, statusCode, err
         }</span>
@@ -887,8 +1023,8 @@ func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *l
         }</span>
 }
 </pre>
-
-		<pre class="file" id="file8" style="display: none">package exec
+		
+		<pre class="file" id="file9" style="display: none">package exec
 
 import (
         "context"
@@ -1038,8 +1174,8 @@ func safeErrorString(err error) string <span class="cov0" title="0">{
         <span class="cov0" title="0">return errMsg</span>
 }
 </pre>
-
-		<pre class="file" id="file9" style="display: none">package fileutil
+		
+		<pre class="file" id="file10" style="display: none">package fileutil
 
 import (
         "os"
@@ -1077,8 +1213,8 @@ func WriteOutputFile(outputPath string, output []byte) error <span class="cov0" 
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-
-		<pre class="file" id="file10" style="display: none">package fileutil
+		
+		<pre class="file" id="file11" style="display: none">package fileutil
 
 import (
         "fmt"
@@ -1123,8 +1259,8 @@ func createOutputDir(outputPath string) error <span class="cov0" title="0">{
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-
-		<pre class="file" id="file11" style="display: none">package flags
+		
+		<pre class="file" id="file12" style="display: none">package flags
 
 import (
         "flag"
@@ -1356,8 +1492,8 @@ func IsAddSecret(givenSecret string, conn *sqlite.Conn) (bool, error) <span clas
         return complete, nil</span>
 }
 </pre>
-
-		<pre class="file" id="file12" style="display: none">package loader
+		
+		<pre class="file" id="file13" style="display: none">package loader
 
 import (
         "errors"
@@ -1541,8 +1677,8 @@ func removeDuplicates(requestsList []*APIRequest) []*APIRequest <span class="cov
         <span class="cov0" title="0">return unique</span>
 }
 </pre>
-
-		<pre class="file" id="file13" style="display: none">package loader
+		
+		<pre class="file" id="file14" style="display: none">package loader
 
 import (
         "bytes"
@@ -1736,23 +1872,25 @@ func (req *APIRequest) CurlCmdArguments() []string <span class="cov0" title="0">
                 cmdArgs = append(cmdArgs, "--get")
         }</span>
 
-        <span class="cov0" title="0">if req.Request.Method == http.MethodPost &amp;&amp; req.Request.PostBody != "" </span><span class="cov0" title="0">{
-                postBody := req.Request.PostBody
+        <span class="cov0" title="0">if req.Request.Method == http.MethodPost || req.Request.Method == http.MethodPut </span><span class="cov0" title="0">{
+                if req.Request.PostBody != "" </span><span class="cov0" title="0">{
+                        postBody := req.Request.PostBody
 
-                // Encoding for POST body form "x-www-form-urlencoded".
-                if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
-                        postBody = url.PathEscape(req.Request.PostBody)
-                }</span>
+                        // Encoding for POST/PUT body form "x-www-form-urlencoded".
+                        if util.ContainsSubstring(req.Request.Headers, "x-www-form-urlencoded") </span><span class="cov0" title="0">{
+                                postBody = url.PathEscape(req.Request.PostBody)
+                        }</span>
 
-                <span class="cov0" title="0">cmdArgs = append(cmdArgs, "--data", postBody)</span>
+                        <span class="cov0" title="0">cmdArgs = append(cmdArgs, "--data", postBody)</span>
+                }
         }
 
         <span class="cov0" title="0">if req.Request.BasicAuth != "" </span><span class="cov0" title="0">{
                 cmdArgs = append(cmdArgs, "--user", req.Request.BasicAuth)
         }</span>
 
-        <span class="cov0" title="0">for _, h := range req.Request.Headers </span><span class="cov0" title="0">{
-                cmdArgs = append(cmdArgs, "--header", h)
+        <span class="cov0" title="0">for _, header := range req.Request.Headers </span><span class="cov0" title="0">{
+                cmdArgs = append(cmdArgs, "--header", header)
         }</span>
 
         <span class="cov0" title="0">return cmdArgs</span>
@@ -1823,8 +1961,8 @@ func loadRequestFromFile(path string, inputDir string) ([]*APIRequest, error) <s
         <span class="cov0" title="0">return request, nil</span>
 }
 </pre>
-
-		<pre class="file" id="file14" style="display: none">package logger
+		
+		<pre class="file" id="file15" style="display: none">package logger
 
 import (
         "fmt"
@@ -1918,8 +2056,8 @@ func occurrence() string <span class="cov8" title="1">{
         <span class="cov8" title="1">return fmt.Sprintf("(%s:%d)\n", filepath.Base(file), line)</span>
 }
 </pre>
-
-		<pre class="file" id="file15" style="display: none">package report
+		
+		<pre class="file" id="file16" style="display: none">package report
 
 import (
         "bytes"
@@ -2079,8 +2217,8 @@ func webExWebhookNotification(
         <span class="cov0" title="0">defer resp.Body.Close()</span>
 }
 </pre>
-
-		<pre class="file" id="file16" style="display: none">package report
+		
+		<pre class="file" id="file17" style="display: none">package report
 
 import (
         "encoding/json"
@@ -2202,7 +2340,7 @@ func IsHeartbeatTime(cfg *config.Config) (bool, error) <span class="cov0" title=
 func UpdateHeartbeatTime(cfg *config.Config) error <span class="cov0" title="0">{
         cfg.Heartbeat.LastHeartbeatTime = time.Now().UTC().Format(time.RFC3339)
 
-        file, err := os.Create("./config/config.json")
+        file, err := os.Create("./config/apiprobe.json")
         if err != nil </span><span class="cov0" title="0">{
                 logger.Errorf("Failure on create file. Error: %v", err)
 
@@ -2224,8 +2362,8 @@ func UpdateHeartbeatTime(cfg *config.Config) error <span class="cov0" title="0">
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
-
-		<pre class="file" id="file17" style="display: none">package util
+		
+		<pre class="file" id="file18" style="display: none">package util
 
 // Max returns the larger of two integer values.
 func Max(a, b int) int <span class="cov0" title="0">{
@@ -2236,8 +2374,8 @@ func Max(a, b int) int <span class="cov0" title="0">{
         <span class="cov0" title="0">return b</span>
 }
 </pre>
-
-		<pre class="file" id="file18" style="display: none">package util
+		
+		<pre class="file" id="file19" style="display: none">package util
 
 import (
         "strings"
@@ -2272,8 +2410,8 @@ func ReplaceQueryParam(params []string, testCaseValue string) []string <span cla
         <span class="cov0" title="0">return newParams</span>
 }
 </pre>
-
-		<pre class="file" id="file19" style="display: none">package util
+		
+		<pre class="file" id="file20" style="display: none">package util
 
 import "strings"
 
@@ -2299,8 +2437,8 @@ func ContainsSubstring(slice []string, substr string) bool <span class="cov0" ti
         <span class="cov0" title="0">return false</span>
 }
 </pre>
-
-		<pre class="file" id="file20" style="display: none">package main
+		
+		<pre class="file" id="file21" style="display: none">package main
 
 import (
         "context"
@@ -2344,7 +2482,7 @@ func main() <span class="cov0" title="0">{
         cliFlags := flags.Init()
 
         // Load config file and values.
-        cfg, err := config.Load("./config/config.json")
+        cfg, err := config.Load("./config/apiprobe.json")
         if err != nil </span><span class="cov0" title="0">{
                 logger.Fatalf("Program exits: Failed to load config file.")
 
@@ -2428,7 +2566,7 @@ func main() <span class="cov0" title="0">{
         tokenStore := auth.NewTokenStore()
 
         // Process each API request, optionally with test case variations.
-        res, rep := processRequests(ctx, finalRequests, tokenStore)
+        res, rep := processRequests(ctx, finalRequests, tokenStore, cfg.DebugMode)
 
         // Send notification on error case or on changes.
         report.Notification(ctx, cfg, conn, res, rep, *cliFlags.Name)</span>
@@ -2441,6 +2579,7 @@ func processRequests(
         ctx context.Context,
         requests []*loader.APIRequest,
         tokenStore *auth.TokenStore,
+        debugMode bool,
 ) (*report.Result, *report.Report) <span class="cov0" title="0">{
         res := &amp;report.Result{}
         rep := &amp;report.Report{}
@@ -2463,7 +2602,7 @@ func processRequests(
                 }</span>
 
                 // Execute first (main) request, regardless of whether additional test cases exist.
-                <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore)
+                <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore, debugMode)
 
                 // Execute additional requests depending on the number of defined test cases.
                 for testCaseIndex, testCase := range req.TestCases </span><span class="cov0" title="0">{
@@ -2481,7 +2620,7 @@ func processRequests(
                                 modifiedReq.Request.PostBody = testCase.PostBodyData
                         }</span>
 
-                        <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, &amp;modifiedReq, &amp;testCaseIndex, res, rep, tokenStore)
+                        <span class="cov0" title="0">exec.ProcessRequest(ctx, idx+1, &amp;modifiedReq, &amp;testCaseIndex, res, rep, tokenStore, debugMode)
                         logger.Infof("Test case: %s", testCase.Name)</span>
                 }
         }
@@ -2516,7 +2655,7 @@ func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStor
         }
 }
 </pre>
-
+		
 		</div>
 	</body>
 	<script>
