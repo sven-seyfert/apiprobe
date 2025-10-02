@@ -202,6 +202,10 @@ For example, to schedule a daily run at 2 AM, import the XML and adjust the `<
 
 Setup your webhook URL for WebEx, MS Teams etc. At the moment only WebEx is available (more to be developed).
 
+#### *debugMode*
+
+Activate or deactivate debug mode. This will print the cURL format representation of the request to the console. You then can simply test your request via cURL directly.
+
 #### *heartbeat*
 
 Define the interval (in hours) how often a heartbeat message should be sent. This is useful when you don't receive many failures or changes with you API requests and still want to know is the program running and healthy.
