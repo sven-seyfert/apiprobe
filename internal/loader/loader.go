@@ -17,6 +17,7 @@ import (
 // as specified in the input JSON configuration.
 type APIRequest struct {
 	ID            string      `json:"id"`
+	IsActive      bool        `json:"isActive"`
 	IsAuthRequest bool        `json:"isAuthRequest"`
 	PreRequestID  string      `json:"preRequestId"`
 	Request       Request     `json:"request"`

@@ -151,6 +151,10 @@ func processRequests(
 			return res, rep
 		}
 
+		if !req.IsActive {
+			continue
+		}
+
 		if idx > 0 {
 			logger.NewLine()
 		}
