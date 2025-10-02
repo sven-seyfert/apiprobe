@@ -224,6 +224,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
+        "isActive": true,
         "isAuthRequest": false,
         "preRequestId": "",
         "request": {
@@ -257,6 +258,7 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
 [
     {
         "id": "0f1e2d3c4b",
+        "isActive": true,
         "isAuthRequest": false,
         "preRequestId": "",
         "request": {
@@ -319,6 +321,7 @@ Mandatory for POST request = (P)
 | JSON key                   | JSON value description                                                                                                                                                                               | Default value                               |
 | --                         | ---                                                                                                                                                                                                  | ---                                         |
 | **id** (M)                 | Unique 10 character hex hash. Use `--new-id` to generate.                                                                                                                                            |                                             |
+| **isActive** (M)           | Toggle the request execution by this boolean flag. In case the endpoint still exists but is temporary inactive, simply set 'false' and this requests will not be processed.                          | true                                        |
 | **isAuthRequest** (M)      | Marks this as an authentication request (e.g. login). When true, the tool will make the resulting token available to subsequent requests.                                                            | false                                       |
 | **preRequestId**           | ID of the preconditional request to run before this one. The response payload (e.g. token) of that pre-request will automatically be made available to this request’s headers or body if referenced. | "" (empty string)                           |
 | **request**                | JSON node for all request related values.                                                                                                                                                            |                                             |
