@@ -1,6 +1,7 @@
 [
     {
         "id": "22a3e9cfbb",
+        "isActive": true,
         "isAuthRequest": false,
         "preRequestId": "",
         "request": {
