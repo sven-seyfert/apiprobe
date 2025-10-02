@@ -13,10 +13,10 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/util"
 )
 
-// ProcessRequest executes the APIRequest (including optional test cases),
+// ProcessFirstRequest executes the APIRequest (including optional test cases),
 // compares the response against existing output, and triggers the webhook
 // if differences are detected.
-func ProcessRequest(
+func ProcessFirstRequest(
 	ctx context.Context,
 	idx int,
 	req *loader.APIRequest,
@@ -64,7 +64,7 @@ func ProcessRequest(
 	}
 
 	if req.IsAuthRequest {
-		addAuthTokenToTokenStore(result, tokenStore, req)
+		auth.AddAuthTokenToTokenStore(result, tokenStore, req)
 
 		logger.Debugf("No output file will be written (unnecessary), because generic token result.")
 
@@ -88,6 +88,37 @@ func ProcessRequest(
 		rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
 	} else {
 		rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+	}
+}
+
+// ProcessTestCasesRequests executes all test case variations for a given
+// API request. Returns nothing.
+func ProcessTestCasesRequests(
+	ctx context.Context,
+	req *loader.APIRequest,
+	idx int,
+	res *report.Result,
+	rep *report.Report,
+	tokenStore *auth.TokenStore,
+	debugMode bool,
+) {
+	for testCaseIndex, testCase := range req.TestCases {
+		if testCase.ParamsData == "" && testCase.PostBodyData == "" {
+			continue
+		}
+
+		modifiedReq := *req
+
+		if testCase.ParamsData != "" {
+			modifiedReq.Request.Params = util.ReplaceQueryParam(req.Request.Params, testCase.ParamsData)
+		}
+
+		if testCase.PostBodyData != "" {
+			modifiedReq.Request.PostBody = testCase.PostBodyData
+		}
+
+		ProcessFirstRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep, tokenStore, debugMode)
+		logger.Infof("Test case: %s", testCase.Name)
 	}
 }
 
@@ -117,17 +148,4 @@ func formatResponse(ctx context.Context, req *loader.APIRequest, response []byte
 	}
 
 	return jqOutput, nil
-}
-
-// addAuthTokenToTokenStore attempts to add the token to the provided token store
-// using the request ID as the key. Returns nothing.
-func addAuthTokenToTokenStore(result []byte, tokenStore *auth.TokenStore, req *loader.APIRequest) {
-	token := util.TrimQuotes(string(result))
-	lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
-
-	if added := tokenStore.Add(req.ID, token); added {
-		logger.Debugf(`Token "...%s" for auth request "%s" added to token store.`, lastTokenChars, req.ID)
-	} else {
-		logger.Warnf(`Token "...%s" for auth request "%s" already exists in token store.`, lastTokenChars, req.ID)
-	}
 }

@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/sven-seyfert/apiprobe/internal/auth"
@@ -16,7 +16,8 @@ import (
 	"github.com/sven-seyfert/apiprobe/internal/loader"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
 	"github.com/sven-seyfert/apiprobe/internal/report"
-	"github.com/sven-seyfert/apiprobe/internal/util"
+
+	"zombiezen.com/go/sqlite"
 )
 
 // main initializes the logger and database, parses command-line flags loads
@@ -25,23 +26,14 @@ import (
 // processes each request and finally sends notifications based on errors
 // or detected changes.
 func main() {
-	if err := logger.Init(); err != nil {
-		logger.Fatalf("Program exits: Failed to initialize logger.")
-
-		return
-	}
-
-	conn, err := db.Init()
+	dbConn, cliFlags, err := initializeServices()
 	if err != nil {
-		logger.Fatalf("Program exits: Failed to initialize database.")
+		logger.Fatalf("Program exits: %v", err)
 
 		return
 	}
-	defer conn.Close()
+	defer dbConn.Close()
 
-	cliFlags := flags.Init()
-
-	// Load config file and values.
 	cfg, err := config.Load("./config/apiprobe.json")
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to load config file.")
@@ -60,13 +52,13 @@ func main() {
 		return
 	}
 
-	complete, err = flags.IsAddSecret(*cliFlags.AddSecret, conn)
+	complete, err = flags.IsAddSecret(*cliFlags.AddSecret, dbConn)
 	if complete || err != nil {
 		return
 	}
 
 	// Fill database with default seed data.
-	err = db.InsertSeedData(conn)
+	err = db.InsertSeedData(dbConn)
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to fill database with seed default data.")
 
@@ -111,7 +103,7 @@ func main() {
 	}
 
 	// Replace secrets placeholders in the requests with actual values.
-	finalRequests, err := crypto.HandleSecrets(preparedRequests, conn)
+	finalRequests, err := crypto.HandleSecrets(preparedRequests, dbConn)
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to handle secrets in requests.")
 
@@ -129,7 +121,24 @@ func main() {
 	res, rep := processRequests(ctx, finalRequests, tokenStore, cfg.DebugMode)
 
 	// Send notification on error case or on changes.
-	report.Notification(ctx, cfg, conn, res, rep, *cliFlags.Name)
+	report.Notification(ctx, cfg, dbConn, res, rep, *cliFlags.Name)
+}
+
+// initializeServices initializes logger, database and CLI flags.
+// Returns database connection, CLI flags and error if initialization fails.
+func initializeServices() (*sqlite.Conn, *flags.CLIFlags, error) {
+	if err := logger.Init(); err != nil {
+		return nil, nil, errors.Join(errors.New("failed to initialize logger: "), err)
+	}
+
+	conn, err := db.Init()
+	if err != nil {
+		return nil, nil, errors.Join(errors.New("failed to initialize database: "), err)
+	}
+
+	cliFlags := flags.Init()
+
+	return conn, cliFlags, nil
 }
 
 // processRequests iterates over the APIRequests, executes
@@ -162,59 +171,16 @@ func processRequests(
 		logger.Infof(`Run: %d, Test case: %d, File: "%s"`, idx+1, 0, req.JSONFilePath)
 
 		if req.PreRequestID != "" {
-			repaceAuthTokenPlaceholderInRequestHeader(req, tokenStore)
+			auth.RepaceAuthTokenPlaceholderInRequestHeader(req, tokenStore)
 		}
 
 		// Execute first (main) request, regardless of whether additional test cases exist.
-		exec.ProcessRequest(ctx, idx+1, req, nil, res, rep, tokenStore, debugMode)
+		exec.ProcessFirstRequest(ctx, idx+1, req, nil, res, rep, tokenStore, debugMode)
 
-		// Execute additional requests depending on the number of defined test cases.
-		for testCaseIndex, testCase := range req.TestCases {
-			if testCase.ParamsData == "" && testCase.PostBodyData == "" {
-				continue
-			}
-
-			modifiedReq := *req
-
-			if testCase.ParamsData != "" {
-				modifiedReq.Request.Params = util.ReplaceQueryParam(req.Request.Params, testCase.ParamsData)
-			}
-
-			if testCase.PostBodyData != "" {
-				modifiedReq.Request.PostBody = testCase.PostBodyData
-			}
-
-			exec.ProcessRequest(ctx, idx+1, &modifiedReq, &testCaseIndex, res, rep, tokenStore, debugMode)
-			logger.Infof("Test case: %s", testCase.Name)
-		}
+		// Execute additional requests of the same JSON definition file,
+		// depending on the number of defined test cases.
+		exec.ProcessTestCasesRequests(ctx, req, idx, res, rep, tokenStore, debugMode)
 	}
 
 	return res, rep
-}
-
-// repaceAuthTokenPlaceholderInRequestHeader replaces the <auth-token> placeholder
-// in request headers with the corresponding token from the token store, if available.
-// Returns nothing.
-func repaceAuthTokenPlaceholderInRequestHeader(req *loader.APIRequest, tokenStore *auth.TokenStore) {
-	const headerReplacementIndicator = "<auth-token>"
-
-	lookupID := req.PreRequestID
-
-	for idx, header := range req.Request.Headers {
-		if !strings.Contains(header, headerReplacementIndicator) {
-			continue
-		}
-
-		if token, found := tokenStore.Get(lookupID); found {
-			lastTokenChars := token[util.Max(0, len(token)-12):] //nolint:mnd
-
-			logger.Debugf(`Token "...%s" found for auth request "%s".`, lastTokenChars, lookupID)
-
-			req.Request.Headers[idx] = strings.ReplaceAll(header, headerReplacementIndicator, token)
-
-			break
-		}
-
-		logger.Warnf(`No token found for auth request "%s".`, lookupID)
-	}
 }
