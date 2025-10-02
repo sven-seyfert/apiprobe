@@ -11,6 +11,21 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.16.0] - 2025-10-02
+
+### Added
+
+- Debug mode which prints the cURL request format representation to console. [aebb02c](https://github.com/sven-seyfert/apiprobe/commit/aebb02c6537af9e173bb11d6ef723184f729aa99)
+- Support for HTTP method PUT. [18e026c](https://github.com/sven-seyfert/apiprobe/commit/18e026cdca8d969a619ffff3254692aded572ddf)
+
+### Changed
+
+- Rename config.json to apiprobe.json and adjust the usages. [c93de3c](https://github.com/sven-seyfert/apiprobe/commit/c93de3c821d21bdd720f4de3e84e1a45ffe55bb2)
+
+### Documented
+
+- Update code coverage. [f58d944](https://github.com/sven-seyfert/apiprobe/commit/f58d9440488c7ab06ee40f1db7a001879e94990d)
+
 ## [0.15.0] - 2025-09-30
 
 ### Added
@@ -275,7 +290,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.12.0...v0.13.0
