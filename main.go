@@ -42,7 +42,7 @@ func main() {
 	cliFlags := flags.Init()
 
 	// Load config file and values.
-	cfg, err := config.Load("./config/config.json")
+	cfg, err := config.Load("./config/apiprobe.json")
 	if err != nil {
 		logger.Fatalf("Program exits: Failed to load config file.")
 

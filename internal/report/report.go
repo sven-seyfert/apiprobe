@@ -120,7 +120,7 @@ func IsHeartbeatTime(cfg *config.Config) (bool, error) {
 func UpdateHeartbeatTime(cfg *config.Config) error {
 	cfg.Heartbeat.LastHeartbeatTime = time.Now().UTC().Format(time.RFC3339)
 
-	file, err := os.Create("./config/config.json")
+	file, err := os.Create("./config/apiprobe.json")
 	if err != nil {
 		logger.Errorf("Failure on create file. Error: %v", err)
 

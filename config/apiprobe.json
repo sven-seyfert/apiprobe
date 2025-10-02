@@ -1,4 +1,5 @@
 {
+    "debugMode": false,
     "heartbeat": {
         "intervalInHours": 3,
         "lastHeartbeatTime": ""
