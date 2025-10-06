@@ -11,6 +11,31 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.17.0] - 2025-10-06
+
+### Added
+
+- Boolean flag 'isActive' for JSON definition files that will be ignored in the processing in case of 'false'. [cfa2b0e](https://github.com/sven-seyfert/apiprobe/commit/cfa2b0e7904bd302a96313a88d14a100ffedd0b3)
+
+### Changed
+
+- Add isActive flag to JSON definition (input) files. [25e1757](https://github.com/sven-seyfert/apiprobe/commit/25e1757ae9746fb011be0ba40f1b38f6e6c4b927)
+- Extend Makefile by dependencies update command. [6862445](https://github.com/sven-seyfert/apiprobe/commit/686244519cd34154b6e6108a10e5bb45366c6c20)
+
+### Documented
+
+- Update README.md file. [e0a03a3](https://github.com/sven-seyfert/apiprobe/commit/e0a03a381aefbcc50eb38fc5dbe6f343c6c84f70)
+- Update README.md file. [3b4521c](https://github.com/sven-seyfert/apiprobe/commit/3b4521c4fad0b881b0d16ab91512e353e78691af)
+- Update code coverage. [3b73ac5](https://github.com/sven-seyfert/apiprobe/commit/3b73ac5eb9f47e1bb9d92a7a8831a6e54d2eb5d0)
+
+### Refactored
+
+- Extract functions to reduce the complexity of main and increase the readability. [a0883d4](https://github.com/sven-seyfert/apiprobe/commit/a0883d457ecf7fd6d187d641ea385e69bab5990a)
+
+### Styled
+
+- Simply nolint instruction. [c586655](https://github.com/sven-seyfert/apiprobe/commit/c5866555ab1015e7c5aaac59a719188a6772d876)
+
 ## [0.16.0] - 2025-10-02
 
 ### Added
@@ -290,7 +315,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.13.0...v0.14.0
