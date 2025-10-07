@@ -182,7 +182,7 @@ func (req *APIRequest) BuildRequestURL() string {
 func (req *APIRequest) CurlCmdArguments() []string {
 	cmdArgs := []string{
 		"--request", req.Request.Method,
-		"--silent", "--location", "--insecure",
+		"--silent", "--show-error", "--location", "--insecure",
 		"--connect-timeout", "8",
 		"--max-time", "24",
 		"--url", req.BuildRequestURL(),
