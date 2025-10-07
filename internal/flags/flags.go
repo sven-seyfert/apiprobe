@@ -135,6 +135,7 @@ func writeNewTemplateJSONFile(hash string) error {
 	content := `[
     {
         "id": "${ID}",
+		"isActive": true,
         "isAuthRequest": false,
         "preRequestId": "",
         "request": {
