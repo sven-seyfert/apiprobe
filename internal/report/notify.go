@@ -24,14 +24,13 @@ func Notification(
 	conn *sqlite.Conn,
 	res *Result,
 	rep *Report,
-	name string,
+	runName string,
 ) {
 	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
 		return
 	}
 
-	const reportFile = "./logs/report.json"
-
+	reportFile := buildReportFileName(runName)
 	hostname, _ := os.Hostname()
 	hostnameMessage := fmt.Sprintf("Message from: __%s__ (hostname)", hostname)
 
@@ -83,8 +82,8 @@ func Notification(
 	mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
 
 	testRunName := ""
-	if name != "" {
-		testRunName = fmt.Sprintf("`%s`\n\n", name)
+	if runName != "" {
+		testRunName = fmt.Sprintf("`%s`\n\n", runName)
 	}
 
 	mdResult := fmt.Sprintf(
@@ -119,6 +118,24 @@ func Notification(
 		cfg.Notification.WebEx.WebhookURL,
 		cfg.Notification.WebEx.Space,
 		webhookPayload)
+}
+
+// buildReportFileName constructs a sanitized file path for report files
+// based on the provided name. It returns the file path as a string.
+func buildReportFileName(name string) string {
+	reportFile := "./logs/report"
+
+	if name != "" {
+		safeName := strings.ToLower(name)
+		safeName = strings.ReplaceAll(safeName, "environment: ", "")
+		safeName = strings.ReplaceAll(safeName, " ", "-")
+		safeName = strings.ReplaceAll(safeName, "\"", "")
+		safeName = strings.ReplaceAll(safeName, "'", "")
+
+		return fmt.Sprintf("./logs/report-%s.json", safeName)
+	}
+
+	return reportFile + ".json"
 }
 
 // webExWebhookNotification sends the given JSON payload to the configured
