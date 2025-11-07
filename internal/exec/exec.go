@@ -35,15 +35,15 @@ func ProcessFirstRequest(
 
 	outputFile := fileutil.BuildOutputFilePath(req, testCaseIndex)
 
-	response, statusCode, err := executeRequest(ctx, req, debugMode)
+	response, statusCode, errorResponse, err := executeRequest(ctx, req, debugMode)
 	if err != nil {
 		logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
 		res.IncreaseRequestErrorCount()
 
 		if testCaseIndex != nil {
-			rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+			rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
 		} else {
-			rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+			rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
 		}
 
 		return
@@ -55,9 +55,9 @@ func ProcessFirstRequest(
 		res.IncreaseFormatErrorCount()
 
 		if testCaseIndex != nil {
-			rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+			rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
 		} else {
-			rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+			rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
 		}
 
 		return
@@ -85,9 +85,9 @@ func ProcessFirstRequest(
 	res.IncreaseChangedFilesCount()
 
 	if testCaseIndex != nil {
-		rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+		rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
 	} else {
-		rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+		rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
 	}
 }
 
@@ -123,14 +123,14 @@ func ProcessTestCasesRequests(
 }
 
 // executeRequest wraps runCurl to perform the HTTP request defined by APIRequest
-// and returns the raw response body and status code.
-func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) {
-	curlOutput, statusCode, err := runCurl(ctx, req, debugMode)
+// and returns the raw response body, status code and potential error information.
+func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, string, error) {
+	curlOutput, statusCode, errorResponse, err := runCurl(ctx, req, debugMode)
 	if err != nil {
-		return nil, statusCode, err
+		return nil, statusCode, errorResponse, err
 	}
 
-	return curlOutput, statusCode, nil
+	return curlOutput, statusCode, errorResponse, nil
 }
 
 // formatResponse formats the curl output using jq

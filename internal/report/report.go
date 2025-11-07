@@ -32,21 +32,28 @@ func (res *Result) IncreaseChangedFilesCount() {
 }
 
 type Request struct {
-	ID             string `json:"id"`
-	Description    string `json:"description"`
-	Endpoint       string `json:"endpoint"`
-	StatusCode     string `json:"statusCode"`
-	OutputFilePath string `json:"outputFilePath"`
-	TestCase       string `json:"testCase"`
+	ID            string `json:"id"`
+	Description   string `json:"description"`
+	URL           string `json:"url"`
+	Endpoint      string `json:"endpoint"`
+	StatusCode    string `json:"statusCode"`
+	ErrorResponse string `json:"errorResponse,omitempty"`
+	TestCase      string `json:"testCase,omitempty"`
+	OutputFile    string `json:"outputFile"`
 }
 
 type Report struct {
 	Requests []Request `json:"issues"`
 }
 
-// AddReportData records a single API request’s result, its ID, description,
-// endpoint, status code, output file path and test case into the Report.
-func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) {
+// AddReportData records a single API request’s result into the Report.
+func (r *Report) AddReportData(
+	req *loader.APIRequest,
+	statusCode string,
+	errorResponse string,
+	outputFile string,
+	testCaseIndex int,
+) {
 	const noTestCaseIndicator = -1
 
 	testCase := req.Request.Name
@@ -56,12 +63,14 @@ func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, output
 	}
 
 	request := Request{
-		ID:             req.ID,
-		Description:    req.Request.Description,
-		Endpoint:       req.Request.Endpoint,
-		StatusCode:     statusCode,
-		OutputFilePath: outputFilePath,
-		TestCase:       testCase,
+		ID:            req.ID,
+		Description:   req.Request.Description,
+		URL:           req.Request.BaseURL,
+		Endpoint:      req.Request.Endpoint,
+		StatusCode:    statusCode,
+		ErrorResponse: errorResponse,
+		TestCase:      testCase,
+		OutputFile:    outputFile,
 	}
 
 	r.Requests = append(r.Requests, request)
