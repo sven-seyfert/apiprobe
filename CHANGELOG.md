@@ -11,6 +11,24 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 ## [Unreleased]
 
+## [0.18.0] - 2025-11-07
+
+### Added
+
+- Missing 'isActive' key into to --new-file (template JSON) option. [a31464f](https://github.com/sven-seyfert/apiprobe/commit/a31464f098cdb6e0c6ea21e705ea56fa8d7a706d)
+- JSON definition field 'request.name' for better reporting. [000654e](https://github.com/sven-seyfert/apiprobe/commit/000654e47c26129f7200bda1c3abf28fb50f528a)
+
+### Changed
+
+- Extend curl error logging. [7667a80](https://github.com/sven-seyfert/apiprobe/commit/7667a8060af13142a302f6190cae0acf61825e39)
+- Add environment suffix to report file. [60aeb60](https://github.com/sven-seyfert/apiprobe/commit/60aeb604182989880b6eb3784b52a6bfa03ddc53)
+- Extend log and report by error response text (of StdOut and/or StdErr). [a92b9cc](https://github.com/sven-seyfert/apiprobe/commit/a92b9ccc22d3c39a945ca43651097c77bf087e65)
+
+### Documented
+
+- Update report file name in docs. [c63c558](https://github.com/sven-seyfert/apiprobe/commit/c63c558ff82726dd3530599cdf41718adaed5390)
+- Update code coverage. [d611104](https://github.com/sven-seyfert/apiprobe/commit/d6111045ea77040f54181f0a926f1c2a5a5aeae1)
+
 ## [0.17.0] - 2025-10-06
 
 ### Added
@@ -315,7 +333,8 @@ Go to [legend](#legend-types-of-changes) for further information about the types
 
 - Update README.md file. [41e88aa](https://github.com/sven-seyfert/apiprobe/commit/41e88aa0147098a0727020f5b45850c9328af4b3)
 
-[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.17.0...HEAD
+[Unreleased]: https://github.com/sven-seyfert/apiprobe/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/sven-seyfert/apiprobe/compare/v0.14.0...v0.15.0
