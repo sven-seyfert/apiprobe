@@ -212,7 +212,7 @@ import (
         "github.com/sven-seyfert/apiprobe/internal/logger"
 )
 
-const Version = "APIProbe 📡 v0.17.0 - 2025-10-06"
+const Version = "APIProbe 📡 v0.18.0 - 2025-11-07"
 
 type Heartbeat struct {
         IntervalInHours   int    `json:"intervalInHours"`
@@ -880,10 +880,10 @@ import (
 // and write-out flags, captures its stdout, splits the HTTP status code
 // and returns the response body if the status code is 2xx;
 // otherwise, returns an error.
-func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) <span class="cov0" title="0">{
+func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, string, error) <span class="cov0" title="0">{
         cmdArgs := req.CurlCmdArguments()
 
-        var stdout bytes.Buffer
+        var stdout, stderr bytes.Buffer
 
         cmd := exec.CommandContext(ctx, "./lib/curl.exe", cmdArgs...)
 
@@ -892,35 +892,39 @@ func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byt
         }</span>
 
         <span class="cov0" title="0">cmd.Stdout = &amp;stdout
+        cmd.Stderr = &amp;stderr
 
         logger.Debugf(`Executing endpoint request "%s"`, req.Request.Endpoint)
         logger.Infof(`Description: "%s"`, req.Request.Description)
 
         start := time.Now()
-
-        if err := cmd.Run(); err != nil </span><span class="cov0" title="0">{
-                logger.Errorf("Curl execution failed. Error: %v", err)
-
-                return nil, "", fmt.Errorf("curl error: %w", err)
-        }</span>
-
-        <span class="cov0" title="0">duration := time.Since(start)
+        err := cmd.Run()
+        duration := time.Since(start)
         rawOutput := stdout.Bytes()
 
-        body, statusCode, err := extractStatusCode(rawOutput)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, "", err
+                logger.Errorf("Curl execution failed. Error: %v", err)
+                logger.Errorf("StdOut response: %s", stdout.String())
+                logger.Errorf("StdErr response: %s", stderr.String())
+
+                return nil, "", stderr.String(), fmt.Errorf("curl error: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">body, statusCode, err := extractStatusCode(rawOutput)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, "", stdout.String(), err
         }</span>
 
         <span class="cov0" title="0">logger.Debugf("Status: %s, Duration: %dms", statusCode, duration.Milliseconds())
 
         if !strings.HasPrefix(statusCode, "2") </span><span class="cov0" title="0">{
                 logger.Warnf("Non-2xx status code received: status %s", statusCode)
+                logger.Warnf("Curl stdout response: %s", body)
 
-                return nil, statusCode, fmt.Errorf("status %s", statusCode)
+                return nil, statusCode, string(body), fmt.Errorf("status %s", statusCode)
         }</span>
 
-        <span class="cov0" title="0">return body, statusCode, nil</span>
+        <span class="cov0" title="0">return body, statusCode, "", nil</span>
 }
 
 // extractStatusCode splits the raw output from curl (where the last
@@ -979,15 +983,15 @@ func ProcessFirstRequest(
 
         outputFile := fileutil.BuildOutputFilePath(req, testCaseIndex)
 
-        response, statusCode, err := executeRequest(ctx, req, debugMode)
+        response, statusCode, errorResponse, err := executeRequest(ctx, req, debugMode)
         if err != nil </span><span class="cov0" title="0">{
                 logger.Errorf(`Failed endpoint request "%s": %v`, req.Request.Endpoint, err)
                 res.IncreaseRequestErrorCount()
 
                 if testCaseIndex != nil </span><span class="cov0" title="0">{
-                        rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+                        rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
                 }</span> else<span class="cov0" title="0"> {
-                        rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+                        rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
                 }</span>
 
                 <span class="cov0" title="0">return</span>
@@ -999,9 +1003,9 @@ func ProcessFirstRequest(
                 res.IncreaseFormatErrorCount()
 
                 if testCaseIndex != nil </span><span class="cov0" title="0">{
-                        rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+                        rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
                 }</span> else<span class="cov0" title="0"> {
-                        rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+                        rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
                 }</span>
 
                 <span class="cov0" title="0">return</span>
@@ -1029,9 +1033,9 @@ func ProcessFirstRequest(
         <span class="cov0" title="0">res.IncreaseChangedFilesCount()
 
         if testCaseIndex != nil </span><span class="cov0" title="0">{
-                rep.AddReportData(req, statusCode, outputFile, *testCaseIndex)
+                rep.AddReportData(req, statusCode, errorResponse, outputFile, *testCaseIndex)
         }</span> else<span class="cov0" title="0"> {
-                rep.AddReportData(req, statusCode, outputFile, noTestCaseIndicator)
+                rep.AddReportData(req, statusCode, errorResponse, outputFile, noTestCaseIndicator)
         }</span>
 }
 
@@ -1067,14 +1071,14 @@ func ProcessTestCasesRequests(
 }
 
 // executeRequest wraps runCurl to perform the HTTP request defined by APIRequest
-// and returns the raw response body and status code.
-func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, error) <span class="cov0" title="0">{
-        curlOutput, statusCode, err := runCurl(ctx, req, debugMode)
+// and returns the raw response body, status code and potential error information.
+func executeRequest(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byte, string, string, error) <span class="cov0" title="0">{
+        curlOutput, statusCode, errorResponse, err := runCurl(ctx, req, debugMode)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, statusCode, err
+                return nil, statusCode, errorResponse, err
         }</span>
 
-        <span class="cov0" title="0">return curlOutput, statusCode, nil</span>
+        <span class="cov0" title="0">return curlOutput, statusCode, errorResponse, nil</span>
 }
 
 // formatResponse formats the curl output using jq
@@ -1468,6 +1472,7 @@ func writeNewTemplateJSONFile(hash string) error <span class="cov0" title="0">{
         content := `[
     {
         "id": "${ID}",
+                "isActive": true,
         "isAuthRequest": false,
         "preRequestId": "",
         "request": {
@@ -1478,7 +1483,8 @@ func writeNewTemplateJSONFile(hash string) error <span class="cov0" title="0">{
             "basicAuth": "",
             "headers": [],
             "params": [],
-            "postBody": {}
+            "postBody": {},
+                        "name": ""
         },
         "testCases": [
             {
@@ -1790,6 +1796,7 @@ type Request struct {
         Headers     []string        `json:"headers"`
         Params      []string        `json:"params"`
         PostBodyRaw json.RawMessage `json:"postBody"`
+        Name        string          `json:"name"`
 
         // Target data type for the POST body format is string.
         PostBody string `json:"-"`
@@ -1933,7 +1940,7 @@ func (req *APIRequest) BuildRequestURL() string <span class="cov0" title="0">{
 func (req *APIRequest) CurlCmdArguments() []string <span class="cov0" title="0">{
         cmdArgs := []string{
                 "--request", req.Request.Method,
-                "--silent", "--location", "--insecure",
+                "--silent", "--show-error", "--location", "--insecure",
                 "--connect-timeout", "8",
                 "--max-time", "24",
                 "--url", req.BuildRequestURL(),
@@ -2155,14 +2162,13 @@ func Notification(
         conn *sqlite.Conn,
         res *Result,
         rep *Report,
-        name string,
+        runName string,
 ) <span class="cov0" title="0">{
         if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active </span><span class="cov0" title="0">{
                 return
         }</span>
 
-        <span class="cov0" title="0">const reportFile = "./logs/report.json"
-
+        <span class="cov0" title="0">reportFile := buildReportFileName(runName)
         hostname, _ := os.Hostname()
         hostnameMessage := fmt.Sprintf("Message from: __%s__ (hostname)", hostname)
 
@@ -2214,8 +2220,8 @@ func Notification(
         <span class="cov0" title="0">mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
 
         testRunName := ""
-        if name != "" </span><span class="cov0" title="0">{
-                testRunName = fmt.Sprintf("`%s`\n\n", name)
+        if runName != "" </span><span class="cov0" title="0">{
+                testRunName = fmt.Sprintf("`%s`\n\n", runName)
         }</span>
 
         <span class="cov0" title="0">mdResult := fmt.Sprintf(
@@ -2250,6 +2256,24 @@ func Notification(
                 cfg.Notification.WebEx.WebhookURL,
                 cfg.Notification.WebEx.Space,
                 webhookPayload)</span>
+}
+
+// buildReportFileName constructs a sanitized file path for report files
+// based on the provided name. It returns the file path as a string.
+func buildReportFileName(name string) string <span class="cov0" title="0">{
+        reportFile := "./logs/report"
+
+        if name != "" </span><span class="cov0" title="0">{
+                safeName := strings.ToLower(name)
+                safeName = strings.ReplaceAll(safeName, "environment: ", "")
+                safeName = strings.ReplaceAll(safeName, " ", "-")
+                safeName = strings.ReplaceAll(safeName, "\"", "")
+                safeName = strings.ReplaceAll(safeName, "'", "")
+
+                return fmt.Sprintf("./logs/report-%s.json", safeName)
+        }</span>
+
+        <span class="cov0" title="0">return reportFile + ".json"</span>
 }
 
 // webExWebhookNotification sends the given JSON payload to the configured
@@ -2324,36 +2348,45 @@ func (res *Result) IncreaseChangedFilesCount() <span class="cov0" title="0">{
 }</span>
 
 type Request struct {
-        ID             string `json:"id"`
-        Description    string `json:"description"`
-        Endpoint       string `json:"endpoint"`
-        StatusCode     string `json:"statusCode"`
-        OutputFilePath string `json:"outputFilePath"`
-        TestCase       string `json:"testCase"`
+        ID            string `json:"id"`
+        Description   string `json:"description"`
+        URL           string `json:"url"`
+        Endpoint      string `json:"endpoint"`
+        StatusCode    string `json:"statusCode"`
+        ErrorResponse string `json:"errorResponse,omitempty"`
+        TestCase      string `json:"testCase,omitempty"`
+        OutputFile    string `json:"outputFile"`
 }
 
 type Report struct {
         Requests []Request `json:"issues"`
 }
 
-// AddReportData records a single API request’s result, its ID, description,
-// endpoint, status code, output file path and test case into the Report.
-func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) <span class="cov0" title="0">{
+// AddReportData records a single API request’s result into the Report.
+func (r *Report) AddReportData(
+        req *loader.APIRequest,
+        statusCode string,
+        errorResponse string,
+        outputFile string,
+        testCaseIndex int,
+) <span class="cov0" title="0">{
         const noTestCaseIndicator = -1
 
-        testCase := ""
+        testCase := req.Request.Name
 
         if testCaseIndex != noTestCaseIndicator </span><span class="cov0" title="0">{
                 testCase = req.TestCases[testCaseIndex].Name
         }</span>
 
         <span class="cov0" title="0">request := Request{
-                ID:             req.ID,
-                Description:    req.Request.Description,
-                Endpoint:       req.Request.Endpoint,
-                StatusCode:     statusCode,
-                OutputFilePath: outputFilePath,
-                TestCase:       testCase,
+                ID:            req.ID,
+                Description:   req.Request.Description,
+                URL:           req.Request.BaseURL,
+                Endpoint:      req.Request.Endpoint,
+                StatusCode:    statusCode,
+                ErrorResponse: errorResponse,
+                TestCase:      testCase,
+                OutputFile:    outputFile,
         }
 
         r.Requests = append(r.Requests, request)</span>

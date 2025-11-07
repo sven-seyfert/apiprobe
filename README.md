@@ -9,7 +9,7 @@
 [![release](https://img.shields.io/github/release/sven-seyfert/apiprobe.svg?color=slateblue&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/releases/latest)
 [![docs](https://img.shields.io/badge/docs-github--pages-steelblue.svg?style=flat-square&logo=markdown&logoColor=white)](https://sven-seyfert.github.io/apiprobe/)
 [![go report](https://img.shields.io/badge/report-A+-green.svg?style=flat-square&logo=go&logoColor=white)](https://goreportcard.com/report/github.com/sven-seyfert/apiprobe)
-[![go coverage](https://img.shields.io/badge/coverage-Ø_20%25-seagreen.svg?style=flat-square&logo=go&logoColor=white)](https://raw.githack.com/sven-seyfert/apiprobe/main/coverage/coverage.html)
+[![go coverage](https://img.shields.io/badge/coverage-Ø_19%25-seagreen.svg?style=flat-square&logo=go&logoColor=white)](https://raw.githack.com/sven-seyfert/apiprobe/main/coverage/coverage.html)
 [![go.mod version)](https://img.shields.io/github/go-mod/go-version/sven-seyfert/apiprobe?color=lightskyblue&label=go.mod&style=flat-square&logo=go&logoColor=white)](https://github.com/sven-seyfert/apiprobe/blob/main/go.mod)
 [![last commit](https://img.shields.io/github/last-commit/sven-seyfert/apiprobe.svg?color=darkgoldenrod&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/commits/main)
 [![contributors](https://img.shields.io/github/contributors/sven-seyfert/apiprobe.svg?color=darkolivegreen&style=flat-square&logo=github)](https://github.com/sven-seyfert/apiprobe/graphs/contributors)
