@@ -433,13 +433,14 @@ apiprobe/
    - Update file and record change if different.
 9. **Reporting**:
    - Increment counters for errors and changes.
-   - Depending on counter results write `./logs/report.json`.
+   - Depending on counter results write `./logs/report.json`<br>
+     or with suffix `./logs/report-test.json`, `./logs/report-prod.json` depending on `--name` flag content.
    - Send WebEx webhook summary.
 
 ### Logging, Reporting
 
 - **Console & file logging**: All logs to console and to file, like `./logs/2025-06/18/2025-06-18-12-58-54.938.log`.
-- **Report file**: JSON report at `./logs/report.json` when errors/changes occur.
+- **Report file**: JSON report at `./logs/report.json` or `./logs/report-test.json` (see above) when errors/changes occur.
 - **Webhook**: Automatic notifications to WebEx (WebEx only at the moment). Later also to MS Teams etc.
 
 ## Contributing
