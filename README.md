@@ -235,7 +235,8 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
             "basicAuth": "",
             "headers": [],
             "params": [],
-            "postBody": {}
+            "postBody": {},
+            "name": ""
         },
         "testCases": [
             {
@@ -278,7 +279,8 @@ Define your APIs in JSON files under `./data/input/`. Each file contains an arra
             "postBody": {
                 "Username": "John Doe",
                 "Password": "<secret-b4c3d2e1f0>"
-            }
+            },
+            "name": ""
         },
         "testCases": [
             {
@@ -333,6 +335,7 @@ Mandatory for POST request = (P)
 | **request.headers**        | Request header list (one or n headers).                                                                                                                                                              | [] (empty string array)                     |
 | **request.params**         | URL query parameter list (one or n params); no ? or & needed, only the raw query parameter(s).                                                                                                       | [] (empty string array)                     |
 | **request.postBody** (P)   | JSON message body (payload) for POST requests. Custom JSON object.                                                                                                                                   | {} (empty JSON object)                      |
+| **request.name**           | Define the name of the first test case.                                                                                                                                                              | "" (empty string)                           |
 | **testCases**              | Data driven test data list (one or n test data entries); these variations apply to query params or post body. See [minimal definition](#minimal-definition).                                         |                                             |
 | **testCases.name**         | Define the name of your test case.                                                                                                                                                                   | "" (empty string)                           |
 | **testCases.paramsData**   | Define which query parameter should be applied (replaced) in request.params for the test cases. See [advanced definition](#advanced-definition).                                                     | "" (empty string)                           |

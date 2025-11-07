@@ -39,6 +39,7 @@ type Request struct {
 	Headers     []string        `json:"headers"`
 	Params      []string        `json:"params"`
 	PostBodyRaw json.RawMessage `json:"postBody"`
+	Name        string          `json:"name"`
 
 	// Target data type for the POST body format is string.
 	PostBody string `json:"-"`

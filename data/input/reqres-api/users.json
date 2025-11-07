@@ -16,7 +16,8 @@
             "params": [
                 "page=2"
             ],
-            "postBody": {}
+            "postBody": {},
+            "name": "Test with page=2 parameter (valid)"
         },
         "testCases": [
             {

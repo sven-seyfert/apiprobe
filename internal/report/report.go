@@ -49,7 +49,7 @@ type Report struct {
 func (r *Report) AddReportData(req *loader.APIRequest, statusCode string, outputFilePath string, testCaseIndex int) {
 	const noTestCaseIndicator = -1
 
-	testCase := ""
+	testCase := req.Request.Name
 
 	if testCaseIndex != noTestCaseIndicator {
 		testCase = req.TestCases[testCaseIndex].Name

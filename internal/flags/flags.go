@@ -146,7 +146,8 @@ func writeNewTemplateJSONFile(hash string) error {
             "basicAuth": "",
             "headers": [],
             "params": [],
-            "postBody": {}
+            "postBody": {},
+			"name": ""
         },
         "testCases": [
             {
