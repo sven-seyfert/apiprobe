@@ -56,6 +56,8 @@ func runCurl(ctx context.Context, req *loader.APIRequest, debugMode bool) ([]byt
 	if !strings.HasPrefix(statusCode, "2") {
 		logger.Warnf("Non-2xx status code received: status %s", statusCode)
 		logger.Warnf("Curl stdout response: %s", body)
+		logger.Warnf("StdOut response: %s", stdout.String())
+		logger.Warnf("StdErr response: %s", stderr.String())
 
 		return nil, statusCode, string(body), fmt.Errorf("status %s", statusCode)
 	}
