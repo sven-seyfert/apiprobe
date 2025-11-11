@@ -36,6 +36,7 @@ type Request struct {
 	Description   string `json:"description"`
 	URL           string `json:"url"`
 	Endpoint      string `json:"endpoint"`
+	Method        string `json:"method"`
 	StatusCode    string `json:"statusCode"`
 	ErrorResponse string `json:"errorResponse,omitempty"`
 	TestCase      string `json:"testCase,omitempty"`
@@ -67,6 +68,7 @@ func (r *Report) AddReportData(
 		Description:   req.Request.Description,
 		URL:           req.Request.BaseURL,
 		Endpoint:      req.Request.Endpoint,
+		Method:        req.Request.Method,
 		StatusCode:    statusCode,
 		ErrorResponse: errorResponse,
 		TestCase:      testCase,
