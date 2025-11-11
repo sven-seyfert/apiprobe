@@ -107,16 +107,16 @@ Currently in a stable initial state — core features implemented; more advanced
 
 #### *Global Flags*
 
-| Flags                                | Description                                                                                                                    |
-| ---                                  | ---                                                                                                                            |
-| `--help`                             | Show all flags (switches) and their explanations. Shows also the program version.                                              |
-| `--name "Environment: PROD"`         | Set custom name for the test run (for the execution). Shown in final notification.                                             |
-| `--id "<hex hash>"`                  | Run only the request matching this ID.                                                                                         |
-| `--tags "animals, cars"`             | Run all requests containing any of the comma-separated tags.                                                                   |
-| `--exclude "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
-| `--new-id`                           | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
-| `--new-file`                         | Generates a new JSON definition template file. Then enter the request values/data and done.                                    |
-| `--add-secret "<value>"`             | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
+| Flags                                    | Description                                                                                                                    |
+| ---                                      | ---                                                                                                                            |
+| `--help`                                 | Show all flags (switches) and their explanations. Shows also the program version.                                              |
+| `--name "Environment: PROD"`             | Set custom name for the test run (for the execution). Shown in final notification.                                             |
+| `--id "<hex hash>"`                      | Run only the request matching this ID.                                                                                         |
+| `--tags "animals, cars"`                 | Run all requests containing any of the comma-separated tags.                                                                   |
+| `--exclude-ids "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
+| `--new-id`                               | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
+| `--new-file`                             | Generates a new JSON definition template file. Then enter the request values/data and done.                                    |
+| `--add-secret "<value>"`                 | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
 
 #### *Examples*
 
@@ -147,15 +147,15 @@ Currently in a stable initial state — core features implemented; more advanced
 - **Exclude API requests from run by ID**:
 
     ``` bash
-    go run main.go --exclude "ff00fceb61, bb11abc987"
+    go run main.go --exclude-ids "ff00fceb61, bb11abc987"
     # or by executable (faster)
-    ./apiprobe.exe --exclude "ff00fceb61, bb11abc987"
+    ./apiprobe.exe --exclude-ids "ff00fceb61, bb11abc987"
     ```
 
     ``` bash
     # combination example:
     # run every request with tag "<tag-name>" except request with specific <ID> and name the test run "MyFirstRun"
-    go run main.go --tags "env-prod" --exclude "bb11abc987" --name "MyFirstRun"
+    go run main.go --tags "env-prod" --exclude-ids "bb11abc987" --name "MyFirstRun"
     ```
 
 - **Generate new ID**:
@@ -419,7 +419,7 @@ apiprobe/
 
 1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
 2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
-3. **Filtering**: Apply `--exclude`, `--id` and `--tags` CLI flag filters.
+3. **Filtering**: Apply `--exclude-ids`, `--id` and `--tags` CLI flag filters.
 4. **Prepending**: Dependent pre-requests will be merged (prepended) to the list of requests.
 5. **Secrets**: Replace `<secret-...>` placeholders with actual secrets from the database.
 6. **Authentication**: If an API definition has `isAuthRequest: true`, the response token is stored in an in-memory Token Store keyed by the request ID. For any subsequent requests with `preRequestId`, the `<auth-token>` placeholder in headers is replaced with the stored token before execution.
