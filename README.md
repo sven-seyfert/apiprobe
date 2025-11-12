@@ -113,7 +113,8 @@ Currently in a stable initial state — core features implemented; more advanced
 | `--name "Environment: PROD"`             | Set custom name for the test run (for the execution). Shown in final notification.                                             |
 | `--id "<hex hash>"`                      | Run only the request matching this ID.                                                                                         |
 | `--tags "animals, cars"`                 | Run all requests containing any of the comma-separated tags.                                                                   |
-| `--exclude-ids "ff00fceb61, bb11abc987"` | Do not run any request that contains the ID of the comma-separated ID list.                                                    |
+| `--exclude-ids "bb5599abcd, ff00fceb61"` | Do not run any request that contains ANY of the IDs in the comma-separated ID list.                                            |
+| `--exclude-tags "daily-based-execution"` | Do not run any request that contains ANY of the tags in the comma-separated tag list.                                          |
 | `--new-id`                               | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
 | `--new-file`                             | Generates a new JSON definition template file. Then enter the request values/data and done.                                    |
 | `--add-secret "<value>"`                 | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |

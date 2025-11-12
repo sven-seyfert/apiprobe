@@ -16,13 +16,14 @@ import (
 )
 
 type CLIFlags struct {
-	Name       *string
-	ID         *string
-	Tags       *string
-	ExcludeIDs *string
-	NewID      *bool
-	NewFile    *bool
-	AddSecret  *string
+	Name        *string
+	ID          *string
+	Tags        *string
+	ExcludeIDs  *string
+	ExcludeTags *string
+	NewID       *bool
+	NewFile     *bool
+	AddSecret   *string
 }
 
 // Init defines and parses the CLI flags and returning their values.
@@ -46,9 +47,14 @@ func Init() *CLIFlags {
 		"In combination with the --exclude-ids flag, exclude will be prioritized.\n" +
 		"Example: --tags \"reqres, booker\"\n"
 
-	excludeIDsUsage := "Specify a comma-separated list of IDs (hashes) to exclude from the execution.\n" +
+	excludeIDsUsage := "Specify a comma-separated list of IDs to exclude from the execution.\n" +
+		"Requests containing ANY of these IDs will be excluded.\n" +
 		"The IDs must match the JSON \"id\" value, in the JSON definition (input) files.\n" +
 		"Example: --exclude-ids \"bb5599abcd, ff00fceb61\"\n"
+
+	excludeTagsUsage := "Specify a comma-separated list of tags to exclude from the execution.\n" +
+		"Requests containing ANY of these tags will be excluded.\n" +
+		"Example: --exclude-tags \"booker, env-test\"\n"
 
 	newIDUsage := "Generate a new ten-character hex hash (id) for the \n" +
 		"JSON \"id\" value, in the JSON definition (input) file.\n" +
@@ -64,13 +70,14 @@ func Init() *CLIFlags {
 		"Example: --add-secret \"ThisIsMySecretText\"\n"
 
 	cliFlags := &CLIFlags{
-		Name:       flag.String("name", "", nameUsage),
-		ID:         flag.String("id", "", idUsage),
-		Tags:       flag.String("tags", "", tagUsage),
-		ExcludeIDs: flag.String("exclude-ids", "", excludeIDsUsage),
-		NewID:      flag.Bool("new-id", false, newIDUsage),
-		NewFile:    flag.Bool("new-file", false, newFileUsage),
-		AddSecret:  flag.String("add-secret", "", addSecretUsage),
+		Name:        flag.String("name", "", nameUsage),
+		ID:          flag.String("id", "", idUsage),
+		Tags:        flag.String("tags", "", tagUsage),
+		ExcludeIDs:  flag.String("exclude-ids", "", excludeIDsUsage),
+		ExcludeTags: flag.String("exclude-tags", "", excludeTagsUsage),
+		NewID:       flag.Bool("new-id", false, newIDUsage),
+		NewFile:     flag.Bool("new-file", false, newFileUsage),
+		AddSecret:   flag.String("add-secret", "", addSecretUsage),
 	}
 
 	flag.Parse()

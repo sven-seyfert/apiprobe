@@ -9,7 +9,7 @@ import (
 )
 
 // ExcludeRequestsByID returns a filtered slice of APIRequest, excluding any
-// requests whose IDs are listed in the comma-separated excludeIDs string.
+// requests that contain ANY of the IDs in the comma-separated excludeIDs string.
 func ExcludeRequestsByID(requests []*APIRequest, excludeIDs string) []*APIRequest {
 	if excludeIDs == "" {
 		return requests
@@ -29,6 +29,43 @@ func ExcludeRequestsByID(requests []*APIRequest, excludeIDs string) []*APIReques
 
 	for _, req := range requests {
 		if _, found := excludeSet[req.ID]; !found {
+			filteredRequests = append(filteredRequests, req)
+		}
+	}
+
+	return filteredRequests
+}
+
+// ExcludeRequestsByTags returns a filtered slice of APIRequest, excluding any
+// requests that contain ANY of the tags listed in the comma-separated excludeTags string.
+func ExcludeRequestsByTags(requests []*APIRequest, excludeTags string) []*APIRequest {
+	if excludeTags == "" {
+		return requests
+	}
+
+	tagList := strings.Split(excludeTags, ",")
+	excludeSet := make(map[string]struct{})
+
+	for _, tag := range tagList {
+		tag = strings.TrimSpace(tag)
+		if tag != "" {
+			excludeSet[tag] = struct{}{}
+		}
+	}
+
+	var filteredRequests []*APIRequest
+
+	for _, req := range requests {
+		shouldExclude := false
+
+		for _, tag := range req.Tags {
+			if _, found := excludeSet[tag]; found {
+				shouldExclude = true
+				break
+			}
+		}
+
+		if !shouldExclude {
 			filteredRequests = append(filteredRequests, req)
 		}
 	}
