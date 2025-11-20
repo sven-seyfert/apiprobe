@@ -463,7 +463,7 @@ apiprobe/
 
 1. **Initialization**: Logger setup, DB connection, CLI flags setup and config load. Also seed default data insertion.
 2. **Loading**: Recursively parse JSON files (API request definitions) into `APIRequest` objects.
-3. **Filtering**: Apply `--exclude-ids`, `--id` and `--tags` CLI flag filters.
+3. **Filtering**: Apply `--exclude-ids`, `--exclude-tags`, `--id` and `--tags` CLI flag filters.
 4. **Prepending**: Dependent pre-requests will be merged (prepended) to the list of requests.
 5. **Secrets**: Replace `<secret-...>` placeholders with actual secrets from the database.
 6. **Authentication**: If an API definition has `isAuthRequest: true`, the response token is stored in an in-memory Token Store keyed by the request ID. For any subsequent requests with `preRequestId`, the `<auth-token>` placeholder in headers is replaced with the stored token before execution.
