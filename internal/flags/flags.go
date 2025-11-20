@@ -16,14 +16,15 @@ import (
 )
 
 type CLIFlags struct {
-	Name        *string
-	ID          *string
-	Tags        *string
-	ExcludeIDs  *string
-	ExcludeTags *string
-	NewID       *bool
-	NewFile     *bool
-	AddSecret   *string
+	Name          *string
+	ID            *string
+	Tags          *string
+	ExcludeIDs    *string
+	ExcludeTags   *string
+	NewID         *bool
+	NewFile       *bool
+	AddSecret     *string
+	NotifyChannel *string
 }
 
 // Init defines and parses the CLI flags and returning their values.
@@ -69,15 +70,20 @@ func Init() *CLIFlags {
 		"Use this placeholder in your JSON definition (input) file instead of the actual secret value.\n" +
 		"Example: --add-secret \"ThisIsMySecretText\"\n"
 
+	notifyChannelUsage := "Specify the WebEx or MS Teams channel where the notifications should be sent to.\n" +
+		"The name must match a key in the 'webEx.webhooks' or 'msTeams.webhooks' map, in config file apiprobe.json.\n" +
+		"Example: --notify-channel \"prod\" or \"test\"\n"
+
 	cliFlags := &CLIFlags{
-		Name:        flag.String("name", "", nameUsage),
-		ID:          flag.String("id", "", idUsage),
-		Tags:        flag.String("tags", "", tagUsage),
-		ExcludeIDs:  flag.String("exclude-ids", "", excludeIDsUsage),
-		ExcludeTags: flag.String("exclude-tags", "", excludeTagsUsage),
-		NewID:       flag.Bool("new-id", false, newIDUsage),
-		NewFile:     flag.Bool("new-file", false, newFileUsage),
-		AddSecret:   flag.String("add-secret", "", addSecretUsage),
+		Name:          flag.String("name", "", nameUsage),
+		ID:            flag.String("id", "", idUsage),
+		Tags:          flag.String("tags", "", tagUsage),
+		ExcludeIDs:    flag.String("exclude-ids", "", excludeIDsUsage),
+		ExcludeTags:   flag.String("exclude-tags", "", excludeTagsUsage),
+		NewID:         flag.Bool("new-id", false, newIDUsage),
+		NewFile:       flag.Bool("new-file", false, newFileUsage),
+		AddSecret:     flag.String("add-secret", "", addSecretUsage),
+		NotifyChannel: flag.String("notify-channel", "", notifyChannelUsage),
 	}
 
 	flag.Parse()

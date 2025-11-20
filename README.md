@@ -107,17 +107,18 @@ Currently in a stable initial state — core features implemented; more advanced
 
 #### *Global Flags*
 
-| Flags                                    | Description                                                                                                                    |
-| ---                                      | ---                                                                                                                            |
-| `--help`                                 | Show all flags (switches) and their explanations. Shows also the program version.                                              |
-| `--name "Environment: PROD"`             | Set custom name for the test run (for the execution). Shown in final notification.                                             |
-| `--id "<hex hash>"`                      | Run only the request matching this ID.                                                                                         |
-| `--tags "animals, cars"`                 | Run all requests containing any of the comma-separated tags.                                                                   |
-| `--exclude-ids "bb5599abcd, ff00fceb61"` | Do not run any request that contains ANY of the IDs in the comma-separated ID list.                                            |
-| `--exclude-tags "daily-based-execution"` | Do not run any request that contains ANY of the tags in the comma-separated tag list.                                          |
-| `--new-id`                               | Generates and returns a new random hex ID for use in JSON definitions.                                                         |
-| `--new-file`                             | Generates a new JSON definition template file. Then enter the request values/data and done.                                    |
-| `--add-secret "<value>"`                 | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions. |
+| Flags                                    | Description                                                                                                                                                                                                         |
+| ---                                      | ---                                                                                                                                                                                                                 |
+| `--help`                                 | Show all flags (switches) and their explanations. Shows also the program version.                                                                                                                                   |
+| `--name "Environment: PROD"`             | Set custom name for the test run (for the execution). Shown in final notification.                                                                                                                                  |
+| `--id "<hex hash>"`                      | Run only the request matching this ID.                                                                                                                                                                              |
+| `--tags "animals, cars"`                 | Run all requests containing any of the comma-separated tags.                                                                                                                                                        |
+| `--exclude-ids "bb5599abcd, ff00fceb61"` | Do not run any request that contains ANY of the IDs in the comma-separated ID list.                                                                                                                                 |
+| `--exclude-tags "daily-based-execution"` | Do not run any request that contains ANY of the tags in the comma-separated tag list.                                                                                                                               |
+| `--new-id`                               | Generates and returns a new random hex ID for use in JSON definitions.                                                                                                                                              |
+| `--new-file`                             | Generates a new JSON definition template file. Then enter the request values/data and done.                                                                                                                         |
+| `--add-secret "<value>"`                 | Securely stores secrets in SQLite database. Returns a placeholder like "\<secret-b29ff12b50\>"<br>for use in JSON definitions.                                                                                      |
+| `--notify-channel "<channel>"`           | Specify the WebEx or MS Teams channel where notifications should be sent.<br>The name must match a key in the 'webEx.webhooks' or 'msTeams.webhooks' map in the config file apiprobe.json.<br>Default is "default". |
 
 #### *Examples*
 
@@ -155,8 +156,8 @@ Currently in a stable initial state — core features implemented; more advanced
 
     ``` bash
     # combination example:
-    # run every request with tag "<tag-name>" except request with specific <ID> and name the test run "MyFirstRun"
-    go run main.go --tags "env-prod" --exclude-ids "bb11abc987" --name "MyFirstRun"
+    # run every request with tag "<tag-name>" except request with specific <ID> and name the test run "Environment: PROD"
+    go run main.go --tags "env-prod" --exclude-ids "bb11abc987" --name "Environment: PROD"
     ```
 
 - **Generate new ID**:
@@ -185,6 +186,20 @@ Currently in a stable initial state — core features implemented; more advanced
 
     For more instructions, see section [secret management](#secret-management) below.
 
+- **Send notifications to a specific channel**:
+
+    ``` bash
+    go run main.go --notify-channel "prod"
+    # or by executable (faster)
+    ./apiprobe.exe --notify-channel "prod"
+    ```
+
+    ``` bash
+    # combination example:
+    # run requests with tag "env-test" and send notifications to the "test" channel and name the test run "Environment: TEST"
+    go run main.go --tags "env-test" --notify-channel "test" --name "Test Run"
+    ```
+
 #### *Remote execution*
 
 You can run the CLI regularly via various schedulers or task runners.
@@ -201,7 +216,7 @@ For example, to schedule a daily run at 2 AM, import the XML and adjust the `<
 
 ### apiprobe.json
 
-Setup your webhook URL for WebEx, MS Teams etc. At the moment only WebEx is available (more to be developed).
+Setup your webhook URL for WebEx or MS Teams. The MS Teams webhook usage is currently in development and cannot be used yet, but coming very soon.
 
 #### *debugMode*
 
@@ -213,7 +228,35 @@ Define the interval (in hours) how often a heartbeat message should be sent. Thi
 
 #### *notification*
 
-You can use a placeholder like `<secret-f0f0f0f0f0>` to avoid any plaintext URL section or other secret tokens. To do so, add your URL section to the database using `--add-secret "<value>"` and replace the generated returned placeholder with your original URL section. For more instructions, see section [secret management](#secret-management) below.
+Configure webhook notifications for collaboration tools like WebEx and MS Teams. Notifications are sent automatically when errors occur, responses change, or on heartbeat intervals.
+
+- **webEx** / **msTeams**: Set `active` to `true` to enable notifications for the respective tool. Define multiple webhook URLs under `webhooks` as a map (e.g., "default", "prod", "test"). Use the `--notify-channel` flag to specify which channel to use (defaults to "default" if not set).
+- You can use placeholders like `<secret-f0f0f0f0f0>` to avoid plaintext secrets in webhook URLs. Add the secret using `--add-secret "<value>"` and replace it in the config. For more instructions, see section [secret management](#secret-management) below.
+
+Example config snippet:
+```json
+{
+    ...
+    ...
+    "notification": {
+        "webEx": {
+            "active": true,
+        "webhooks": {
+            "default": "https://webexapis.com/v1/webhooks/incoming/<secret-abcde12345>",
+            "prod": "https://webexapis.com/v1/webhooks/incoming/<secret-54321edcba>",
+            "test": "https://webexapis.com/v1/webhooks/incoming/<secret-edcba54321>"
+        }
+        },
+        "msTeams": {
+            "active": false,
+            "webhooks": {
+                "default": "<webhook-url-with-secret>",
+                "prod": "<webhook-url-with-secret>",
+                "test": "<webhook-url-with-secret>"
+            }
+        }
+    }
+}
 
 ### JSON definitions
 

@@ -16,10 +16,13 @@ type Heartbeat struct {
 
 type Notification struct {
 	WebEx *struct {
-		Active     bool   `json:"active"`
-		WebhookURL string `json:"webhookUrl"`
-		Space      string `json:"space"`
+		Active   bool              `json:"active"`
+		Webhooks map[string]string `json:"webhooks"`
 	} `json:"webEx"`
+	MSTeams *struct {
+		Active   bool              `json:"active"`
+		Webhooks map[string]string `json:"webhooks"`
+	} `json:"msTeams"`
 }
 
 type Config struct {

@@ -7,8 +7,19 @@
     "notification": {
         "webEx": {
             "active": true,
-            "webhookUrl": "https://webexapis.com/v1/webhooks/incoming/",
-            "space": "<secret-f54e7b098b>"
+            "webhooks": {
+                "default": "https://webexapis.com/v1/webhooks/incoming/<secret-f54e7b098b>",
+                "prod": "https://webexapis.com/v1/webhooks/incoming/<secret-f54e7b098b>",
+                "test": "https://webexapis.com/v1/webhooks/incoming/<secret-f54e7b098b>"
+            }
+        },
+        "msTeams": {
+            "active": false,
+            "webhooks": {
+                "default": "",
+                "prod": "",
+                "test": ""
+            }
         }
     }
 }

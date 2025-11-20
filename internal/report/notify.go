@@ -3,21 +3,21 @@ package report
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
-
-	"zombiezen.com/go/sqlite"
+	"time"
 
 	"github.com/sven-seyfert/apiprobe/internal/config"
 	"github.com/sven-seyfert/apiprobe/internal/crypto"
 	"github.com/sven-seyfert/apiprobe/internal/db"
 	"github.com/sven-seyfert/apiprobe/internal/logger"
+
+	"zombiezen.com/go/sqlite"
 )
 
-// Notification sends a summary notification via WebEx webhook.
+// Notification sends summary notifications via WebEx and MS Teams webhooks.
+// It selects the notification channel and triggers the appropriate send function.
 func Notification(
 	ctx context.Context,
 	cfg *config.Config,
@@ -25,141 +25,57 @@ func Notification(
 	res *Result,
 	rep *Report,
 	runName string,
+	notifyChannel string,
 ) {
-	if cfg.Notification.WebEx == nil || !cfg.Notification.WebEx.Active {
-		return
+	if notifyChannel == "" {
+		notifyChannel = "default"
 	}
 
-	reportFile := buildReportFileName(runName)
-	hostname, _ := os.Hostname()
-	hostnameMessage := fmt.Sprintf("Message from: __%s__ (hostname)", hostname)
-
-	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount == 0 {
-		_ = os.Remove(reportFile)
-
-		isHeartbeatTime, err := IsHeartbeatTime(cfg)
-		if err != nil {
-			return
-		}
-
-		if !isHeartbeatTime {
-			return
-		}
-
-		if err = UpdateHeartbeatTime(cfg); err != nil {
-			return
-		}
-
-		mdMessage := fmt.Sprintf(
-			`{"markdown":"#### 💙 %s\nHeartbeat: __still alive__\n\n%s"}`,
-			config.Version,
-			hostnameMessage,
-		)
-
-		webhookPayload := []byte(mdMessage)
-
-		webExWebhookNotification(ctx, conn,
-			cfg.Notification.WebEx.WebhookURL,
-			cfg.Notification.WebEx.Space,
-			webhookPayload)
-
-		return
+	if cfg.Notification.WebEx != nil && cfg.Notification.WebEx.Active {
+		sendWebExNotifications(ctx, cfg, conn, res, rep, runName, notifyChannel)
 	}
 
-	if err := rep.SaveToFile(reportFile); err != nil {
-		logger.Errorf("Error on save file. Error: %v", err)
-
-		return
+	if cfg.Notification.MSTeams != nil && cfg.Notification.MSTeams.Active {
+		sendMSTeamsNotifications(ctx, cfg, conn, res, rep, runName, notifyChannel)
 	}
-
-	data, err := os.ReadFile(reportFile)
-	if err != nil {
-		logger.Errorf("Error on read file. Error: %v", err)
-
-		return
-	}
-
-	mdCodeBlock := fmt.Sprintf("```json\n%s\n```", data)
-
-	testRunName := ""
-	if runName != "" {
-		testRunName = fmt.Sprintf("`%s`\n\n", runName)
-	}
-
-	mdResult := fmt.Sprintf(
-		"%sChanged files: __%d__\nRequest errors: __%d__\nFormat response errors: __%d__\n\n📄 _report.json_",
-		testRunName,
-		res.ChangedFilesCount,
-		res.RequestErrorCount,
-		res.FormatResponseErrorCount,
-	)
-
-	trafficLight := "🔴"
-	if res.RequestErrorCount == 0 && res.FormatResponseErrorCount == 0 && res.ChangedFilesCount > 0 {
-		trafficLight = "🟡"
-	}
-
-	mdMessage := fmt.Sprintf(
-		"#### %s %s\n%s\n%s\n\n%s",
-		trafficLight,
-		config.Version,
-		mdResult,
-		mdCodeBlock,
-		hostnameMessage,
-	)
-
-	payload := map[string]string{
-		"markdown": mdMessage,
-	}
-
-	webhookPayload, _ := json.Marshal(payload)
-
-	webExWebhookNotification(ctx, conn,
-		cfg.Notification.WebEx.WebhookURL,
-		cfg.Notification.WebEx.Space,
-		webhookPayload)
 }
 
-// buildReportFileName constructs a sanitized file path for report files
-// based on the provided name. It returns the file path as a string.
-func buildReportFileName(name string) string {
-	reportFile := "./logs/report"
+// buildReportFilePath generates a timestamped JSON file path for saving reports.
+// The format is ./reports/YYYY-MM-DD-HH-MM-SS.mmm.json.
+func buildReportFilePath() string {
+	const reportsPath = "./reports"
+	const ext = "json"
 
-	if name != "" {
-		safeName := strings.ToLower(name)
-		safeName = strings.ReplaceAll(safeName, "environment: ", "")
-		safeName = strings.ReplaceAll(safeName, " ", "-")
-		safeName = strings.ReplaceAll(safeName, "\"", "")
-		safeName = strings.ReplaceAll(safeName, "'", "")
+	now := time.Now()
+	timestamp := now.Format("2006-01-02-15-04-05.000")
 
-		return fmt.Sprintf("./logs/report-%s.json", safeName)
-	}
-
-	return reportFile + ".json"
+	return fmt.Sprintf("%s/%s.%s", reportsPath, timestamp, ext)
 }
 
-// webExWebhookNotification sends the given JSON payload to the configured
-// WebEx incoming webhook URL.
-func webExWebhookNotification(
+// sendNotification sends the given JSON payload to the configured incoming webhook URL.
+// It handles secret replacement in the webhook URL and logs the result.
+func sendNotification(
 	ctx context.Context,
 	conn *sqlite.Conn,
 	webhookURL string,
-	spaceSecret string,
 	webhookPayload []byte,
+	notificationTool string,
 ) {
-	url := webhookURL + spaceSecret
-
 	const secretPrefix = "<secret-"
+	const secretSuffix = ">"
 
-	if strings.Contains(spaceSecret, secretPrefix) {
-		spaceSecret = crypto.ExtractSecretHash(spaceSecret)
-		spaceIdentifier, _ := db.SelectHash(conn, spaceSecret)
-		url = webhookURL + crypto.Deobfuscate(spaceIdentifier)
+	url := webhookURL
+
+	if strings.Contains(webhookURL, secretPrefix) {
+		urlSecret := crypto.ExtractSecretHash(webhookURL)
+		urlIdentifier, _ := db.SelectHash(conn, urlSecret)
+		webhookIdentifier := crypto.Deobfuscate(urlIdentifier)
+		url = strings.Replace(webhookURL, secretPrefix+urlSecret+secretSuffix, webhookIdentifier, 1)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(webhookPayload))
 	if err != nil {
-		logger.Errorf("Error on new request. Error: %v", err)
+		logger.Errorf("Error creating new request. Error: %v", err)
 
 		return
 	}
@@ -168,9 +84,11 @@ func webExWebhookNotification(
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logger.Errorf("Error on send request. Error: %v", err)
+		logger.Errorf("Error sending request. Error: %v", err)
 
 		return
 	}
 	defer resp.Body.Close()
+
+	logger.Infof(notificationTool+" notification sent successfully (status: %d)", resp.StatusCode)
 }

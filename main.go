@@ -122,7 +122,7 @@ func main() {
 	res, rep := processRequests(ctx, finalRequests, tokenStore, cfg.DebugMode)
 
 	// Send notification on error case or on changes.
-	report.Notification(ctx, cfg, dbConn, res, rep, *cliFlags.Name)
+	report.Notification(ctx, cfg, dbConn, res, rep, *cliFlags.Name, *cliFlags.NotifyChannel)
 }
 
 // initializeServices initializes logger, database and CLI flags.
