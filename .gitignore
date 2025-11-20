@@ -1,7 +1,9 @@
 logs/*.log
 logs/**/*.log
-logs/report.json
+reports/*.json
+reports/**/*.log
 apiprobe.exe
 Au3ChangelogUpdater.exe
+list-tags.au3
 notes.txt
 package.json
