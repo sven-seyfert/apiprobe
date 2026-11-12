@@ -1,3 +1,14 @@
+> [!NOTE]
+> 2026-11-12
+> 
+> The version of this project available here is no longer up to date. In the meantime, I've continued developing and maintaining the project on **GitLab**. However, I plan to bring **GitHub** up to date with the latest version, including various enhancements and new features, in the near future.
+>
+> Please keep this in mind when using version **v0.18.0** currently available here.
+> 
+> Thanks for your understanding, and stay tuned - exciting improvements are coming, and they'll be worth the wait!
+
+------
+
 #####
 
 <div align="center">
